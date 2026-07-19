@@ -19,18 +19,21 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const res = await signIn("credentials", {
-      email, password, redirect: false,
-    });
+    try {
+      const res = await signIn("credentials", {
+        email, password, redirect: false,
+      });
 
-    if (res?.error) {
-      setError("Invalid email or password");
-      setLoading(false);
-    } else if (res?.url) {
-      router.push(res.url);
-    } else {
-      router.push("/student");
+      if (res?.error) {
+        setError("Invalid email or password");
+      } else {
+        router.push("/admin");
+        return;
+      }
+    } catch {
+      setError("Connection error. Please try again.");
     }
+    setLoading(false);
   }, [email, password, router]);
 
   return (

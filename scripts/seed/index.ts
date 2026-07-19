@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { db } from "@/lib/db";
 import {
   users, roles, permissions, rolePermissions, userRoles, studentProfiles,
@@ -51,23 +50,17 @@ async function seed() {
   const parentRole = roleData.find((r) => r.name === "parent")!;
 
   // ─── Permissions ───────────────────────────────────────────────────
-  const permCodes = ["manage:system", "manage:school", "manage:assessments", "view:reports", "manage:students", "take:assessment"];
-  const permDescs: Record<string, string> = {
-    "manage:system": "Full system access", "manage:school": "Manage school settings",
-    "manage:assessments": "Create/edit assessments", "view:reports": "View diagnostic reports",
-    "manage:students": "Manage student profiles", "take:assessment": "Take assessments",
-  };
-  const permModules: Record<string, string> = {
-    "manage:system": "system", "manage:school": "school", "manage:assessments": "assessment",
-    "view:reports": "report", "manage:students": "student", "take:assessment": "assessment",
-  };
-  for (const c of permCodes) {
-    await db.execute(sql`INSERT INTO permissions (id, code, name, module, description) VALUES (gen_random_uuid(), ${c}, ${c}, ${permModules[c]}, ${permDescs[c]})`);
-  }
-  const permRows = await db.execute(sql`SELECT id, code FROM permissions`);
-  const permMap: Record<string, string> = {};
-  for (const r of permRows.rows as { id: string; code: string }[]) permMap[r.code] = r.id;
-  console.log(`✓ ${permCodes.length} permissions created`);
+  const permData = await db.insert(permissions).values([
+    { code: "manage:system", name: "manage:system", module: "system", description: "Full system access" },
+    { code: "manage:school", name: "manage:school", module: "school", description: "Manage school settings" },
+    { code: "manage:assessments", name: "manage:assessments", module: "assessment", description: "Create/edit assessments" },
+    { code: "view:reports", name: "view:reports", module: "report", description: "View diagnostic reports" },
+    { code: "manage:students", name: "manage:students", module: "student", description: "Manage student profiles" },
+    { code: "take:assessment", name: "take:assessment", module: "assessment", description: "Take assessments" },
+  ]).returning();
+  console.log(`✓ ${permData.length} permissions created`);
+
+  const permMap = Object.fromEntries(permData.map((p) => [p.code, p.id]));
 
   const rolePermInserts = [
     { roleId: adminRole.id, permissionId: permMap["manage:system"] },
@@ -93,8 +86,8 @@ async function seed() {
 
   // ─── Schools ───────────────────────────────────────────────────────
   const schoolData = await db.insert(schools).values([
-    { name: "Gracefield College", slug: "gracefield-college", city: "Lagos", state: "Lagos", schoolType: "Secondary", verificationStatus: "verified", subscriptionStatus: "premium", deepReportCredits: 50, isActive: true },
-    { name: "Excel Comprehensive Academy", slug: "excel-comprehensive", city: "Abuja", state: "FCT", schoolType: "Secondary", verificationStatus: "verified", subscriptionStatus: "free", deepReportCredits: 5, isActive: true },
+    { name: "Gracefield College", slug: "gracefield-college", city: "Lagos", state: "Lagos", schoolType: "secondary", verificationStatus: "verified", subscriptionStatus: "premium", deepReportCredits: 50, isActive: true },
+    { name: "Excel Comprehensive Academy", slug: "excel-comprehensive", city: "Abuja", state: "FCT", schoolType: "secondary", verificationStatus: "verified", subscriptionStatus: "free", deepReportCredits: 5, isActive: true },
   ]).returning();
   console.log(`✓ ${schoolData.length} schools created`);
 
@@ -160,14 +153,14 @@ async function seed() {
   );
   console.log(`✓ ${studentUsers.length} students created`);
 
-  // Student profiles
+  // Student profiles (using schema fields: userId, studentCode, dateOfBirth, gender, currentSchoolId, enrollmentStatus)
   await db.insert(studentProfiles).values([
-    { userId: studentUsers[0].id, grade: "Grade 10", schoolId: schoolData[0].id },
-    { userId: studentUsers[1].id, grade: "Grade 11", schoolId: schoolData[0].id },
-    { userId: studentUsers[2].id, grade: "Grade 12", schoolId: schoolData[0].id },
-    { userId: studentUsers[3].id, grade: "Grade 9", schoolId: schoolData[1].id },
-    { userId: studentUsers[4].id, grade: "Grade 10", schoolId: schoolData[1].id },
-    { userId: studentUsers[5].id, grade: "Grade 11", schoolId: schoolData[1].id },
+    { userId: studentUsers[0].id, currentSchoolId: schoolData[0].id, enrollmentStatus: "active" },
+    { userId: studentUsers[1].id, currentSchoolId: schoolData[0].id, enrollmentStatus: "active" },
+    { userId: studentUsers[2].id, currentSchoolId: schoolData[0].id, enrollmentStatus: "active" },
+    { userId: studentUsers[3].id, currentSchoolId: schoolData[1].id, enrollmentStatus: "active" },
+    { userId: studentUsers[4].id, currentSchoolId: schoolData[1].id, enrollmentStatus: "active" },
+    { userId: studentUsers[5].id, currentSchoolId: schoolData[1].id, enrollmentStatus: "active" },
   ]);
 
   // ─── Parent ────────────────────────────────────────────────────────
@@ -227,33 +220,33 @@ async function seed() {
   console.log(`✓ ${topicData.length} topics created`);
   const topicMap = Object.fromEntries(topicData.map((t) => [t.code!, t.id]));
 
-  // Concepts
+  // Concepts (schema: name, code, subtopicId, bloomLevel, isFoundational, importanceWeight)
   const conceptData = [
-    { name: "Place Value", code: "place-value", subtopicId: topicMap["number-operations"] },
-    { name: "Fractions", code: "fractions", subtopicId: topicMap["number-operations"] },
-    { name: "Decimals", code: "decimals", subtopicId: topicMap["number-operations"] },
-    { name: "Percentages", code: "percentages", subtopicId: topicMap["number-operations"] },
-    { name: "Ratios", code: "ratios", subtopicId: topicMap["number-operations"] },
-    { name: "Algebraic Expressions", code: "algebraic-expressions", subtopicId: topicMap.algebra },
-    { name: "Linear Equations", code: "linear-equations", subtopicId: topicMap.algebra },
-    { name: "Inequalities", code: "inequalities", subtopicId: topicMap.algebra },
-    { name: "Shapes & Angles", code: "shapes-angles", subtopicId: topicMap["geometry-measurement"] },
-    { name: "Area & Perimeter", code: "area-perimeter", subtopicId: topicMap["geometry-measurement"] },
-    { name: "Volume", code: "volume", subtopicId: topicMap["geometry-measurement"] },
-    { name: "Data Collection", code: "data-collection", subtopicId: topicMap["statistics-probability"] },
-    { name: "Probability", code: "probability", subtopicId: topicMap["statistics-probability"] },
-    { name: "Main Idea", code: "main-idea", subtopicId: topicMap["reading-comprehension"] },
-    { name: "Inference", code: "inference", subtopicId: topicMap["reading-comprehension"] },
-    { name: "Vocabulary in Context", code: "vocabulary-context", subtopicId: topicMap["reading-comprehension"] },
-    { name: "Parts of Speech", code: "parts-of-speech", subtopicId: topicMap["grammar-usage"] },
-    { name: "Sentence Structure", code: "sentence-structure", subtopicId: topicMap["grammar-usage"] },
-    { name: "Tenses", code: "tenses", subtopicId: topicMap["grammar-usage"] },
-    { name: "Forces", code: "forces", subtopicId: topicMap.mechanics },
-    { name: "Motion", code: "motion", subtopicId: topicMap.mechanics },
-    { name: "Energy", code: "energy", subtopicId: topicMap.mechanics },
-    { name: "Wave Properties", code: "wave-properties", subtopicId: topicMap["waves-optics"] },
-    { name: "Light", code: "light", subtopicId: topicMap["waves-optics"] },
-    { name: "Sound", code: "sound", subtopicId: topicMap["waves-optics"] },
+    { name: "Place Value", code: "place-value", subtopicId: topicMap["number-operations"], bloomLevel: "remember", isFoundational: true },
+    { name: "Fractions", code: "fractions", subtopicId: topicMap["number-operations"], bloomLevel: "understand", isFoundational: true },
+    { name: "Decimals", code: "decimals", subtopicId: topicMap["number-operations"], bloomLevel: "understand" },
+    { name: "Percentages", code: "percentages", subtopicId: topicMap["number-operations"], bloomLevel: "apply" },
+    { name: "Ratios", code: "ratios", subtopicId: topicMap["number-operations"], bloomLevel: "apply" },
+    { name: "Algebraic Expressions", code: "algebraic-expressions", subtopicId: topicMap.algebra, bloomLevel: "understand", isFoundational: true },
+    { name: "Linear Equations", code: "linear-equations", subtopicId: topicMap.algebra, bloomLevel: "apply" },
+    { name: "Inequalities", code: "inequalities", subtopicId: topicMap.algebra, bloomLevel: "apply" },
+    { name: "Shapes & Angles", code: "shapes-angles", subtopicId: topicMap["geometry-measurement"], bloomLevel: "remember", isFoundational: true },
+    { name: "Area & Perimeter", code: "area-perimeter", subtopicId: topicMap["geometry-measurement"], bloomLevel: "apply" },
+    { name: "Volume", code: "volume", subtopicId: topicMap["geometry-measurement"], bloomLevel: "apply" },
+    { name: "Data Collection", code: "data-collection", subtopicId: topicMap["statistics-probability"], bloomLevel: "remember" },
+    { name: "Probability", code: "probability", subtopicId: topicMap["statistics-probability"], bloomLevel: "understand" },
+    { name: "Main Idea", code: "main-idea", subtopicId: topicMap["reading-comprehension"], bloomLevel: "understand", isFoundational: true },
+    { name: "Inference", code: "inference", subtopicId: topicMap["reading-comprehension"], bloomLevel: "analyze" },
+    { name: "Vocabulary in Context", code: "vocabulary-context", subtopicId: topicMap["reading-comprehension"], bloomLevel: "understand" },
+    { name: "Parts of Speech", code: "parts-of-speech", subtopicId: topicMap["grammar-usage"], bloomLevel: "remember", isFoundational: true },
+    { name: "Sentence Structure", code: "sentence-structure", subtopicId: topicMap["grammar-usage"], bloomLevel: "apply" },
+    { name: "Tenses", code: "tenses", subtopicId: topicMap["grammar-usage"], bloomLevel: "apply" },
+    { name: "Forces", code: "forces", subtopicId: topicMap.mechanics, bloomLevel: "understand", isFoundational: true },
+    { name: "Motion", code: "motion", subtopicId: topicMap.mechanics, bloomLevel: "understand" },
+    { name: "Energy", code: "energy", subtopicId: topicMap.mechanics, bloomLevel: "apply" },
+    { name: "Wave Properties", code: "wave-properties", subtopicId: topicMap["waves-optics"], bloomLevel: "understand", isFoundational: true },
+    { name: "Light", code: "light", subtopicId: topicMap["waves-optics"], bloomLevel: "apply" },
+    { name: "Sound", code: "sound", subtopicId: topicMap["waves-optics"], bloomLevel: "apply" },
   ];
   const insertedConcepts = await db.insert(concepts).values(conceptData).returning();
   console.log(`✓ ${insertedConcepts.length} concepts created`);
@@ -281,38 +274,38 @@ async function seed() {
   ]);
   console.log("✓ Concept prerequisites created");
 
-  // Concept misconceptions
+  // Concept misconceptions (schema: conceptId, misconception, code, description, severity, correctionStrategy)
   await db.insert(conceptMisconceptions).values([
-    { conceptId: conceptMap.fractions, misconception: "Believes larger denominator means larger fraction", remediationStrategy: "Use visual fraction strips to compare same-numerator fractions" },
-    { conceptId: conceptMap["linear-equations"], misconception: "Believes variables always represent a single unknown", remediationStrategy: "Use balance-scale models to show equivalence" },
-    { conceptId: conceptMap.forces, misconception: "Believes force is required to maintain motion", remediationStrategy: "Demonstrate inertia with frictionless surfaces" },
-    { conceptId: conceptMap["parts-of-speech"], misconception: "Confuses adjectives with adverbs", remediationStrategy: "Practice identifying words that modify nouns vs verbs" },
+    { conceptId: conceptMap.fractions, misconception: "Believes larger denominator means larger fraction", correctionStrategy: "Use visual fraction strips to compare same-numerator fractions", severity: "common" },
+    { conceptId: conceptMap["linear-equations"], misconception: "Believes variables always represent a single unknown", correctionStrategy: "Use balance-scale models to show equivalence", severity: "moderate" },
+    { conceptId: conceptMap.forces, misconception: "Believes force is required to maintain motion", correctionStrategy: "Demonstrate inertia with frictionless surfaces", severity: "moderate" },
+    { conceptId: conceptMap["parts-of-speech"], misconception: "Confuses adjectives with adverbs", correctionStrategy: "Practice identifying words that modify nouns vs verbs", severity: "common" },
   ]);
   console.log("✓ Concept misconceptions created");
 
   // ─── Question Banks ────────────────────────────────────────────────
   const bankData = await db.insert(questionBanks).values([
-    { name: "Primary → JSS1 Transition", code: "PRI-JSS1", description: "Mathematics diagnostic for students moving from Primary to JSS1", subjectId: mathId, targetLevel: "Primary 6 → JSS 1", totalQuestions: 170, difficultyDistribution: { easy: 60, medium: 60, hard: 50 } },
-    { name: "JSS3 → SS1 Transition", code: "JSS3-SS1", description: "Mathematics diagnostic for students moving from JSS3 to SS1", subjectId: mathId, targetLevel: "JSS 3 → SS 1", totalQuestions: 170, difficultyDistribution: { easy: 60, medium: 60, hard: 50 } },
-    { name: "SS3 → University Transition", code: "SS3-UNI", description: "Mathematics diagnostic for students moving from SS3 to University", subjectId: mathId, targetLevel: "SS 3 → University", totalQuestions: 170, difficultyDistribution: { easy: 60, medium: 60, hard: 50 } },
+    { level: "PRI-JSS1", title: "Primary → JSS1 Transition", description: "Mathematics diagnostic for students moving from Primary to JSS1", displayOrder: 1 },
+    { level: "JSS3-SS1", title: "JSS3 → SS1 Transition", description: "Mathematics diagnostic for students moving from JSS3 to SS1", displayOrder: 2 },
+    { level: "SS3-UNI", title: "SS3 → University Transition", description: "Mathematics diagnostic for students moving from SS3 to University", displayOrder: 3 },
   ]).returning();
-  const bankMap = Object.fromEntries(bankData.map((b) => [b.code, b.id]));
+  const bankMap = Object.fromEntries(bankData.map((b) => [b.level, b.id]));
   console.log(`✓ ${bankData.length} question banks created`);
 
-  // Section configs
+  // Section configs (schema: bankId, sectionName, questionCount, timeLimitMinutes, displayOrder)
   const sectionConfigs = [
-    { bankId: bankMap["PRI-JSS1"], name: "Number & Operations", slug: "number-operations", order: 1, questionCount: 50, timeMinutes: 15 },
-    { bankId: bankMap["PRI-JSS1"], name: "Algebra", slug: "algebra", order: 2, questionCount: 40, timeMinutes: 12 },
-    { bankId: bankMap["PRI-JSS1"], name: "Geometry & Measurement", slug: "geometry-measurement", order: 3, questionCount: 40, timeMinutes: 12 },
-    { bankId: bankMap["PRI-JSS1"], name: "Statistics & Probability", slug: "statistics-probability", order: 4, questionCount: 40, timeMinutes: 11 },
-    { bankId: bankMap["JSS3-SS1"], name: "Number & Operations", slug: "number-operations", order: 1, questionCount: 50, timeMinutes: 15 },
-    { bankId: bankMap["JSS3-SS1"], name: "Algebra", slug: "algebra", order: 2, questionCount: 40, timeMinutes: 12 },
-    { bankId: bankMap["JSS3-SS1"], name: "Geometry & Measurement", slug: "geometry-measurement", order: 3, questionCount: 40, timeMinutes: 12 },
-    { bankId: bankMap["JSS3-SS1"], name: "Statistics & Probability", slug: "statistics-probability", order: 4, questionCount: 40, timeMinutes: 11 },
-    { bankId: bankMap["SS3-UNI"], name: "Number & Operations", slug: "number-operations", order: 1, questionCount: 50, timeMinutes: 15 },
-    { bankId: bankMap["SS3-UNI"], name: "Algebra", slug: "algebra", order: 2, questionCount: 40, timeMinutes: 12 },
-    { bankId: bankMap["SS3-UNI"], name: "Geometry & Measurement", slug: "geometry-measurement", order: 3, questionCount: 40, timeMinutes: 12 },
-    { bankId: bankMap["SS3-UNI"], name: "Statistics & Probability", slug: "statistics-probability", order: 4, questionCount: 40, timeMinutes: 11 },
+    { bankId: bankMap["PRI-JSS1"], sectionName: "Number & Operations", questionCount: 50, timeLimitMinutes: 15, displayOrder: 1 },
+    { bankId: bankMap["PRI-JSS1"], sectionName: "Algebra", questionCount: 40, timeLimitMinutes: 12, displayOrder: 2 },
+    { bankId: bankMap["PRI-JSS1"], sectionName: "Geometry & Measurement", questionCount: 40, timeLimitMinutes: 12, displayOrder: 3 },
+    { bankId: bankMap["PRI-JSS1"], sectionName: "Statistics & Probability", questionCount: 40, timeLimitMinutes: 11, displayOrder: 4 },
+    { bankId: bankMap["JSS3-SS1"], sectionName: "Number & Operations", questionCount: 50, timeLimitMinutes: 15, displayOrder: 1 },
+    { bankId: bankMap["JSS3-SS1"], sectionName: "Algebra", questionCount: 40, timeLimitMinutes: 12, displayOrder: 2 },
+    { bankId: bankMap["JSS3-SS1"], sectionName: "Geometry & Measurement", questionCount: 40, timeLimitMinutes: 12, displayOrder: 3 },
+    { bankId: bankMap["JSS3-SS1"], sectionName: "Statistics & Probability", questionCount: 40, timeLimitMinutes: 11, displayOrder: 4 },
+    { bankId: bankMap["SS3-UNI"], sectionName: "Number & Operations", questionCount: 50, timeLimitMinutes: 15, displayOrder: 1 },
+    { bankId: bankMap["SS3-UNI"], sectionName: "Algebra", questionCount: 40, timeLimitMinutes: 12, displayOrder: 2 },
+    { bankId: bankMap["SS3-UNI"], sectionName: "Geometry & Measurement", questionCount: 40, timeLimitMinutes: 12, displayOrder: 3 },
+    { bankId: bankMap["SS3-UNI"], sectionName: "Statistics & Probability", questionCount: 40, timeLimitMinutes: 11, displayOrder: 4 },
   ];
   const configData = await db.insert(questionBankConfigs).values(sectionConfigs).returning();
   console.log(`✓ ${configData.length} section configs created`);
@@ -326,40 +319,39 @@ async function seed() {
   console.log(`\nSeeding ${allBankQuestions.length} questions...`);
 
   let insertedCount = 0;
+  const insertedQuestions: { id: string; options: any[] }[] = [];
   for (const q of allBankQuestions) {
     const { options, ...questionFields } = q;
-    await db.insert(questionsTable).values(questionFields as any);
+    const [inserted] = await db.insert(questionsTable).values(questionFields as any).returning();
+    insertedQuestions.push({ id: inserted.id, options: q.options || [] });
     insertedCount++;
     if (insertedCount % 50 === 0) process.stdout.write(".");
   }
   console.log(`\n✓ ${insertedCount} questions inserted`);
 
-  // Insert options for all questions
-  let optCount = 0;
-  for (const q of allBankQuestions) {
-    if (q.options && q.options.length > 0) {
-      await db.insert(questionOptions).values(
-        q.options.map((o: any) => ({ ...o, questionId: q.id })),
-      );
-      optCount += q.options.length;
-    }
+  // Insert all options in one batch
+  const allOptions = insertedQuestions.flatMap(({ id, options }) =>
+    options.map((o: any) => ({ ...o, questionId: id }))
+  );
+  if (allOptions.length > 0) {
+    await db.insert(questionOptions).values(allOptions);
   }
-  console.log(`✓ ${optCount} question options inserted`);
+  console.log(`✓ ${allOptions.length} question options inserted`);
 
   // ─── Terminal Assessment Configs ────────────────────────────────────
   await db.insert(assessmentConfigs).values([
-    { name: "Primary → JSS1 Terminal Assessment", slug: "pri-jss1-terminal", bankId: bankMap["PRI-JSS1"], description: "End-of-transition diagnostic for primary school leavers", totalQuestions: 30, timeMinutes: 45, passingScore: 40, isActive: true },
-    { name: "JSS3 → SS1 Terminal Assessment", slug: "jss3-ss1-terminal", bankId: bankMap["JSS3-SS1"], description: "End-of-transition diagnostic for junior secondary leavers", totalQuestions: 30, timeMinutes: 45, passingScore: 40, isActive: true },
-    { name: "SS3 → University Terminal Assessment", slug: "ss3-uni-terminal", bankId: bankMap["SS3-UNI"], description: "End-of-transition diagnostic for senior secondary leavers", totalQuestions: 30, timeMinutes: 45, passingScore: 40, isActive: true },
+    { title: "Primary → JSS1 Terminal Assessment", subjectId: mathId, questionCount: 30, timeLimitMinutes: 45, isAdaptive: true },
+    { title: "JSS3 → SS1 Terminal Assessment", subjectId: mathId, questionCount: 30, timeLimitMinutes: 45, isAdaptive: true },
+    { title: "SS3 → University Terminal Assessment", subjectId: mathId, questionCount: 30, timeLimitMinutes: 45, isAdaptive: true },
   ]);
   console.log("✓ Terminal assessment configs created\n");
 
   // ─── Subscription Plans ────────────────────────────────────────────
   await db.insert(subscriptionPlans).values([
-    { name: "Free", slug: "free", price: 0, credits: 1, period: "month", features: { deepReports: 1, basicReports: -1, students: -1 } },
-    { name: "Basic", slug: "basic", price: 5000, credits: 10, period: "month", features: { deepReports: 10, basicReports: -1, students: -1 } },
-    { name: "Pro", slug: "pro", price: 15000, credits: 50, period: "month", features: { deepReports: 50, basicReports: -1, students: -1 } },
-    { name: "Enterprise", slug: "enterprise", price: 50000, credits: -1, period: "month", features: { deepReports: -1, basicReports: -1, students: -1 } },
+    { name: "Free", code: "free", amount: "0", interval: "one_time", credits: 1, isActive: true, features: [] },
+    { name: "Basic", code: "basic", amount: "5000", interval: "term", credits: 10, isActive: true, features: [] },
+    { name: "Pro", code: "pro", amount: "15000", interval: "term", credits: 50, isActive: true, features: [] },
+    { name: "Enterprise", code: "enterprise", amount: "50000", interval: "annual", credits: -1, isActive: true, features: [] },
   ]);
   console.log("✓ Subscription plans created\n");
 

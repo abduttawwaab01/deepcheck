@@ -1,14 +1,18 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/lib/db";
 import { users, roles, userRoles } from "@/lib/db/schemas";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 
+const withTimeout = <T>(p: Promise<T>, ms: number): Promise<T> =>
+  Promise.race([
+    p,
+    new Promise<T>((_, reject) => setTimeout(() => reject(new Error("DB query timed out")), ms)),
+  ]);
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: DrizzleAdapter(db),
   session: { strategy: "jwt" },
   pages: {
     signIn: "/auth/login",
@@ -27,27 +31,39 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
-        const user = await db.query.users.findFirst({
-          where: eq(users.email, credentials.email as string),
-        });
-        if (!user || !user.passwordHash) return null;
-        const isValid = await bcrypt.compare(credentials.password as string, user.passwordHash);
-        if (!isValid) return null;
-        return { id: user.id, email: user.email, name: `${user.firstName} ${user.lastName}`, image: user.avatarUrl };
+        try {
+          const user = await withTimeout(
+            db.query.users.findFirst({ where: eq(users.email, credentials.email as string) }),
+            10000,
+          );
+          if (!user || !user.passwordHash) return null;
+          const isValid = await bcrypt.compare(credentials.password as string, user.passwordHash);
+          if (!isValid) return null;
+          return { id: user.id, email: user.email, name: `${user.firstName} ${user.lastName}`, image: user.avatarUrl, role: "authenticated" };
+        } catch {
+          return null;
+        }
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      if (user?.id) {
+    async jwt({ token, user, trigger }) {
+      if ((trigger === "signIn" || trigger === "signUp") && user?.id) {
         token.id = user.id;
-        const [userRole] = await db
-          .select({ roleName: roles.name })
-          .from(userRoles)
-          .innerJoin(roles, eq(userRoles.roleId, roles.id))
-          .where(eq(userRoles.userId, user.id))
-          .limit(1);
-        token.role = userRole?.roleName || "guest";
+        try {
+          const [userRole] = await withTimeout(
+            db
+              .select({ roleName: roles.name })
+              .from(userRoles)
+              .innerJoin(roles, eq(userRoles.roleId, roles.id))
+              .where(eq(userRoles.userId, user.id))
+              .limit(1),
+            10000,
+          );
+          token.role = userRole?.roleName || "guest";
+        } catch {
+          token.role = "guest";
+        }
       }
       return token;
     },
