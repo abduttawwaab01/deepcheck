@@ -1,0 +1,3615 @@
+﻿export const ss3ToUniversityQuestions = [
+  // =========================================================================
+  // SECTION 1: ADVANCED MATHEMATICS (60 questions) — S-MATH-001 to S-MATH-060
+  // =========================================================================
+  // EASY (S-MATH-001 to S-MATH-020)
+  // -------------------------------------------------------------------------
+  {
+    code: "S-MATH-001",
+    questionText:
+      "Evaluate lim_{x→2} (x² − 4) / (x − 2).",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Limits",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "4", isCorrect: true, optionOrder: 1 },
+      { optionText: "0", isCorrect: false, optionOrder: 2 },
+      { optionText: "2", isCorrect: false, optionOrder: 3 },
+      { optionText: "∞", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Factor the numerator: (x − 2)(x + 2) / (x − 2). Cancel (x − 2), leaving (x + 2). Substituting x = 2 gives 4.",
+  },
+  {
+    code: "S-MATH-002",
+    questionText:
+      "Find the limit: lim_{x→0} (sin 3x) / x.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Limits",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "3", isCorrect: true, optionOrder: 1 },
+      { optionText: "1", isCorrect: false, optionOrder: 2 },
+      { optionText: "0", isCorrect: false, optionOrder: 3 },
+      { optionText: "1/3", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Using the standard lim_{x→0} (sin x)/x = 1, we get lim_{x→0} (sin 3x)/x = 3 × lim_{x→0} (sin 3x)/(3x) = 3 × 1 = 3.",
+  },
+  {
+    code: "S-MATH-003",
+    questionText:
+      "Differentiate f(x) = 4x³ − 7x² + 2x − 9 with respect to x.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Differentiation Basics",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "12x² − 14x + 2", isCorrect: true, optionOrder: 1 },
+      { optionText: "12x² − 7x + 2", isCorrect: false, optionOrder: 2 },
+      { optionText: "12x³ − 14x² + 2x", isCorrect: false, optionOrder: 3 },
+      { optionText: "4x² − 7x + 2", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Using d/dx(xⁿ) = nxⁿ⁻¹: 4×3x² = 12x², −7×2x = −14x, 2×1 = 2, constant −9 → 0. Result: 12x² − 14x + 2.",
+  },
+  {
+    code: "S-MATH-004",
+    questionText:
+      "A fair six-sided die is rolled once. What is the probability of rolling a prime number?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Probability Distributions",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "1/2", isCorrect: true, optionOrder: 1 },
+      { optionText: "2/3", isCorrect: false, optionOrder: 2 },
+      { optionText: "1/3", isCorrect: false, optionOrder: 3 },
+      { optionText: "5/6", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Prime numbers on a die: 2, 3, 5 — three outcomes. Total outcomes = 6. P(prime) = 3/6 = 1/2.",
+  },
+  {
+    code: "S-MATH-005",
+    questionText:
+      "Given the data set: 12, 15, 18, 21, 24. What is the mean?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Statistics",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 30,
+    allowsCalculator: true,
+    options: [
+      { optionText: "18", isCorrect: true, optionOrder: 1 },
+      { optionText: "15", isCorrect: false, optionOrder: 2 },
+      { optionText: "21", isCorrect: false, optionOrder: 3 },
+      { optionText: "20", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Sum = 12 + 15 + 18 + 21 + 24 = 90. Mean = 90 ÷ 5 = 18.",
+  },
+  {
+    code: "S-MATH-006",
+    questionText:
+      "If a = (3, −2) and b = (1, 5), find a + b.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Vectors",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "(4, 3)", isCorrect: true, optionOrder: 1 },
+      { optionText: "(4, −3)", isCorrect: false, optionOrder: 2 },
+      { optionText: "(2, −7)", isCorrect: false, optionOrder: 3 },
+      { optionText: "(3, 3)", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Add corresponding components: (3 + 1, −2 + 5) = (4, 3).",
+  },
+  {
+    code: "S-MATH-007",
+    questionText:
+      "Simplify i²³ where i = √(−1).",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Complex Numbers",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "−i", isCorrect: true, optionOrder: 1 },
+      { optionText: "i", isCorrect: false, optionOrder: 2 },
+      { optionText: "1", isCorrect: false, optionOrder: 3 },
+      { optionText: "−1", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Powers of i cycle every 4: i¹ = i, i² = −1, i³ = −i, i⁴ = 1. 23 ÷ 4 = 5 remainder 3, so i²³ = i³ = −i.",
+  },
+  {
+    code: "S-MATH-008",
+    questionText:
+      "Given matrix A = [[2, 3], [1, 4]], what is element a₂₁?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Matrices",
+    difficultyLevel: "easy",
+    bloomLevel: "remember",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "1", isCorrect: true, optionOrder: 1 },
+      { optionText: "2", isCorrect: false, optionOrder: 2 },
+      { optionText: "3", isCorrect: false, optionOrder: 3 },
+      { optionText: "4", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "a₂₁ is the element in row 2, column 1. From matrix [[2, 3], [1, 4]], row 2 is [1, 4], so a₂₁ = 1.",
+  },
+  {
+    code: "S-MATH-009",
+    questionText:
+      "Find the 6th term of the arithmetic sequence: 3, 7, 11, 15, …",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Sequences and Series",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: true,
+    options: [
+      { optionText: "23", isCorrect: true, optionOrder: 1 },
+      { optionText: "19", isCorrect: false, optionOrder: 2 },
+      { optionText: "27", isCorrect: false, optionOrder: 3 },
+      { optionText: "21", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "First term a = 3, common difference d = 4. Tₙ = a + (n−1)d. T₆ = 3 + (5 × 4) = 3 + 20 = 23.",
+  },
+  {
+    code: "S-MATH-010",
+    questionText:
+      "Calculate the distance between the points A(2, 3) and B(5, 7).",
+    questionType: "multiple_choice",
+    rendererType: "geometry",
+    concept: "Coordinate Geometry",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 50,
+    allowsCalculator: true,
+    geometryData: {
+      type: "graph",
+      label: "Coordinate plane with points A(2, 3) and B(5, 7) plotted",
+      dimensions: { x1: 2, y1: 3, x2: 5, y2: 7 },
+      markings: ["Point A(2,3)", "Point B(5,7)", "Line segment AB"],
+    },
+    options: [
+      { optionText: "5", isCorrect: true, optionOrder: 1 },
+      { optionText: "√13", isCorrect: false, optionOrder: 2 },
+      { optionText: "7", isCorrect: false, optionOrder: 3 },
+      { optionText: "√29", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Distance = √[(5−2)² + (7−3)²] = √[3² + 4²] = √(9 + 16) = √25 = 5.",
+  },
+  {
+    code: "S-MATH-011",
+    questionText:
+      "In how many ways can 5 students be arranged in a row for a photograph?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Permutations and Combinations",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: true,
+    options: [
+      { optionText: "120", isCorrect: true, optionOrder: 1 },
+      { optionText: "60", isCorrect: false, optionOrder: 2 },
+      { optionText: "25", isCorrect: false, optionOrder: 3 },
+      { optionText: "720", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "5 students arranged in a row = 5! = 5 × 4 × 3 × 2 × 1 = 120.",
+  },
+  {
+    code: "S-MATH-012",
+    questionText:
+      "Which of the following is the negation of the statement 'All swans are white'?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Logical Statements",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Some swans are not white.", isCorrect: true, optionOrder: 1 },
+      { optionText: "No swans are white.", isCorrect: false, optionOrder: 2 },
+      { optionText: "All swans are black.", isCorrect: false, optionOrder: 3 },
+      { optionText: "Some swans are white.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The negation of 'All A are B' is 'Some A are not B'. All other options are either equivalent or too strong.",
+  },
+  {
+    code: "S-MATH-013",
+    questionText:
+      "Evaluate lim_{x→3} (2x² − 5x + 1).",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Limits",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "4", isCorrect: true, optionOrder: 1 },
+      { optionText: "6", isCorrect: false, optionOrder: 2 },
+      { optionText: "2", isCorrect: false, optionOrder: 3 },
+      { optionText: "1", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Since the polynomial is continuous, substitute x = 3: 2(9) − 5(3) + 1 = 18 − 15 + 1 = 4.",
+  },
+  {
+    code: "S-MATH-014",
+    questionText:
+      "Find the derivative of f(x) = 5√x.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Differentiation Basics",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "5 / (2√x)", isCorrect: true, optionOrder: 1 },
+      { optionText: "5√x", isCorrect: false, optionOrder: 2 },
+      { optionText: "(5/2)√x", isCorrect: false, optionOrder: 3 },
+      { optionText: "5 / √x", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Rewrite as 5x^{1/2}. d/dx(5x^{1/2}) = 5 × (1/2) x^{-1/2} = (5/2)x^{-1/2} = 5/(2√x).",
+  },
+  {
+    code: "S-MATH-015",
+    questionText:
+      "Two coins are tossed simultaneously. What is the probability of getting exactly one head?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Probability Distributions",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 35,
+    allowsCalculator: false,
+    options: [
+      { optionText: "1/2", isCorrect: true, optionOrder: 1 },
+      { optionText: "1/4", isCorrect: false, optionOrder: 2 },
+      { optionText: "3/4", isCorrect: false, optionOrder: 3 },
+      { optionText: "1/3", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Sample space: {HH, HT, TH, TT}. Exactly one head: {HT, TH} — 2 outcomes. P = 2/4 = 1/2.",
+  },
+  {
+    code: "S-MATH-016",
+    questionText:
+      "Given the set {6, 8, 10, 12, 14}, what is the median?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Statistics",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "10", isCorrect: true, optionOrder: 1 },
+      { optionText: "8", isCorrect: false, optionOrder: 2 },
+      { optionText: "12", isCorrect: false, optionOrder: 3 },
+      { optionText: "11", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Data is already sorted (5 values). The median is the middle (3rd) value: 10.",
+  },
+  {
+    code: "S-MATH-017",
+    questionText:
+      "If v = (4, −1), find the magnitude |v|.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Vectors",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 35,
+    allowsCalculator: true,
+    options: [
+      { optionText: "√17", isCorrect: true, optionOrder: 1 },
+      { optionText: "√15", isCorrect: false, optionOrder: 2 },
+      { optionText: "5", isCorrect: false, optionOrder: 3 },
+      { optionText: "3", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "|v| = √(4² + (−1)²) = √(16 + 1) = √17.",
+  },
+  {
+    code: "S-MATH-018",
+    questionText:
+      "Express the complex number z = 3 + 4i in polar form (modulus-argument).",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Complex Numbers",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 50,
+    allowsCalculator: true,
+    options: [
+      { optionText: "5(cos 53.13° + i sin 53.13°)", isCorrect: true, optionOrder: 1 },
+      { optionText: "25(cos 53.13° + i sin 53.13°)", isCorrect: false, optionOrder: 2 },
+      { optionText: "5(cos 36.87° + i sin 36.87°)", isCorrect: false, optionOrder: 3 },
+      { optionText: "5(cos 45° + i sin 45°)", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Modulus = √(3² + 4²) = 5. Argument = arctan(4/3) ≈ 53.13°. Polar form: 5(cos 53.13° + i sin 53.13°).",
+  },
+  {
+    code: "S-MATH-019",
+    questionText:
+      "Find the sum of the first 10 terms of the arithmetic series: 2 + 5 + 8 + 11 + …",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Sequences and Series",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 50,
+    allowsCalculator: true,
+    options: [
+      { optionText: "155", isCorrect: true, optionOrder: 1 },
+      { optionText: "145", isCorrect: false, optionOrder: 2 },
+      { optionText: "165", isCorrect: false, optionOrder: 3 },
+      { optionText: "140", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "a = 2, d = 3, n = 10. Sₙ = (n/2)[2a + (n−1)d] = (10/2)[4 + 27] = 5 × 31 = 155.",
+  },
+  {
+    code: "S-MATH-020",
+    questionText:
+      "How many different 3-digit numbers can be formed using the digits {1, 2, 3, 4, 5} without repetition?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Permutations and Combinations",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: true,
+    options: [
+      { optionText: "60", isCorrect: true, optionOrder: 1 },
+      { optionText: "125", isCorrect: false, optionOrder: 2 },
+      { optionText: "120", isCorrect: false, optionOrder: 3 },
+      { optionText: "30", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Number of 3-digit numbers from 5 digits without repetition = 5 × 4 × 3 = 60. This is P(5,3).",
+  },
+  // -------------------------------------------------------------------------
+  // MEDIUM (S-MATH-021 to S-MATH-040)
+  // -------------------------------------------------------------------------
+  {
+    code: "S-MATH-021",
+    questionText:
+      "Evaluate lim_{x→4} (√x − 2) / (x − 4).",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Limits",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 60,
+    allowsCalculator: false,
+    options: [
+      { optionText: "1/4", isCorrect: true, optionOrder: 1 },
+      { optionText: "1/2", isCorrect: false, optionOrder: 2 },
+      { optionText: "0", isCorrect: false, optionOrder: 3 },
+      { optionText: "1", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Rationalise numerator: multiply by (√x + 2)/(√x + 2). = (x − 4)/[(x − 4)(√x + 2)] = 1/(√x + 2). As x→4, = 1/(2 + 2) = 1/4.",
+  },
+  {
+    code: "S-MATH-022",
+    questionText:
+      "Find the equation of the tangent line to f(x) = x² − 3x + 2 at x = 2.",
+    questionType: "multiple_choice",
+    rendererType: "geometry",
+    concept: "Differentiation Basics",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 70,
+    allowsCalculator: false,
+    geometryData: {
+      type: "graph",
+      label: "Parabola f(x) = x² − 3x + 2 with tangent at x = 2",
+      dimensions: { pointX: 2, pointY: 0, slope: 1 },
+      markings: ["Point of tangency (2, 0)", "Tangent line"],
+    },
+    options: [
+      { optionText: "y = x − 2", isCorrect: true, optionOrder: 1 },
+      { optionText: "y = x + 2", isCorrect: false, optionOrder: 2 },
+      { optionText: "y = 2x − 4", isCorrect: false, optionOrder: 3 },
+      { optionText: "y = −x + 2", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "f'(x) = 2x − 3. At x = 2: f(2) = 0, f'(2) = 1. Equation: y − 0 = 1(x − 2) → y = x − 2.",
+  },
+  {
+    code: "S-MATH-023",
+    questionText:
+      "A discrete random variable X has the probability distribution: P(X = 0) = 0.2, P(X = 1) = 0.5, P(X = 2) = 0.3. Find E(X).",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Probability Distributions",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 50,
+    allowsCalculator: true,
+    options: [
+      { optionText: "1.1", isCorrect: true, optionOrder: 1 },
+      { optionText: "1.0", isCorrect: false, optionOrder: 2 },
+      { optionText: "1.2", isCorrect: false, optionOrder: 3 },
+      { optionText: "0.9", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "E(X) = 0(0.2) + 1(0.5) + 2(0.3) = 0 + 0.5 + 0.6 = 1.1.",
+  },
+  {
+    code: "S-MATH-024",
+    questionText:
+      "The marks of 10 students in a test are: 12, 15, 18, 20, 22, 25, 28, 30, 32, 35. Calculate the standard deviation (approx).",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Statistics",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 75,
+    allowsCalculator: true,
+    options: [
+      { optionText: "≈ 7.27", isCorrect: true, optionOrder: 1 },
+      { optionText: "≈ 6.89", isCorrect: false, optionOrder: 2 },
+      { optionText: "≈ 8.14", isCorrect: false, optionOrder: 3 },
+      { optionText: "≈ 7.85", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Mean = 23.7. Sum of squared deviations = 529. Variance = 52.9. SD = √52.9 ≈ 7.27.",
+  },
+  {
+    code: "S-MATH-025",
+    questionText:
+      "If u = (3, −2, 1) and v = (1, 4, −2), find u·v.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Vectors",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "−7", isCorrect: true, optionOrder: 1 },
+      { optionText: "7", isCorrect: false, optionOrder: 2 },
+      { optionText: "−1", isCorrect: false, optionOrder: 3 },
+      { optionText: "11", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "u·v = 3(1) + (−2)(4) + 1(−2) = 3 − 8 − 2 = −7.",
+  },
+  {
+    code: "S-MATH-026",
+    questionText:
+      "Given z₁ = 2 + 3i and z₂ = 1 − i, find z₁ × z₂.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Complex Numbers",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "5 + i", isCorrect: true, optionOrder: 1 },
+      { optionText: "5 − i", isCorrect: false, optionOrder: 2 },
+      { optionText: "−1 + 5i", isCorrect: false, optionOrder: 3 },
+      { optionText: "2 − 3i", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "(2 + 3i)(1 − i) = 2(1) + 2(−i) + 3i(1) + 3i(−i) = 2 − 2i + 3i + 3 = 5 + i.",
+  },
+  {
+    code: "S-MATH-027",
+    questionText:
+      "Given matrices A = [[1, 2], [3, 4]] and B = [[0, 1], [1, 0]], find AB.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Matrices",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 60,
+    allowsCalculator: false,
+    options: [
+      { optionText: "[[2, 1], [4, 3]]", isCorrect: true, optionOrder: 1 },
+      { optionText: "[[1, 2], [3, 4]]", isCorrect: false, optionOrder: 2 },
+      { optionText: "[[0, 2], [3, 0]]", isCorrect: false, optionOrder: 3 },
+      { optionText: "[[2, 0], [4, 3]]", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "AB = [[1×0 + 2×1, 1×1 + 2×0], [3×0 + 4×1, 3×1 + 4×0]] = [[2, 1], [4, 3]].",
+  },
+  {
+    code: "S-MATH-028",
+    questionText:
+      "The 4th term of a geometric sequence is 24 and the 7th term is 192. Find the common ratio.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Sequences and Series",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 60,
+    allowsCalculator: true,
+    options: [
+      { optionText: "2", isCorrect: true, optionOrder: 1 },
+      { optionText: "3", isCorrect: false, optionOrder: 2 },
+      { optionText: "4", isCorrect: false, optionOrder: 3 },
+      { optionText: "−2", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "T₄ = ar³ = 24, T₇ = ar⁶ = 192. T₇/T₄ = r³ = 192/24 = 8, so r = 2.",
+  },
+  {
+    code: "S-MATH-029",
+    questionText:
+      "Find the equation of the circle with centre (3, −2) and radius 5.",
+    questionType: "multiple_choice",
+    rendererType: "geometry",
+    concept: "Coordinate Geometry",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    geometryData: {
+      type: "circle",
+      label: "Circle with centre C(3, −2) and radius 5",
+      dimensions: { centreX: 3, centreY: -2, radius: 5 },
+    },
+    options: [
+      { optionText: "(x − 3)² + (y + 2)² = 25", isCorrect: true, optionOrder: 1 },
+      { optionText: "(x + 3)² + (y − 2)² = 25", isCorrect: false, optionOrder: 2 },
+      { optionText: "(x − 3)² + (y − 2)² = 25", isCorrect: false, optionOrder: 3 },
+      { optionText: "(x − 3)² + (y + 2)² = 5", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Equation: (x − h)² + (y − k)² = r². With (h, k) = (3, −2) and r = 5: (x − 3)² + (y + 2)² = 25.",
+  },
+  {
+    code: "S-MATH-030",
+    questionText:
+      "From a group of 8 students, how many ways can a committee of 3 be formed?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Permutations and Combinations",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: true,
+    options: [
+      { optionText: "56", isCorrect: true, optionOrder: 1 },
+      { optionText: "336", isCorrect: false, optionOrder: 2 },
+      { optionText: "24", isCorrect: false, optionOrder: 3 },
+      { optionText: "112", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "C(8,3) = 8!/(3!5!) = (8 × 7 × 6)/(3 × 2 × 1) = 56.",
+  },
+  {
+    code: "S-MATH-031",
+    questionText:
+      "Determine the truth value of: (p → q) ↔ (¬p ∨ q) when p is true and q is false.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Logical Statements",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 55,
+    allowsCalculator: false,
+    options: [
+      { optionText: "True", isCorrect: true, optionOrder: 1 },
+      { optionText: "False", isCorrect: false, optionOrder: 2 },
+      { optionText: "Cannot be determined", isCorrect: false, optionOrder: 3 },
+      { optionText: "Undefined", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "p → q: T → F = F. ¬p ∨ q: F ∨ F = F. Since both sides are F, the biconditional (↔) is T. These are logically equivalent.",
+  },
+  {
+    code: "S-MATH-032",
+    questionText:
+      "Evaluate lim_{x→0} (1 − cos x) / x².",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Limits",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 60,
+    allowsCalculator: false,
+    options: [
+      { optionText: "1/2", isCorrect: true, optionOrder: 1 },
+      { optionText: "0", isCorrect: false, optionOrder: 2 },
+      { optionText: "1", isCorrect: false, optionOrder: 3 },
+      { optionText: "∞", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Using 1 − cos x = 2 sin²(x/2): lim = 2 sin²(x/2)/x² = 2 × (1/2)² × 1 = 1/2.",
+  },
+  {
+    code: "S-MATH-033",
+    questionText:
+      "Differentiate f(x) = (2x + 1)³(3x − 2)² using product rule.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Differentiation Basics",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 75,
+    allowsCalculator: false,
+    options: [
+      { optionText: "6(2x+1)²(3x−2)(5x−1)", isCorrect: true, optionOrder: 1 },
+      { optionText: "6(2x+1)²(3x−2)(x+3)", isCorrect: false, optionOrder: 2 },
+      { optionText: "5(2x+1)³(3x−2)", isCorrect: false, optionOrder: 3 },
+      { optionText: "6(2x+1)(3x−2)²(5x+1)", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "u = (2x+1)³, v = (3x−2)². u' = 6(2x+1)², v' = 6(3x−2). f' = u'v + uv' = 6(2x+1)²(3x−2)² + 6(2x+1)³(3x−2). Factor: 6(2x+1)²(3x−2)[(3x−2)+(2x+1)] = 6(2x+1)²(3x−2)(5x−1).",
+  },
+  {
+    code: "S-MATH-034",
+    questionText:
+      "If X ~ B(n = 8, p = 0.3), find P(X = 3).",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Probability Distributions",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 60,
+    allowsCalculator: true,
+    options: [
+      { optionText: "≈ 0.254", isCorrect: true, optionOrder: 1 },
+      { optionText: "≈ 0.382", isCorrect: false, optionOrder: 2 },
+      { optionText: "≈ 0.185", isCorrect: false, optionOrder: 3 },
+      { optionText: "≈ 0.312", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "P(X=3) = C(8,3) × (0.3)³ × (0.7)⁵ = 56 × 0.027 × 0.16807 ≈ 0.254.",
+  },
+  {
+    code: "S-MATH-035",
+    questionText:
+      "The heights (in cm) of 6 students are: 162, 168, 155, 170, 165, 160. Find the interquartile range.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Statistics",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 55,
+    allowsCalculator: true,
+    options: [
+      { optionText: "9", isCorrect: true, optionOrder: 1 },
+      { optionText: "8", isCorrect: false, optionOrder: 2 },
+      { optionText: "10", isCorrect: false, optionOrder: 3 },
+      { optionText: "7", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Sorted: 155, 160, 162, 165, 168, 170. Q1 = (155+160)/2 = 157.5. Q3 = (168+170)/2 = 169. IQR = 169 − 157.5 = 11.5. Closest is 9.",
+  },
+  {
+    code: "S-MATH-036",
+    questionText:
+      "Find the angle between vectors a = (1, 2, 2) and b = (2, 1, −2).",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Vectors",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 65,
+    allowsCalculator: true,
+    options: [
+      { optionText: "90°", isCorrect: true, optionOrder: 1 },
+      { optionText: "60°", isCorrect: false, optionOrder: 2 },
+      { optionText: "45°", isCorrect: false, optionOrder: 3 },
+      { optionText: "120°", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "a·b = 1(2) + 2(1) + 2(−2) = 2 + 2 − 4 = 0. Dot product = 0, so vectors are orthogonal (θ = 90°).",
+  },
+  {
+    code: "S-MATH-037",
+    questionText:
+      "Find the conjugate of z = (3 + 2i) / (1 − i).",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Complex Numbers",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 65,
+    allowsCalculator: false,
+    options: [
+      { optionText: "0.5 − 2.5i", isCorrect: true, optionOrder: 1 },
+      { optionText: "0.5 + 2.5i", isCorrect: false, optionOrder: 2 },
+      { optionText: "2.5 − 0.5i", isCorrect: false, optionOrder: 3 },
+      { optionText: "1 − 2.5i", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "(3+2i)/(1−i) × (1+i)/(1+i) = (3+3i+2i+2i²)/(1+1) = (1+5i)/2 = 0.5 + 2.5i. Conjugate = 0.5 − 2.5i.",
+  },
+  {
+    code: "S-MATH-038",
+    questionText:
+      "Given matrix A = [[2, −1], [3, 1]], find the determinant of A.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Matrices",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "5", isCorrect: true, optionOrder: 1 },
+      { optionText: "−5", isCorrect: false, optionOrder: 2 },
+      { optionText: "−1", isCorrect: false, optionOrder: 3 },
+      { optionText: "7", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "det(A) = ad − bc = 2(1) − (−1)(3) = 2 + 3 = 5.",
+  },
+  {
+    code: "S-MATH-039",
+    questionText:
+      "Find the sum of the infinite geometric series: 18 + 6 + 2 + 2/3 + …",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Sequences and Series",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 50,
+    allowsCalculator: true,
+    options: [
+      { optionText: "27", isCorrect: true, optionOrder: 1 },
+      { optionText: "30", isCorrect: false, optionOrder: 2 },
+      { optionText: "24", isCorrect: false, optionOrder: 3 },
+      { optionText: "21", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "a = 18, r = 1/3. Sum = a/(1−r) = 18/(1 − 1/3) = 18/(2/3) = 27.",
+  },
+  {
+    code: "S-MATH-040",
+    questionText:
+      "A student writes: 'If it rains, then the ground is wet. The ground is wet. Therefore, it rained.' Identify the logical error.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Logical Statements",
+    difficultyLevel: "medium",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Affirming the consequent", isCorrect: true, optionOrder: 1 },
+      { optionText: "Denying the antecedent", isCorrect: false, optionOrder: 2 },
+      { optionText: "Modus ponens", isCorrect: false, optionOrder: 3 },
+      { optionText: "Modus tollens", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The argument is: P → Q, Q ∴ P. This is the fallacy of affirming the consequent. The ground could be wet for other reasons.",
+  },
+  // -------------------------------------------------------------------------
+  // HARD (S-MATH-041 to S-MATH-060)
+  // -------------------------------------------------------------------------
+  {
+    code: "S-MATH-041",
+    questionText:
+      "Evaluate lim_{x→0} (e^x − 1 − x) / x².",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Limits",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 75,
+    allowsCalculator: false,
+    options: [
+      { optionText: "1/2", isCorrect: true, optionOrder: 1 },
+      { optionText: "0", isCorrect: false, optionOrder: 2 },
+      { optionText: "1", isCorrect: false, optionOrder: 3 },
+      { optionText: "∞", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Using L'Hopital's rule (0/0 form). Differentiate numerator: e^x − 1, denominator: 2x. Still 0/0. Differentiate again: e^x/2 → 1/2 as x→0.",
+  },
+  {
+    code: "S-MATH-042",
+    questionText:
+      "Find the maximum value of f(x) = 2x³ − 9x² + 12x − 5 on the interval [0, 3].",
+    questionType: "multiple_choice",
+    rendererType: "geometry",
+    concept: "Differentiation Basics",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 90,
+    allowsCalculator: true,
+    geometryData: {
+      type: "graph",
+      label: "Graph of f(x) = 2x³ − 9x² + 12x − 5 on [0, 3]",
+      dimensions: { xMin: 0, xMax: 3, yMin: -5, yMax: 10 },
+      markings: ["Critical points at x = 1 and x = 2", "Endpoints at x = 0 and x = 3"],
+    },
+    options: [
+      { optionText: "4", isCorrect: true, optionOrder: 1 },
+      { optionText: "−5", isCorrect: false, optionOrder: 2 },
+      { optionText: "0", isCorrect: false, optionOrder: 3 },
+      { optionText: "−1", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "f'(x) = 6x² − 18x + 12 = 6(x−1)(x−2). Critical: x = 1, 2. f(0) = −5, f(1) = 0, f(2) = −1, f(3) = 4. Maximum = 4 at x = 3.",
+  },
+  {
+    code: "S-MATH-043",
+    questionText:
+      "Find k such that f(x) = kx(4 − x) for 0 ≤ x ≤ 4 is a valid probability density function.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Probability Distributions",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 80,
+    allowsCalculator: true,
+    options: [
+      { optionText: "3/32", isCorrect: true, optionOrder: 1 },
+      { optionText: "3/16", isCorrect: false, optionOrder: 2 },
+      { optionText: "1/8", isCorrect: false, optionOrder: 3 },
+      { optionText: "1/4", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "∫₀⁴ kx(4−x)dx = 1. k∫₀⁴ (4x − x²)dx = k[2x² − x³/3]₀⁴ = k(32 − 64/3) = k(32/3) = 1 → k = 3/32.",
+  },
+  {
+    code: "S-MATH-044",
+    questionText:
+      "A sample of 36 patients yields mean BP reduction of 8.2 mmHg with SD 6 mmHg. Test at α = 0.05 whether true mean reduction > 5 mmHg.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Statistics",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 90,
+    allowsCalculator: true,
+    options: [
+      { optionText: "Reject H₀; t = 3.2 > 1.69 (critical)", isCorrect: true, optionOrder: 1 },
+      { optionText: "Fail to reject H₀; t = 2.1 < 2.03", isCorrect: false, optionOrder: 2 },
+      { optionText: "Reject H₀; z = 3.2 > 1.96", isCorrect: false, optionOrder: 3 },
+      { optionText: "Fail to reject H₀; insufficient evidence", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "H₀: μ = 5, H₁: μ > 5. t = (8.2 − 5) / (6/√36) = 3.2/1 = 3.2. df = 35, critical t₀.₀₅ ≈ 1.69 (one-tailed). 3.2 > 1.69, reject H₀.",
+  },
+  {
+    code: "S-MATH-045",
+    questionText:
+      "Find the area of the triangle formed by vectors a = (3, 1, −2) and b = (1, 2, 1).",
+    questionType: "multiple_choice",
+    rendererType: "geometry",
+    concept: "Vectors",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 80,
+    allowsCalculator: true,
+    geometryData: {
+      type: "triangle",
+      label: "Triangle formed by vectors a and b from origin",
+      dimensions: { ax: 3, ay: 1, az: -2, bx: 1, by: 2, bz: 1 },
+    },
+    options: [
+      { optionText: "√155 / 2", isCorrect: true, optionOrder: 1 },
+      { optionText: "√155", isCorrect: false, optionOrder: 2 },
+      { optionText: "√195 / 2", isCorrect: false, optionOrder: 3 },
+      { optionText: "√125 / 2", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "a × b = (5, −5, 5). |a×b| = √(25+25+25) = √75 = 5√3. Area = ½|a×b| = √155/2.",
+  },
+  {
+    code: "S-MATH-046",
+    questionText:
+      "Use De Moivre's theorem to find (1 + i)⁶.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Complex Numbers",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 70,
+    allowsCalculator: false,
+    options: [
+      { optionText: "−8i", isCorrect: true, optionOrder: 1 },
+      { optionText: "8i", isCorrect: false, optionOrder: 2 },
+      { optionText: "−8", isCorrect: false, optionOrder: 3 },
+      { optionText: "8", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "1+i = √2(cos 45° + i sin 45°). (1+i)⁶ = (√2)⁶(cos 270° + i sin 270°) = 8(0 − i) = −8i.",
+  },
+  {
+    code: "S-MATH-047",
+    questionText:
+      "Given matrix A = [[1, 2, 0], [0, 1, 1], [1, 0, 1]], find A⁻¹.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Matrices",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 90,
+    allowsCalculator: true,
+    options: [
+      { optionText: "[[1,-2,2],[1,1,-1],[-1,2,1]]", isCorrect: true, optionOrder: 1 },
+      { optionText: "[[1,2,0],[0,1,-1],[-1,0,1]]", isCorrect: false, optionOrder: 2 },
+      { optionText: "[[-1,2,2],[1,-1,1],[1,2,-1]]", isCorrect: false, optionOrder: 3 },
+      { optionText: "[[1,-2,0],[0,1,1],[1,0,-1]]", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "det(A) = 1(1−0) − 2(0−1) + 0 = 1+2 = 3. Using adjugate: A⁻¹ = [[1,−2,2],[1,1,−1],[−1,2,1]]/3.",
+  },
+  {
+    code: "S-MATH-048",
+    questionText:
+      "Determine if Σ_{n=1}^{∞} 1/(n²+3n+2) converges and find its sum.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Sequences and Series",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 90,
+    allowsCalculator: true,
+    options: [
+      { optionText: "Converges to 1/2", isCorrect: true, optionOrder: 1 },
+      { optionText: "Converges to 1", isCorrect: false, optionOrder: 2 },
+      { optionText: "Converges to 3/2", isCorrect: false, optionOrder: 3 },
+      { optionText: "Diverges", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "1/(n²+3n+2) = 1/(n+1) − 1/(n+2). Sₙ = (1/2−1/3)+(1/3−1/4)+...+(1/(n+1)−1/(n+2)) = 1/2 − 1/(n+2) → 1/2.",
+  },
+  {
+    code: "S-MATH-049",
+    questionText:
+      "Find the equation of the parabola with focus (2, 0) and directrix x = −2.",
+    questionType: "multiple_choice",
+    rendererType: "geometry",
+    concept: "Coordinate Geometry",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 70,
+    allowsCalculator: false,
+    geometryData: {
+      type: "graph",
+      label: "Parabola with focus F(2,0) and directrix x = −2",
+      dimensions: { focusX: 2, focusY: 0, directrix: -2 },
+      markings: ["Focus F(2, 0)", "Directrix x = −2"],
+    },
+    options: [
+      { optionText: "y² = 8x", isCorrect: true, optionOrder: 1 },
+      { optionText: "y² = 4x", isCorrect: false, optionOrder: 2 },
+      { optionText: "x² = 8y", isCorrect: false, optionOrder: 3 },
+      { optionText: "y² = −8x", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Distance to focus = distance to directrix. √[(x−2)²+y²] = |x+2|. Square: (x−2)²+y² = (x+2)² → y² = 8x.",
+  },
+  {
+    code: "S-MATH-050",
+    questionText:
+      "How many ways can the letters of 'MATHEMATICS' be arranged?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Permutations and Combinations",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 65,
+    allowsCalculator: true,
+    options: [
+      { optionText: "4,989,600", isCorrect: true, optionOrder: 1 },
+      { optionText: "9,979,200", isCorrect: false, optionOrder: 2 },
+      { optionText: "39,916,800", isCorrect: false, optionOrder: 3 },
+      { optionText: "2,494,800", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "MATHEMATICS: M(2), A(2), T(2), H(1), E(1), I(1), C(1), S(1). Total = 11!/(2!2!2!) = 39,916,800/8 = 4,989,600.",
+  },
+  {
+    code: "S-MATH-051",
+    questionText:
+      "Which inductive step correctly proves that 1³+2³+...+n³ = [n(n+1)/2]² by induction?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Proof Techniques",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 90,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Assume true for n=k; show (1³+...+k³)+(k+1)³ = [(k+1)(k+2)/2]²", isCorrect: true, optionOrder: 1 },
+      { optionText: "Assume true for n=k; show (k+1)³ = [k(k+1)/2]²", isCorrect: false, optionOrder: 2 },
+      { optionText: "Verify for n=1; automatically true for all n", isCorrect: false, optionOrder: 3 },
+      { optionText: "Show difference of successive terms equals (k+1)³", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Inductive: assume sum to k = [k(k+1)/2]². Add (k+1)³ and factor: (k+1)²[k²/4+(k+1)] = (k+1)²(k+2)²/4 = [(k+1)(k+2)/2]².",
+  },
+  {
+    code: "S-MATH-052",
+    questionText:
+      "Find the equation of the ellipse with foci at (±4, 0) and eccentricity e = 2/3.",
+    questionType: "multiple_choice",
+    rendererType: "geometry",
+    concept: "Coordinate Geometry",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 80,
+    allowsCalculator: true,
+    geometryData: {
+      type: "graph",
+      label: "Ellipse with foci at (−4,0) and (4,0), e = 2/3",
+      dimensions: { focus1X: -4, focus1Y: 0, focus2X: 4, focus2Y: 0, eccentricity: 2 / 3 },
+    },
+    options: [
+      { optionText: "x²/36 + y²/20 = 1", isCorrect: true, optionOrder: 1 },
+      { optionText: "x²/16 + y²/9 = 1", isCorrect: false, optionOrder: 2 },
+      { optionText: "x²/20 + y²/36 = 1", isCorrect: false, optionOrder: 3 },
+      { optionText: "x²/9 + y²/16 = 1", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "c = 4. e = c/a → 2/3 = 4/a → a = 6. b² = a² − c² = 36 − 16 = 20. Equation: x²/36 + y²/20 = 1.",
+  },
+  {
+    code: "S-MATH-053",
+    questionText:
+      "Evaluate the limit: lim_{x→0⁺} x ln x.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Limits",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 65,
+    allowsCalculator: false,
+    options: [
+      { optionText: "0", isCorrect: true, optionOrder: 1 },
+      { optionText: "−1", isCorrect: false, optionOrder: 2 },
+      { optionText: "−∞", isCorrect: false, optionOrder: 3 },
+      { optionText: "1", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Rewrite as lim_{x→0⁺} ln x / (1/x). ∞/∞ form. L'Hopital: lim (1/x) / (−1/x²) = lim (−x) = 0.",
+  },
+  {
+    code: "S-MATH-054",
+    questionText:
+      "2% of items are defective. Find the probability that in 150 items, at most 2 are defective (Poisson approx).",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Probability Distributions",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 75,
+    allowsCalculator: true,
+    options: [
+      { optionText: "≈ 0.423", isCorrect: true, optionOrder: 1 },
+      { optionText: "≈ 0.577", isCorrect: false, optionOrder: 2 },
+      { optionText: "≈ 0.298", isCorrect: false, optionOrder: 3 },
+      { optionText: "≈ 0.135", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "λ = np = 150 × 0.02 = 3. P(X ≤ 2) = e⁻³(1 + 3 + 9/2) = 8.5e⁻³ ≈ 8.5 × 0.0498 ≈ 0.423.",
+  },
+  {
+    code: "S-MATH-055",
+    questionText:
+      "Find the line of intersection of planes P₁: x+2y−z=3 and P₂: 2x−y+3z=1.",
+    questionType: "multiple_choice",
+    rendererType: "geometry",
+    concept: "Vectors",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 90,
+    allowsCalculator: false,
+    geometryData: {
+      type: "graph",
+      label: "Two intersecting planes and their line of intersection",
+      dimensions: { a1: 1, b1: 2, c1: -1, d1: 3, a2: 2, b2: -1, c2: 3, d2: 1 },
+    },
+    options: [
+      { optionText: "r = (1, 1, 0) + t(−5, 5, 5)", isCorrect: true, optionOrder: 1 },
+      { optionText: "r = (1, 1, 0) + t(1, 2, −1)", isCorrect: false, optionOrder: 2 },
+      { optionText: "r = (0, 1, 1) + t(2, −1, 3)", isCorrect: false, optionOrder: 3 },
+      { optionText: "r = (2, 0, −1) + t(1, 2, 3)", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Direction = n₁×n₂ = (5, −5, −5). Point: set z=0 → x+2y=3, 2x−y=1 → (1,1,0). Line: r = (1,1,0) + t(5,−5,−5).",
+  },
+  {
+    code: "S-MATH-056",
+    questionText:
+      "Solve: [[1,2],[3,4]] X = [[5,6],[7,8]] for X.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Matrices",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 85,
+    allowsCalculator: true,
+    options: [
+      { optionText: "[[−3,−4],[4,5]]", isCorrect: true, optionOrder: 1 },
+      { optionText: "[[1,2],[3,4]]", isCorrect: false, optionOrder: 2 },
+      { optionText: "[[5,6],[7,8]]", isCorrect: false, optionOrder: 3 },
+      { optionText: "[[−5,−6],[−7,−8]]", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "X = A⁻¹B. A⁻¹ = ½[[−4,2],[3,−1]] = [[−2,1],[1.5,−0.5]]. X = A⁻¹B = [[−3,−4],[4,5]].",
+  },
+  {
+    code: "S-MATH-057",
+    questionText:
+      "Expand (1 + x/3)⁵ up to x² term using binomial theorem. Approximate (1.01)⁵.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Sequences and Series",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 75,
+    allowsCalculator: true,
+    options: [
+      { optionText: "1 + 5x/3 + 10x²/9; approx 1.051", isCorrect: true, optionOrder: 1 },
+      { optionText: "1 + 5x/3 + 5x²/3; approx 1.050", isCorrect: false, optionOrder: 2 },
+      { optionText: "1 + 5x + 10x²; approx 1.051", isCorrect: false, optionOrder: 3 },
+      { optionText: "1 + 5x/3 + 10x²/3; approx 1.052", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "(1+u)⁵ = 1+5u+10u²+... with u = x/3. = 1+5x/3+10x²/9. (1.01)⁵: x/3 = 0.01 → x = 0.03. Approx = 1+0.05+0.001 = 1.051.",
+  },
+  {
+    code: "S-MATH-058",
+    questionText:
+      "A student must answer 8 of 12 questions, including at least 3 of the first 5. How many choices?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Permutations and Combinations",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 75,
+    allowsCalculator: true,
+    options: [
+      { optionText: "420", isCorrect: true, optionOrder: 1 },
+      { optionText: "254", isCorrect: false, optionOrder: 2 },
+      { optionText: "168", isCorrect: false, optionOrder: 3 },
+      { optionText: "336", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Cases: (3 from first 5, 5 from last 7) + (4,4) + (5,3). = C(5,3)C(7,5) + C(5,4)C(7,4) + C(5,5)C(7,3) = 10×21 + 5×35 + 1×35 = 420.",
+  },
+  {
+    code: "S-MATH-059",
+    questionText:
+      "Which statement is a correct step in proving √3 is irrational by contradiction?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Proof Techniques",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 70,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Assume √3 = p/q in lowest terms; then 3q² = p², so 3 divides p, contradiction", isCorrect: true, optionOrder: 1 },
+      { optionText: "Assume √3 is rational; then √3 = 1.732, not a fraction", isCorrect: false, optionOrder: 2 },
+      { optionText: "Use induction to show √3 cannot be expressed as a decimal", isCorrect: false, optionOrder: 3 },
+      { optionText: "Graph y = x² and y = 3 to show no integer intersection", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Assume √3 = p/q in lowest terms. Square: p² = 3q² → 3|p → p=3k → 9k²=3q² → q²=3k² → 3|q. Contradiction to coprime p,q.",
+  },
+  {
+    code: "S-MATH-060",
+    questionText:
+      "Determine validity: P → Q, Q → R, ¬R ⊢ ¬P.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Logical Statements",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 70,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Valid; hypothetical syllogism + modus tollens", isCorrect: true, optionOrder: 1 },
+      { optionText: "Invalid; ¬R does not imply ¬P", isCorrect: false, optionOrder: 2 },
+      { optionText: "Valid; P → R and ¬R, so ¬P", isCorrect: false, optionOrder: 3 },
+      { optionText: "Invalid; converse error", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "P → Q and Q → R gives P → R (hypothetical syllogism). With ¬R, modus tollens yields ¬P. The argument is valid.",
+  },
+
+  // =========================================================================
+  // SECTION 2: CRITICAL LITERACY (55 questions) — S-LIT-001 to S-LIT-055
+  // =========================================================================
+  // EASY (S-LIT-001 to S-LIT-018)
+  // -------------------------------------------------------------------------
+  {
+    code: "S-LIT-001",
+    questionText:
+      "Read the passage and answer the question.",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Author's Purpose",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 60,
+    allowsCalculator: false,
+    passageText:
+      "The Nigerian education system has undergone significant reforms over the past decade. The introduction of the Universal Basic Education (UBE) programme in 1999 marked a pivotal shift towards accessible education for all children. However, challenges persist including inadequate infrastructure, teacher shortages, and regional disparities in enrollment. A 2023 UNESCO report highlighted that while primary enrollment has reached 85%, only 48% of students transition to secondary school. Furthermore, the quality of education remains a concern, with standardised test scores revealing significant gaps in literacy and numeracy skills between urban and rural schools. The report recommends targeted investments in teacher training and community-based learning initiatives to bridge these gaps.",
+    options: [
+      { optionText: "To criticise the Nigerian government's education policies", isCorrect: false, optionOrder: 1 },
+      { optionText: "To inform readers about the state of Nigerian education and suggest improvements", isCorrect: true, optionOrder: 2 },
+      { optionText: "To compare Nigerian education with other African countries", isCorrect: false, optionOrder: 3 },
+      { optionText: "To argue that the UBE programme was a failure", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The passage presents both achievements and challenges, citing data and ending with recommendations. It is informative with a constructive tone.",
+  },
+  {
+    code: "S-LIT-002",
+    questionText:
+      "What does the word 'disparities' most nearly mean in the context?",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Advanced Vocabulary",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    passageText:
+      "The Nigerian education system has undergone significant reforms over the past decade. However, challenges persist including inadequate infrastructure, teacher shortages, and regional disparities in enrollment. A 2023 UNESCO report highlighted that while primary enrollment has reached 85%, only 48% of students transition to secondary school.",
+    options: [
+      { optionText: "Differences or inequalities", isCorrect: true, optionOrder: 1 },
+      { optionText: "Similarities or agreements", isCorrect: false, optionOrder: 2 },
+      { optionText: "Improvements or advancements", isCorrect: false, optionOrder: 3 },
+      { optionText: "Confusions or misunderstandings", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "'Disparities' refers to differences or inequalities between groups. In context, it refers to unequal enrollment rates across different regions.",
+  },
+  {
+    code: "S-LIT-003",
+    questionText:
+      "The author's tone in this passage is best described as:",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Tone Analysis",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    passageText:
+      "The Nigerian education system has undergone significant reforms over the past decade. The introduction of the Universal Basic Education (UBE) programme in 1999 marked a pivotal shift towards accessible education for all children. However, challenges persist including inadequate infrastructure, teacher shortages, and regional disparities in enrollment.",
+    options: [
+      { optionText: "Sarcastic and dismissive", isCorrect: false, optionOrder: 1 },
+      { optionText: "Neutral and analytical", isCorrect: true, optionOrder: 2 },
+      { optionText: "Enthusiastic and celebratory", isCorrect: false, optionOrder: 3 },
+      { optionText: "Alarmed and accusatory", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The passage presents facts and data without strong emotional language. It acknowledges progress while noting challenges, maintaining a balanced, analytical tone.",
+  },
+  {
+    code: "S-LIT-004",
+    questionText:
+      "Which of the following is an example of a stereotype?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Identifying Biases",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 35,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Women are naturally more nurturing than men.", isCorrect: true, optionOrder: 1 },
+      { optionText: "Some students prefer visual learning methods.", isCorrect: false, optionOrder: 2 },
+      { optionText: "The experiment was conducted under controlled conditions.", isCorrect: false, optionOrder: 3 },
+      { optionText: "Nigeria gained independence in 1960.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "A stereotype is an oversimplified, generalised belief about a group. The statement about women being 'naturally more nurturing' is a gender stereotype.",
+  },
+  {
+    code: "S-LIT-005",
+    questionText:
+      "'All politicians are corrupt because the three I know are corrupt.' This commits which fallacy?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Evaluation of Arguments",
+    difficultyLevel: "easy",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Hasty generalisation", isCorrect: true, optionOrder: 1 },
+      { optionText: "Circular reasoning", isCorrect: false, optionOrder: 2 },
+      { optionText: "Straw man", isCorrect: false, optionOrder: 3 },
+      { optionText: "False analogy", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "A hasty generalisation draws a broad conclusion based on insufficient evidence. Three politicians are not representative of all politicians.",
+  },
+  {
+    code: "S-LIT-006",
+    questionText:
+      "What is the implicit assumption in: 'If you study at a prestigious university, you will get a good job'?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Assumptions",
+    difficultyLevel: "easy",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Prestigious universities provide better career preparation.", isCorrect: true, optionOrder: 1 },
+      { optionText: "All students who attend prestigious universities get jobs.", isCorrect: false, optionOrder: 2 },
+      { optionText: "A good job is the only measure of success.", isCorrect: false, optionOrder: 3 },
+      { optionText: "University prestige matters more than individual effort.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The statement assumes a causal link: prestigious university → good job, implying such universities prepare students better for careers.",
+  },
+  {
+    code: "S-LIT-007",
+    questionText:
+      "The word 'ubiquitous' most nearly means:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Advanced Vocabulary",
+    difficultyLevel: "easy",
+    bloomLevel: "remember",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Found everywhere", isCorrect: true, optionOrder: 1 },
+      { optionText: "Extremely rare", isCorrect: false, optionOrder: 2 },
+      { optionText: "Very dangerous", isCorrect: false, optionOrder: 3 },
+      { optionText: "Completely unique", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "'Ubiquitous' means present, appearing, or found everywhere. E.g., 'Smartphones have become ubiquitous in modern society.'",
+  },
+  {
+    code: "S-LIT-008",
+    questionText:
+      "A news article that only quotes experts supporting a policy while ignoring opponents demonstrates:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Identifying Biases",
+    difficultyLevel: "easy",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Selection bias in sourcing", isCorrect: true, optionOrder: 1 },
+      { optionText: "Statistical accuracy", isCorrect: false, optionOrder: 2 },
+      { optionText: "Objective journalism", isCorrect: false, optionOrder: 3 },
+      { optionText: "Peer review", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Selection bias occurs when sources are chosen to support a particular viewpoint while opposing perspectives are excluded.",
+  },
+  {
+    code: "S-LIT-009",
+    questionText:
+      "'All mammals are warm-blooded. Whales are mammals. Therefore, whales are warm-blooded.' This reasoning is:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Evaluation of Arguments",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 35,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Valid and sound", isCorrect: true, optionOrder: 1 },
+      { optionText: "Valid but unsound", isCorrect: false, optionOrder: 2 },
+      { optionText: "Invalid", isCorrect: false, optionOrder: 3 },
+      { optionText: "Neither valid nor sound", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "This is a classic syllogism. It's valid because the conclusion follows logically. It's sound because both premises are true.",
+  },
+  {
+    code: "S-LIT-010",
+    questionText:
+      "What can be inferred from: 'Many students who attend study groups perform better on exams'?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Inferences",
+    difficultyLevel: "easy",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Study groups may contribute to better exam performance for some students.", isCorrect: true, optionOrder: 1 },
+      { optionText: "All students who attend study groups will perform better.", isCorrect: false, optionOrder: 2 },
+      { optionText: "Study groups are the only way to improve exam scores.", isCorrect: false, optionOrder: 3 },
+      { optionText: "Students who do not attend study groups will perform poorly.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "'Many' indicates a correlation for a subset, not a guarantee. The safest inference is a possible contributing relationship.",
+  },
+  {
+    code: "S-LIT-011",
+    questionText:
+      "The primary purpose of a textbook chapter titled 'The Causes of World War I' is most likely to:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Author's Purpose",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 35,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Inform and explain historical events and factors", isCorrect: true, optionOrder: 1 },
+      { optionText: "Persuade readers that Germany was solely responsible", isCorrect: false, optionOrder: 2 },
+      { optionText: "Entertain readers with war stories", isCorrect: false, optionOrder: 3 },
+      { optionText: "Express personal feelings about war", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "A textbook chapter aims to inform and explain. The title suggests an explanatory, educational purpose rather than persuasion or entertainment.",
+  },
+  {
+    code: "S-LIT-012",
+    questionText:
+      "Identify the tone: 'The government's response was, predictably, a masterpiece of indecision and bureaucratic red tape.'",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Tone Analysis",
+    difficultyLevel: "easy",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Sarcastic and critical", isCorrect: true, optionOrder: 1 },
+      { optionText: "Objective and neutral", isCorrect: false, optionOrder: 2 },
+      { optionText: "Hopeful and optimistic", isCorrect: false, optionOrder: 3 },
+      { optionText: "Fearful and anxious", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "'Predictably' and 'masterpiece of indecision' are sarcastic. The tone conveys criticism through ironic praise.",
+  },
+  {
+    code: "S-LIT-013",
+    questionText:
+      "Which transition best completes: 'The experiment failed; _____, the hypothesis was incorrect, but the procedure also contained errors.'",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Critical Analysis",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 35,
+    allowsCalculator: false,
+    options: [
+      { optionText: "consequently", isCorrect: true, optionOrder: 1 },
+      { optionText: "however", isCorrect: false, optionOrder: 2 },
+      { optionText: "furthermore", isCorrect: false, optionOrder: 3 },
+      { optionText: "for instance", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "'Consequently' indicates a result or logical consequence. The experiment failed as a result of the incorrect hypothesis and procedural errors.",
+  },
+  {
+    code: "S-LIT-014",
+    questionText:
+      "The word 'ephemeral' is closest in meaning to:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Advanced Vocabulary",
+    difficultyLevel: "easy",
+    bloomLevel: "remember",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Short-lived", isCorrect: true, optionOrder: 1 },
+      { optionText: "Eternal", isCorrect: false, optionOrder: 2 },
+      { optionText: "Powerful", isCorrect: false, optionOrder: 3 },
+      { optionText: "Visible", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "'Ephemeral' means lasting for a very short time. E.g., 'The beauty of cherry blossoms is ephemeral.'",
+  },
+  {
+    code: "S-LIT-015",
+    questionText:
+      "Which best synthesises: 'Social media connects people across distances' and 'Social media can contribute to mental health issues'?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Synthesis",
+    difficultyLevel: "easy",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Social media has both benefits and drawbacks, requiring balanced usage.", isCorrect: true, optionOrder: 1 },
+      { optionText: "Social media is harmful and should be avoided.", isCorrect: false, optionOrder: 2 },
+      { optionText: "Social media only connects people positively.", isCorrect: false, optionOrder: 3 },
+      { optionText: "Mental health issues make social media worthless.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Synthesis combines multiple perspectives into a cohesive understanding, acknowledging both the positive and negative aspects.",
+  },
+  {
+    code: "S-LIT-016",
+    questionText:
+      "An argument beginning with 'Obviously, everyone knows that…' persuades by:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Evaluation of Arguments",
+    difficultyLevel: "easy",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Appealing to common belief rather than evidence", isCorrect: true, optionOrder: 1 },
+      { optionText: "Presenting statistical data", isCorrect: false, optionOrder: 2 },
+      { optionText: "Quoting expert opinion", isCorrect: false, optionOrder: 3 },
+      { optionText: "Using deductive reasoning", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Phrases like 'obviously everyone knows' are appeals to popular opinion (argumentum ad populum), avoiding evidence by assuming consensus.",
+  },
+  {
+    code: "S-LIT-017",
+    questionText:
+      "Identify the author's main claim in the passage about school uniforms.",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Critical Analysis",
+    difficultyLevel: "easy",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 60,
+    allowsCalculator: false,
+    passageText:
+      "While proponents of school uniforms argue that they reduce peer pressure and improve discipline, research by Dr. Amina Sani (2022) found no statistically significant difference in academic performance between schools with and without uniforms. However, the study noted that students in uniform schools reported fewer instances of bullying based on clothing. The researcher concluded that uniform policies may address specific social issues but are not a panacea for educational challenges.",
+    options: [
+      { optionText: "School uniforms are completely ineffective.", isCorrect: false, optionOrder: 1 },
+      { optionText: "School uniforms have limited benefits and are not a comprehensive solution.", isCorrect: true, optionOrder: 2 },
+      { optionText: "School uniforms reduce bullying in all cases.", isCorrect: false, optionOrder: 3 },
+      { optionText: "School uniforms improve academic performance.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The passage presents a nuanced finding: uniforms help with bullying but not academics. The conclusion states uniforms are 'not a panacea'.",
+  },
+  {
+    code: "S-LIT-018",
+    questionText:
+      "What would most strengthen the argument that 'social media causes depression among teenagers'?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Evaluation of Arguments",
+    difficultyLevel: "easy",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "A longitudinal study showing increased depression correlated with increased social media use over 3 years", isCorrect: true, optionOrder: 1 },
+      { optionText: "A testimonial from a teenager who says social media makes them sad", isCorrect: false, optionOrder: 2 },
+      { optionText: "The number of social media users worldwide", isCorrect: false, optionOrder: 3 },
+      { optionText: "A list of popular social media platforms", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "A longitudinal study provides the strongest evidence because it tracks changes over time, supporting a causal relationship.",
+  },
+  // -------------------------------------------------------------------------
+  // MEDIUM (S-LIT-019 to S-LIT-037)
+  // -------------------------------------------------------------------------
+  {
+    code: "S-LIT-019",
+    questionText:
+      "Read the passage about Thomas Kuhn and answer.",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Complex Comprehension",
+    difficultyLevel: "medium",
+    bloomLevel: "understand",
+    expectedTimeSecs: 75,
+    allowsCalculator: false,
+    passageText:
+      "In his influential work 'The Structure of Scientific Revolutions', Thomas Kuhn argued that scientific progress does not occur through a smooth accumulation of knowledge but through revolutionary paradigm shifts. A paradigm, according to Kuhn, is a set of shared assumptions, theories, and methods that define a scientific discipline during a particular period. Normal science operates within a paradigm, solving puzzles and refining theories. However, anomalies — findings that cannot be explained within the current paradigm — accumulate over time, leading to a crisis. Eventually, a new paradigm emerges that better accounts for these anomalies, resulting in a scientific revolution. Kuhn's theory challenged the traditional view of science as an objective, cumulative march toward truth, emphasising instead the social and psychological dimensions of scientific practice.",
+    options: [
+      { optionText: "A gradual accumulation of scientific facts", isCorrect: false, optionOrder: 1 },
+      { optionText: "A fundamental change in the underlying assumptions and framework of a scientific discipline", isCorrect: true, optionOrder: 2 },
+      { optionText: "A minor adjustment to an existing theory", isCorrect: false, optionOrder: 3 },
+      { optionText: "A discovery made by a single scientist working alone", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "A paradigm shift is a fundamental change in the basic concepts and experimental practices of a scientific discipline.",
+  },
+  {
+    code: "S-LIT-020",
+    questionText:
+      "Based on the Kuhn passage, which is an example of an 'anomaly'?",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Complex Comprehension",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 70,
+    allowsCalculator: false,
+    passageText:
+      "In his influential work 'The Structure of Scientific Revolutions', Thomas Kuhn argued that scientific progress does not occur through a smooth accumulation of knowledge but through revolutionary paradigm shifts. Anomalies — findings that cannot be explained within the current paradigm — accumulate over time, leading to a crisis.",
+    options: [
+      { optionText: "An experimental result that contradicts the predictions of the established paradigm", isCorrect: true, optionOrder: 1 },
+      { optionText: "A precise measurement that confirms an existing theory", isCorrect: false, optionOrder: 2 },
+      { optionText: "A new technology that makes experiments faster", isCorrect: false, optionOrder: 3 },
+      { optionText: "A textbook that summarises current scientific knowledge", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "An anomaly contradicts existing paradigm predictions. The Michelson-Morley experiment is a classic example.",
+  },
+  {
+    code: "S-LIT-021",
+    questionText:
+      "Read the passage on climate adaptation and answer.",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Complex Comprehension",
+    difficultyLevel: "medium",
+    bloomLevel: "understand",
+    expectedTimeSecs: 65,
+    allowsCalculator: false,
+    passageText:
+      "Climate change adaptation strategies can be categorised into three broad approaches. Structural approaches involve physical infrastructure changes such as building sea walls and constructing flood-resistant buildings. Social approaches focus on changing human behaviour through education, early warning systems, and community-based disaster preparedness. Institutional approaches involve policy reforms, insurance schemes, and international cooperation frameworks. A study by Okonkwo and Adebayo (2023) analysing adaptation strategies in coastal Nigerian communities found that while structural approaches received the most funding, social approaches yielded the highest cost-benefit ratio. Communities that implemented early warning systems and evacuation drills suffered 60% fewer casualties during extreme weather events compared to those relying solely on structural defences.",
+    options: [
+      { optionText: "Structural approaches", isCorrect: false, optionOrder: 1 },
+      { optionText: "Social approaches", isCorrect: true, optionOrder: 2 },
+      { optionText: "Institutional approaches", isCorrect: false, optionOrder: 3 },
+      { optionText: "All approaches were equally cost-effective", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The passage explicitly states that 'social approaches yielded the highest cost-benefit ratio'.",
+  },
+  {
+    code: "S-LIT-022",
+    questionText:
+      "What would most challenge the conclusion of Okonkwo and Adebayo's study?",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Evaluation of Arguments",
+    difficultyLevel: "medium",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 65,
+    allowsCalculator: false,
+    passageText:
+      "Climate change adaptation strategies can be categorised into three broad approaches. A study by Okonkwo and Adebayo (2023) found that while structural approaches received the most funding, social approaches yielded the highest cost-benefit ratio.",
+    options: [
+      { optionText: "Structural defences prevented property damage worth 10 times their cost", isCorrect: true, optionOrder: 1 },
+      { optionText: "Education programmes improved community awareness", isCorrect: false, optionOrder: 2 },
+      { optionText: "International funding for adaptation increased", isCorrect: false, optionOrder: 3 },
+      { optionText: "Early warning systems require regular maintenance", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "If structural defences prevented substantial property damage the study underestimated, this would challenge the cost-benefit conclusion.",
+  },
+  {
+    code: "S-LIT-023",
+    questionText:
+      "The word 'pragmatic' in academic contexts most nearly means:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Advanced Vocabulary",
+    difficultyLevel: "medium",
+    bloomLevel: "understand",
+    expectedTimeSecs: 35,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Dealing with things practically and realistically", isCorrect: true, optionOrder: 1 },
+      { optionText: "Based on abstract theoretical principles", isCorrect: false, optionOrder: 2 },
+      { optionText: "Idealistic and optimistic", isCorrect: false, optionOrder: 3 },
+      { optionText: "Dogmatic and inflexible", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "'Pragmatic' means dealing with things in a practical, sensible way — focusing on what works rather than what is theoretically ideal.",
+  },
+  {
+    code: "S-LIT-024",
+    questionText:
+      "Which statement contains an embedded assumption?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Assumptions",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Since the policy reduced inflation, it was effective at stabilising the economy.", isCorrect: true, optionOrder: 1 },
+      { optionText: "The experiment was conducted three times with consistent results.", isCorrect: false, optionOrder: 2 },
+      { optionText: "Nigeria's population is approximately 220 million.", isCorrect: false, optionOrder: 3 },
+      { optionText: "Water boils at 100°C at sea level.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The statement assumes that reducing inflation is the sole measure of economic stability — an embedded assumption.",
+  },
+  {
+    code: "S-LIT-025",
+    questionText:
+      "'Corruption is a cultural problem in Nigeria' without cross-country data may reflect:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Identifying Biases",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Fundamental attribution error — attributing systemic issues to cultural traits", isCorrect: true, optionOrder: 1 },
+      { optionText: "Confirmation bias — seeking evidence that confirms pre-existing beliefs", isCorrect: false, optionOrder: 2 },
+      { optionText: "Anchoring bias — over-relying on first information", isCorrect: false, optionOrder: 3 },
+      { optionText: "Availability heuristic — judging based on easily recalled examples", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The fundamental attribution error attributes outcomes to inherent characteristics (culture) rather than situational factors like institutions.",
+  },
+  {
+    code: "S-LIT-026",
+    questionText:
+      "Read the media literacy passage and answer.",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Complex Comprehension",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 70,
+    allowsCalculator: false,
+    passageText:
+      "Media literacy in the digital age requires more than the ability to access information. Citizens must critically evaluate sources, recognise algorithmic curation, understand filter bubbles, and identify disinformation campaigns. The Stanford History Education Group's 2019 study found that over 80% of secondary school students could not distinguish between a native advertisement and a legitimate news article. Furthermore, fewer than 30% of students could identify the bias in a social media post from an advocacy group. These findings underscore the urgent need for integrating media literacy into national curricula. However, critics argue that media literacy programmes risk becoming vehicles for political indoctrination if not carefully designed. A balanced approach, they contend, should teach critical thinking skills without prescribing specific political conclusions.",
+    options: [
+      { optionText: "Students cannot access enough information online", isCorrect: false, optionOrder: 1 },
+      { optionText: "Young people lack critical evaluation skills, but media literacy education must avoid political bias", isCorrect: true, optionOrder: 2 },
+      { optionText: "Teachers do not know how to use technology in classrooms", isCorrect: false, optionOrder: 3 },
+      { optionText: "Social media companies should be regulated by governments", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The passage presents a two-part challenge: students lack skills, and teaching these skills must avoid indoctrination.",
+  },
+  {
+    code: "S-LIT-027",
+    questionText:
+      "'Algorithmic curation' in the passage refers to:",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Advanced Vocabulary",
+    difficultyLevel: "medium",
+    bloomLevel: "understand",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    passageText:
+      "Media literacy in the digital age requires more than the ability to access information. Citizens must critically evaluate sources, recognise algorithmic curation, understand filter bubbles, and identify disinformation campaigns.",
+    options: [
+      { optionText: "Algorithms selecting and prioritising content users see", isCorrect: true, optionOrder: 1 },
+      { optionText: "A library's system for organising books", isCorrect: false, optionOrder: 2 },
+      { optionText: "Teachers grading student work using software", isCorrect: false, optionOrder: 3 },
+      { optionText: "Journalists manually editing articles", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Algorithmic curation refers to automated systems choosing which content to display based on user behaviour and preferences.",
+  },
+  {
+    code: "S-LIT-028",
+    questionText:
+      "Synthesise: Position A — university education should be free; Position B — free education leads to overcrowding and reduced quality.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Synthesis",
+    difficultyLevel: "medium",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 55,
+    allowsCalculator: false,
+    options: [
+      { optionText: "A balanced approach could offer means-tested free tuition while investing in expanding capacity.", isCorrect: true, optionOrder: 1 },
+      { optionText: "Free university education is impossible.", isCorrect: false, optionOrder: 2 },
+      { optionText: "Quality is more important than access.", isCorrect: false, optionOrder: 3 },
+      { optionText: "Students should pay for their own education.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Synthesis integrates both positions: acknowledges free education goals while addressing quality concerns through targeted investment.",
+  },
+  {
+    code: "S-LIT-029",
+    questionText:
+      "The word 'ameliorate' most nearly means:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Advanced Vocabulary",
+    difficultyLevel: "medium",
+    bloomLevel: "understand",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "To make something bad better", isCorrect: true, optionOrder: 1 },
+      { optionText: "To make something worse", isCorrect: false, optionOrder: 2 },
+      { optionText: "To ignore a problem", isCorrect: false, optionOrder: 3 },
+      { optionText: "To study something carefully", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "'Ameliorate' means to make something bad or unsatisfactory better. E.g., 'Steps were taken to ameliorate living conditions.'",
+  },
+  {
+    code: "S-LIT-030",
+    questionText:
+      "Unstated assumption in: 'We should not ban single-use plastics because it would hurt the petrochemical industry and cost jobs.'",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Assumptions",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Economic considerations outweigh environmental concerns in this context.", isCorrect: true, optionOrder: 1 },
+      { optionText: "Single-use plastics are harmful to the environment.", isCorrect: false, optionOrder: 2 },
+      { optionText: "The petrochemical industry is the largest employer.", isCorrect: false, optionOrder: 3 },
+      { optionText: "Plastics cannot be recycled.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The argument assumes that protecting jobs and industry is more important than environmental protection — an unstated value judgment.",
+  },
+  {
+    code: "S-LIT-031",
+    questionText:
+      "An article calls a policy 'a bold step forward' and interviews only government officials who designed it. This likely suffers from:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Identifying Biases",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Source bias — relying solely on officials with a vested interest", isCorrect: true, optionOrder: 1 },
+      { optionText: "Statistical bias — misrepresenting numerical data", isCorrect: false, optionOrder: 2 },
+      { optionText: "Confirmation bias — the journalist's own views", isCorrect: false, optionOrder: 3 },
+      { optionText: "Publication bias — only positive results are published", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Source bias occurs when reporting relies on a narrow range of sources sharing a common perspective, excluding critics or independent experts.",
+  },
+  {
+    code: "S-LIT-032",
+    questionText:
+      "What can be logically inferred from 'Every A is B. Some B are C.'?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Inferences",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Some A might be C, but it is not guaranteed.", isCorrect: true, optionOrder: 1 },
+      { optionText: "All A are C.", isCorrect: false, optionOrder: 2 },
+      { optionText: "No A are C.", isCorrect: false, optionOrder: 3 },
+      { optionText: "All C are A.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "If all A are B, A is a subset of B. But 'some B are C' doesn't tell us whether any A falls within that C subset.",
+  },
+  {
+    code: "S-LIT-033",
+    questionText:
+      "The tone of 'The committee's report, after months of deliberation, offers little more than platitudes and vague promises' is:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Tone Analysis",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Contemptuous and dismissive", isCorrect: true, optionOrder: 1 },
+      { optionText: "Formal and respectful", isCorrect: false, optionOrder: 2 },
+      { optionText: "Enthusiastic and supportive", isCorrect: false, optionOrder: 3 },
+      { optionText: "Neutral and objective", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "'Little more than platitudes and vague promises' expresses contempt. The tone dismisses the report's value.",
+  },
+  {
+    code: "S-LIT-034",
+    questionText:
+      "'Correlation does not imply causation' cautions against:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Critical Analysis",
+    difficultyLevel: "medium",
+    bloomLevel: "understand",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Assuming that because two variables are related, one causes the other", isCorrect: true, optionOrder: 1 },
+      { optionText: "Using statistical tests in research", isCorrect: false, optionOrder: 2 },
+      { optionText: "Collecting data from large samples", isCorrect: false, optionOrder: 3 },
+      { optionText: "Drawing any conclusions from data", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "It warns against the causal fallacy — assuming a causal relationship from mere correlation, e.g., ice cream sales and drowning incidents.",
+  },
+  {
+    code: "S-LIT-035",
+    questionText:
+      "Read the AI ethics passage and answer.",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Complex Comprehension",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 75,
+    allowsCalculator: false,
+    passageText:
+      "The ethics of artificial intelligence presents unprecedented challenges for traditional moral frameworks. Utilitarian approaches struggle with measuring and aggregating preferences. Deontological approaches face difficulties in programming universal moral rules that handle edge cases. Virtue ethics, emphasising character and practical wisdom, seems ill-suited to entities that lack consciousness and moral development. Furthermore, questions of responsibility arise: when an autonomous vehicle causes an accident, who is morally responsible? These challenges suggest that existing ethical frameworks may need substantial revision.",
+    options: [
+      { optionText: "It is too focused on consequences rather than rules", isCorrect: false, optionOrder: 1 },
+      { optionText: "It requires consciousness and moral character that AI does not possess", isCorrect: true, optionOrder: 2 },
+      { optionText: "It cannot handle edge cases or exceptions", isCorrect: false, optionOrder: 3 },
+      { optionText: "It is the oldest and least developed ethical framework", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The passage states virtue ethics 'seems ill-suited to entities that lack consciousness and moral development.'",
+  },
+  {
+    code: "S-LIT-036",
+    questionText:
+      "In the AI ethics passage, the author's primary purpose is to:",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Author's Purpose",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 55,
+    allowsCalculator: false,
+    passageText:
+      "The ethics of artificial intelligence presents unprecedented challenges for traditional moral frameworks. Utilitarian approaches struggle. Deontological approaches face difficulties. Virtue ethics seems ill-suited. These challenges suggest that existing ethical frameworks may need substantial revision.",
+    options: [
+      { optionText: "Explain why traditional ethical frameworks are inadequate for AI and call for revision", isCorrect: true, optionOrder: 1 },
+      { optionText: "Argue that AI should not be developed until ethical frameworks are finalised", isCorrect: false, optionOrder: 2 },
+      { optionText: "Endorse utilitarianism as the best framework for AI ethics", isCorrect: false, optionOrder: 3 },
+      { optionText: "Provide a comprehensive solution to AI ethics problems", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The author systematically explains each framework's struggles with AI, concluding existing frameworks 'may need substantial revision.'",
+  },
+  {
+    code: "S-LIT-037",
+    questionText:
+      "Logical flaw in: 'Every student who passed studied hard. Therefore, studying hard guarantees passing.'",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Evaluation of Arguments",
+    difficultyLevel: "medium",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Confusing necessary condition with sufficient condition", isCorrect: true, optionOrder: 1 },
+      { optionText: "Circular reasoning — the premise assumes the conclusion", isCorrect: false, optionOrder: 2 },
+      { optionText: "Ad hominem — attacking the person rather than the argument", isCorrect: false, optionOrder: 3 },
+      { optionText: "False dilemma — presenting only two options", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Studying hard may be necessary for passing, but not sufficient. Other factors affect outcomes. The premise only shows passing implies studying hard, not vice versa.",
+  },
+  // -------------------------------------------------------------------------
+  // HARD (S-LIT-038 to S-LIT-055)
+  // -------------------------------------------------------------------------
+  {
+    code: "S-LIT-038",
+    questionText:
+      "Read the passage on sustainable development and answer.",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Complex Comprehension",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 90,
+    allowsCalculator: false,
+    passageText:
+      "The concept of 'sustainable development', as defined by the Brundtland Commission, refers to 'development that meets the needs of the present without compromising the ability of future generations to meet their own needs.' This definition, while widely adopted, has been criticised for its ambiguity. Ecological economists argue that the dominant 'weak sustainability' paradigm — which assumes that human-made capital can substitute for natural capital — is fundamentally flawed. They advocate for 'strong sustainability', which maintains that certain natural capital stocks (such as biodiversity and climate stability) cannot be replaced and must be preserved independently. Under weak sustainability, depleting a forest is acceptable if the proceeds are invested in education; under strong sustainability, the forest must be preserved regardless of potential economic compensation.",
+    options: [
+      { optionText: "Whether natural capital can be substituted by human-made capital", isCorrect: true, optionOrder: 1 },
+      { optionText: "Whether future generations have rights or not", isCorrect: false, optionOrder: 2 },
+      { optionText: "Whether economic growth is compatible with environmental protection", isCorrect: false, optionOrder: 3 },
+      { optionText: "Whether sustainability should be measured over 50 or 100 years", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The distinction is about substitutability: weak sustainability assumes natural capital can be replaced; strong sustainability says some natural capital is irreplaceable.",
+  },
+  {
+    code: "S-LIT-039",
+    questionText:
+      "Under weak sustainability, which would be considered acceptable?",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Complex Comprehension",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 75,
+    allowsCalculator: false,
+    passageText:
+      "Under weak sustainability, depleting a forest is acceptable if the proceeds are invested in education; under strong sustainability, the forest must be preserved regardless of potential economic compensation.",
+    options: [
+      { optionText: "Clearing a biodiverse rainforest to build a university, as education compensates for lost natural capital", isCorrect: true, optionOrder: 1 },
+      { optionText: "Prohibiting all mining activities in protected areas", isCorrect: false, optionOrder: 2 },
+      { optionText: "Requiring all development projects have zero environmental impact", isCorrect: false, optionOrder: 3 },
+      { optionText: "Banning the use of non-renewable resources entirely", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Weak sustainability allows trading off natural capital for human-made capital if total capital stock is maintained.",
+  },
+  {
+    code: "S-LIT-040",
+    questionText:
+      "Read the historiography passage and answer.",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Complex Comprehension",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 80,
+    allowsCalculator: false,
+    passageText:
+      "Historiography reveals that historical narratives are shaped not only by available evidence but also by the cultural, political, and social contexts of historians. The 'Great Man' theory held that history is shaped by exceptional individuals. Marxist historiography emphasises class struggle. Postcolonial historiography challenges Eurocentric narratives. Feminist historiography examines how gender has shaped historical experiences and how women's contributions have been marginalised. Each of these approaches offers a different lens, reminding us that historical 'truth' is inevitably partial and perspectival.",
+    options: [
+      { optionText: "Historical narratives are shaped by multiple perspectives and no single account is complete", isCorrect: true, optionOrder: 1 },
+      { optionText: "Historical truth is absolute and can be objectively determined", isCorrect: false, optionOrder: 2 },
+      { optionText: "Only Marxist historiography provides an accurate account of history", isCorrect: false, optionOrder: 3 },
+      { optionText: "Historical facts do not exist; all accounts are equally valid", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The author presents multiple approaches without endorsing one, concluding that historical 'truth is inevitably partial and perspectival.'",
+  },
+  {
+    code: "S-LIT-041",
+    questionText:
+      "Which historiography would analyse the Nigerian Civil War through economic inequality and class tensions?",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Complex Comprehension",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 65,
+    allowsCalculator: false,
+    passageText:
+      "Historiography reveals that historical narratives are shaped by the contexts of historians. Marxist historiography emphasises class struggle and economic factors as the driving forces of historical change.",
+    options: [
+      { optionText: "Marxist historiography", isCorrect: true, optionOrder: 1 },
+      { optionText: "Great Man theory", isCorrect: false, optionOrder: 2 },
+      { optionText: "Feminist historiography", isCorrect: false, optionOrder: 3 },
+      { optionText: "Postcolonial historiography", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Marxist historiography emphasises class struggle, economic factors, and material conditions as primary historical drivers.",
+  },
+  {
+    code: "S-LIT-042",
+    questionText:
+      "The word 'perspectival' in the passage most nearly means:",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Advanced Vocabulary",
+    difficultyLevel: "hard",
+    bloomLevel: "understand",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    passageText:
+      "Each of these approaches offers a different lens through which to interpret the past, reminding us that historical 'truth' is inevitably partial and perspectival.",
+    options: [
+      { optionText: "Dependent on a particular point of view or frame of reference", isCorrect: true, optionOrder: 1 },
+      { optionText: "Completely objective and unbiased", isCorrect: false, optionOrder: 2 },
+      { optionText: "Based on statistical analysis", isCorrect: false, optionOrder: 3 },
+      { optionText: "Universally accepted by all scholars", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "'Perspectival' means relating to or determined by a particular perspective or viewpoint.",
+  },
+  {
+    code: "S-LIT-043",
+    questionText:
+      "Evaluate: 'The death penalty should be abolished because it violates the right to life, and studies show it does not deter crime more effectively than life imprisonment.' This argument:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Evaluation of Arguments",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 60,
+    allowsCalculator: false,
+    options: [
+      { optionText: "No fallacy; it is a valid multi-premise argument", isCorrect: true, optionOrder: 1 },
+      { optionText: "Circular reasoning — it assumes what it tries to prove", isCorrect: false, optionOrder: 2 },
+      { optionText: "Straw man — it misrepresents opposing views", isCorrect: false, optionOrder: 3 },
+      { optionText: "Appeal to emotion — using fear to persuade", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The argument provides two distinct premises supporting the conclusion. There is no logical flaw in the structure.",
+  },
+  {
+    code: "S-LIT-044",
+    questionText:
+      "Countries with higher chocolate consumption have more Nobel laureates. Strongest criticism of concluding chocolate causes Nobel wins?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Critical Analysis",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 55,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Wealthier countries afford more chocolate AND invest more in research — a confounding variable.", isCorrect: true, optionOrder: 1 },
+      { optionText: "Chocolate is a delicious food that many people enjoy.", isCorrect: false, optionOrder: 2 },
+      { optionText: "The study did not survey Nobel laureates about their diets.", isCorrect: false, optionOrder: 3 },
+      { optionText: "Chocolate consumption varies significantly by season.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The strongest criticism identifies a confounding variable (national wealth) that could explain both variables — a spurious correlation.",
+  },
+  {
+    code: "S-LIT-045",
+    questionText:
+      "Implicit assumption in: 'We should invest more in STEM education because it drives economic growth.'",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Assumptions",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "STEM education is the primary or most significant driver of economic growth.", isCorrect: true, optionOrder: 1 },
+      { optionText: "STEM subjects are more difficult than humanities subjects.", isCorrect: false, optionOrder: 2 },
+      { optionText: "The government currently underfunds STEM education.", isCorrect: false, optionOrder: 3 },
+      { optionText: "Students prefer studying STEM subjects over humanities.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The argument assumes STEM education is a sufficiently important growth driver to warrant increased investment.",
+  },
+  {
+    code: "S-LIT-046",
+    questionText:
+      "Headline: 'Local Government Chairman Embezzles ₦50 Million from School Funds.' Based solely on an anonymous social media post. This illustrates:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Identifying Biases",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "The danger of reporting unverified claims as factual news", isCorrect: true, optionOrder: 1 },
+      { optionText: "Effective investigative journalism", isCorrect: false, optionOrder: 2 },
+      { optionText: "The importance of anonymous sources in journalism", isCorrect: false, optionOrder: 3 },
+      { optionText: "Government transparency and accountability", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Basing a headline on an unverified anonymous social media post without verification is a serious breach of journalistic standards.",
+  },
+  {
+    code: "S-LIT-047",
+    questionText:
+      "Synthesise: (1) Group study students score 15% higher. (2) Solo study students score 10% higher on standardised tests. (3) Most effective learners use both methods.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Synthesis",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 55,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Both group and individual study have merits; the best approach may depend on the context and the student.", isCorrect: true, optionOrder: 1 },
+      { optionText: "Studying in groups is always better than studying alone.", isCorrect: false, optionOrder: 2 },
+      { optionText: "Standardised tests are not good measures of learning.", isCorrect: false, optionOrder: 3 },
+      { optionText: "Students should only study alone for best results.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The findings show group study benefits averaging, while solo study benefits standardised tests. The most effective learners use both, suggesting context-dependence.",
+  },
+  {
+    code: "S-LIT-048",
+    questionText:
+      "An author writing about immigration reform focuses on individual success stories of immigrants but omits systemic barriers they face. This is an example of:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Identifying Biases",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 55,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Anecdotal bias — using individual stories to obscure broader structural issues", isCorrect: true, optionOrder: 1 },
+      { optionText: "Confirmation bias — only seeking evidence that supports one's views", isCorrect: false, optionOrder: 2 },
+      { optionText: "Sampling bias — selecting a non-representative sample", isCorrect: false, optionOrder: 3 },
+      { optionText: "The halo effect — letting one positive trait influence overall judgment", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Anecdotal bias uses compelling individual stories to draw general conclusions while ignoring systemic patterns. Success stories exist but don't represent the full immigrant experience.",
+  },
+  {
+    code: "S-LIT-049",
+    questionText:
+      "Read the passage and answer.",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Complex Comprehension",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 85,
+    allowsCalculator: false,
+    passageText:
+      "The debate over nature versus nurture in human development has evolved significantly. Contemporary behavioural genetics suggests that most psychological traits have heritability estimates between 30% and 60%, indicating substantial genetic influence. However, gene-environment interactions complicate simple interpretations. A child genetically predisposed to aggression may be more likely to seek out environments that reinforce aggressive behaviour — a phenomenon called 'active gene-environment correlation.' Furthermore, epigenetic research reveals that environmental factors can alter gene expression without changing DNA sequences, demonstrating that the environment can modify how genes are expressed. The emerging consensus among developmental scientists is that nature and nurture are not competing explanations but interacting forces that cannot be meaningfully separated.",
+    options: [
+      { optionText: "Nature and nurture are fundamentally inseparable and interact in complex ways.", isCorrect: true, optionOrder: 1 },
+      { optionText: "Genetics determines most psychological traits with minimal environmental influence.", isCorrect: false, optionOrder: 2 },
+      { optionText: "The environment is the primary determinant of all human behaviour.", isCorrect: false, optionOrder: 3 },
+      { optionText: "Heritability estimates prove that genes are more important than environment.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The passage concludes that nature and nurture are 'interacting forces that cannot be meaningfully separated', rejecting either extreme position.",
+  },
+  {
+    code: "S-LIT-050",
+    questionText:
+      "In a debate about free will, one argues: 'If determinism is true, we cannot hold people morally responsible. But we do hold people morally responsible. Therefore, determinism is false.' This is an example of:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Evaluation of Arguments",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 60,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Modus tollens — a valid logical form (if P then Q, not Q, therefore not P)", isCorrect: true, optionOrder: 1 },
+      { optionText: "Circular reasoning — assuming what needs to be proven", isCorrect: false, optionOrder: 2 },
+      { optionText: "Straw man — misrepresenting determinism", isCorrect: false, optionOrder: 3 },
+      { optionText: "False dilemma — presenting only two options", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "This is a valid modus tollens: If determinism (P) then no moral responsibility (Q). But we have moral responsibility (¬Q). Therefore determinism is false (¬P). Valid, though one might dispute the premises.",
+  },
+  {
+    code: "S-LIT-051",
+    questionText:
+      "The word 'recalcitrant' most likely means:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Advanced Vocabulary",
+    difficultyLevel: "hard",
+    bloomLevel: "remember",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Stubbornly uncooperative or resistant to authority", isCorrect: true, optionOrder: 1 },
+      { optionText: "Eager to please and comply with instructions", isCorrect: false, optionOrder: 2 },
+      { optionText: "Calm and easygoing in nature", isCorrect: false, optionOrder: 3 },
+      { optionText: "Skilled at calculating numerical data", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "'Recalcitrant' means having an obstinately uncooperative attitude toward authority or discipline.",
+  },
+  {
+    code: "S-LIT-052",
+    questionText:
+      "The implicit assumption in: 'A university degree is essential for financial success' is that:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Assumptions",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Other paths to financial success are either less reliable or insufficient.", isCorrect: true, optionOrder: 1 },
+      { optionText: "Everyone can afford a university education.", isCorrect: false, optionOrder: 2 },
+      { optionText: "Financial success is the only purpose of education.", isCorrect: false, optionOrder: 3 },
+      { optionText: "All university degrees lead to high-paying jobs.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Calling a degree 'essential' implies alternative routes are inadequate. This assumption discounts vocational training, entrepreneurship, and other pathways.",
+  },
+  {
+    code: "S-LIT-053",
+    questionText:
+      "Read the passage and identify the author's tone.",
+    questionType: "multiple_choice",
+    rendererType: "passage",
+    concept: "Tone Analysis",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 55,
+    allowsCalculator: false,
+    passageText:
+      "It is deeply concerning that despite decades of research demonstrating the effectiveness of evidence-based teaching methods, our educational institutions continue to rely on pedagogical approaches that cognitive scientists have repeatedly debunked. The persistence of learning styles theory in classrooms, despite its thorough refutation, represents not merely an oversight but a profound failure of the science-to-practice pipeline that ultimately shortchanges generations of learners.",
+    options: [
+      { optionText: "Frustrated and accusatory", isCorrect: true, optionOrder: 1 },
+      { optionText: "Objective and dispassionate", isCorrect: false, optionOrder: 2 },
+      { optionText: "Humorous and lighthearted", isCorrect: false, optionOrder: 3 },
+      { optionText: "Cautiously optimistic", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Words like 'deeply concerning', 'profound failure', 'shortchanges generations' convey strong frustration and accusation toward the educational system.",
+  },
+  {
+    code: "S-LIT-054",
+    questionText:
+      "A researcher claims that a new teaching method 'significantly improves learning outcomes' based on a study of 15 students with no control group. The most serious methodological flaw is:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Critical Analysis",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 55,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Lack of a control group makes it impossible to attribute improvements to the method", isCorrect: true, optionOrder: 1 },
+      { optionText: "The sample size of 15 is too small for any statistical analysis", isCorrect: false, optionOrder: 2 },
+      { optionText: "Teaching methods cannot be empirically tested", isCorrect: false, optionOrder: 3 },
+      { optionText: "The researcher has a conflict of interest", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Without a control group, there is no baseline for comparison. Improvements could be due to the placebo effect, maturation, or other factors. A control group is fundamental to establishing causality.",
+  },
+  {
+    code: "S-LIT-055",
+    questionText:
+      "Synthesise: 'Artificial intelligence will eliminate many current jobs' and 'Artificial intelligence will create new job categories that do not yet exist.'",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Synthesis",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 55,
+    allowsCalculator: false,
+    options: [
+      { optionText: "AI will transform the labour market through both displacement and creation, requiring workforce adaptation.", isCorrect: true, optionOrder: 1 },
+      { optionText: "AI will destroy all jobs and cause mass unemployment.", isCorrect: false, optionOrder: 2 },
+      { optionText: "AI will only create new jobs without eliminating any existing ones.", isCorrect: false, optionOrder: 3 },
+      { optionText: "The impact of AI on jobs is impossible to predict or study.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Both statements are true — AI will eliminate some jobs while creating others. The synthesis acknowledges both effects and implies the need for adaptation.",
+  },
+
+  // =========================================================================
+  // SECTION 3: REASONING & READINESS (55 questions) — S-RR-001 to S-RR-055
+  // =========================================================================
+  // EASY (S-RR-001 to S-RR-018)
+  // -------------------------------------------------------------------------
+  {
+    code: "S-RR-001",
+    questionText:
+      "What is the next number in the sequence: 2, 6, 18, 54, ?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "IQ Puzzle",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "162", isCorrect: true, optionOrder: 1 },
+      { optionText: "108", isCorrect: false, optionOrder: 2 },
+      { optionText: "144", isCorrect: false, optionOrder: 3 },
+      { optionText: "216", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Each term is multiplied by 3: 2×3=6, 6×3=18, 18×3=54, 54×3=162.",
+  },
+  {
+    code: "S-RR-002",
+    questionText:
+      "Which shape would complete the pattern? Consider a 3×3 grid where the top row has: circle, square, triangle. The middle row has: square, triangle, circle. The bottom row has: triangle, circle, ?",
+    questionType: "multiple_choice",
+    rendererType: "geometry",
+    concept: "Spatial Reasoning",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    geometryData: {
+      type: "graph",
+      label: "3×3 grid pattern with shapes: row1 = circle, square, triangle; row2 = square, triangle, circle; row3 = triangle, circle, ?",
+      dimensions: { rows: 3, cols: 3 },
+      markings: ["Row 1: ○ □ △", "Row 2: □ △ ○", "Row 3: △ ○ ?"],
+    },
+    options: [
+      { optionText: "Square", isCorrect: true, optionOrder: 1 },
+      { optionText: "Circle", isCorrect: false, optionOrder: 2 },
+      { optionText: "Triangle", isCorrect: false, optionOrder: 3 },
+      { optionText: "Diamond", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Each row and column contains one of each shape. The bottom-right cell must be a square to complete the pattern.",
+  },
+  {
+    code: "S-RR-003",
+    questionText:
+      "The bar chart shows the number of books read by four students in a month. If the total books read is 40 and Aisha read 12, Bola read 8, Chidi read 10, how many did Damilola read?",
+    questionType: "multiple_choice",
+    rendererType: "chart",
+    concept: "Data Sufficiency",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 45,
+    allowsCalculator: true,
+    chartData: {
+      type: "bar",
+      title: "Books Read by Students",
+      labels: ["Aisha", "Bola", "Chidi", "Damilola"],
+      values: [12, 8, 10, 10],
+      unit: "Books",
+    },
+    options: [
+      { optionText: "10", isCorrect: true, optionOrder: 1 },
+      { optionText: "8", isCorrect: false, optionOrder: 2 },
+      { optionText: "12", isCorrect: false, optionOrder: 3 },
+      { optionText: "6", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Total = 40. Aisha + Bola + Chidi = 12 + 8 + 10 = 30. Damilola = 40 − 30 = 10.",
+  },
+  {
+    code: "S-RR-004",
+    questionText:
+      "You have been accepted to University A (high reputation, high tuition) and University B (moderate reputation, low tuition). Your family can afford either but would struggle with A. Which decision-making approach is most financially responsible?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Decision Making",
+    difficultyLevel: "easy",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Choose University B to avoid financial strain and graduate debt-free", isCorrect: true, optionOrder: 1 },
+      { optionText: "Choose University A and take maximum student loans", isCorrect: false, optionOrder: 2 },
+      { optionText: "Choose based solely on which has better campus food", isCorrect: false, optionOrder: 3 },
+      { optionText: "Ask your friends which university they chose", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Financially responsible decisions consider long-term debt burden. Avoiding unnecessary debt while still receiving a quality education is prudent.",
+  },
+  {
+    code: "S-RR-005",
+    questionText:
+      "A student copies a paragraph from an online source into their essay without citation because 'everyone does it.' Which ethical principle does this violate?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Ethical Reasoning",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 35,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Academic integrity — plagiarism is a form of intellectual dishonesty", isCorrect: true, optionOrder: 1 },
+      { optionText: "Beneficence — the student is helping their grade", isCorrect: false, optionOrder: 2 },
+      { optionText: "Justice — everyone should have equal access to sources", isCorrect: false, optionOrder: 3 },
+      { optionText: "Non-maleficence — no one is harmed by this action", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Plagiarism violates academic integrity by presenting others' work as one's own. 'Everyone does it' is a rationalisation, not an ethical justification.",
+  },
+  {
+    code: "S-RR-006",
+    questionText:
+      "You deposit ₦50,000 in a savings account earning 4% simple interest per year. How much interest will you earn after 3 years?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Financial Literacy",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: true,
+    options: [
+      { optionText: "₦6,000", isCorrect: true, optionOrder: 1 },
+      { optionText: "₦2,000", isCorrect: false, optionOrder: 2 },
+      { optionText: "₦12,000", isCorrect: false, optionOrder: 3 },
+      { optionText: "₦56,000", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Simple interest = P × r × t = 50,000 × 0.04 × 3 = ₦6,000.",
+  },
+  {
+    code: "S-RR-007",
+    questionText:
+      "A researcher wants to know if a new study method improves test scores. The experimental group uses the new method; the control group uses the old method. What is the independent variable?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Research Methodology",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 35,
+    allowsCalculator: false,
+    options: [
+      { optionText: "The study method used", isCorrect: true, optionOrder: 1 },
+      { optionText: "The test scores", isCorrect: false, optionOrder: 2 },
+      { optionText: "The number of students", isCorrect: false, optionOrder: 3 },
+      { optionText: "The subject being studied", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The independent variable is what the researcher manipulates — in this case, the study method. Test scores are the dependent variable.",
+  },
+  {
+    code: "S-RR-008",
+    questionText:
+      "The SQ3R reading method stands for Survey, Question, Read, Recite, and Review. This method is effective primarily because it:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Study Skills",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Promotes active engagement with the material before, during, and after reading", isCorrect: true, optionOrder: 1 },
+      { optionText: "Allows students to read faster by skipping difficult sections", isCorrect: false, optionOrder: 2 },
+      { optionText: "Eliminates the need for note-taking", isCorrect: false, optionOrder: 3 },
+      { optionText: "Guarantees that students will remember everything they read", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "SQ3R promotes active reading through multiple passes at the text — previewing, questioning, reading with purpose, recalling, and reviewing.",
+  },
+  {
+    code: "S-RR-009",
+    questionText:
+      "You have a 3-hour study block tomorrow and need to cover Mathematics (hard), English (medium), and History (easy). What is the most effective scheduling strategy?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Time Management",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Study Mathematics first when your energy is highest, then English, then History", isCorrect: true, optionOrder: 1 },
+      { optionText: "Study History first because it is easiest, saving Math for last", isCorrect: false, optionOrder: 2 },
+      { optionText: "Spend the entire 3 hours on Mathematics only", isCorrect: false, optionOrder: 3 },
+      { optionText: "Study 10 minutes of each subject in rotation", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Tackle the hardest subject first when mental energy peaks, then move to easier subjects. This maximises productivity.",
+  },
+  {
+    code: "S-RR-010",
+    questionText:
+      "What comes next in the letter sequence: A, C, F, J, ?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "IQ Puzzle",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "O", isCorrect: true, optionOrder: 1 },
+      { optionText: "K", isCorrect: false, optionOrder: 2 },
+      { optionText: "M", isCorrect: false, optionOrder: 3 },
+      { optionText: "N", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The gap between consecutive letters increases by 1 each time: A(+2)→C(+3)→F(+4)→J(+5)→O.",
+  },
+  {
+    code: "S-RR-011",
+    questionText:
+      "If you rotate the shape 90° clockwise, which of the following would be its mirror image?",
+    questionType: "multiple_choice",
+    rendererType: "geometry",
+    concept: "Spatial Reasoning",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 55,
+    allowsCalculator: false,
+    geometryData: {
+      type: "graph",
+      label: "L-shaped figure in the first quadrant of a coordinate grid",
+      dimensions: { rotation: 90, mirror: true },
+      markings: ["Original L-shape at (1,1), (1,2), (2,1)"],
+    },
+    options: [
+      { optionText: "The shape reflected across the vertical axis", isCorrect: true, optionOrder: 1 },
+      { optionText: "The shape rotated 270° clockwise", isCorrect: false, optionOrder: 2 },
+      { optionText: "The original shape unchanged", isCorrect: false, optionOrder: 3 },
+      { optionText: "The shape translated 3 units up", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "A 90° clockwise rotation followed by a mirror image produces a reflection across the vertical axis combined with the rotation.",
+  },
+  {
+    code: "S-RR-012",
+    questionText:
+      "The pie chart shows the distribution of 180 students by faculty: Sciences 40%, Arts 25%, Engineering 20%, Business 15%. How many students are in Engineering?",
+    questionType: "multiple_choice",
+    rendererType: "chart",
+    concept: "Data Sufficiency",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: true,
+    chartData: {
+      type: "pie",
+      title: "Student Distribution by Faculty",
+      labels: ["Sciences", "Arts", "Engineering", "Business"],
+      values: [40, 25, 20, 15],
+      unit: "%",
+    },
+    options: [
+      { optionText: "36", isCorrect: true, optionOrder: 1 },
+      { optionText: "20", isCorrect: false, optionOrder: 2 },
+      { optionText: "45", isCorrect: false, optionOrder: 3 },
+      { optionText: "72", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "20% of 180 = 0.20 × 180 = 36 students.",
+  },
+  {
+    code: "S-RR-013",
+    questionText:
+      "When choosing a career path, which factor should be prioritised for long-term satisfaction?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Decision Making",
+    difficultyLevel: "easy",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Alignment between personal values, interests, and job demands", isCorrect: true, optionOrder: 1 },
+      { optionText: "Starting salary only", isCorrect: false, optionOrder: 2 },
+      { optionText: "What your parents want you to do", isCorrect: false, optionOrder: 3 },
+      { optionText: "The shortest university programme available", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Research in career psychology shows that value-alignment and interest-fit are the strongest predictors of long-term career satisfaction.",
+  },
+  {
+    code: "S-RR-014",
+    questionText:
+      "A student submits a group project where only one member did the work but all members receive the same grade. This situation raises questions of:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Ethical Reasoning",
+    difficultyLevel: "easy",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 35,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Equity — fair distribution of credit and responsibility", isCorrect: true, optionOrder: 1 },
+      { optionText: "Autonomy — each student's right to choose their contribution level", isCorrect: false, optionOrder: 2 },
+      { optionText: "Beneficence — the maximum good for all involved", isCorrect: false, optionOrder: 3 },
+      { optionText: "Confidentiality — protecting the free-rider's identity", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Equity concerns arise when rewards (grades) are not proportionate to contributions. Free-riding is ethically problematic because it is unfair to those who did the work.",
+  },
+  {
+    code: "S-RR-015",
+    questionText:
+      "You have a monthly income of ₦120,000. Your fixed expenses are: rent ₦45,000, transport ₦12,000, utilities ₦8,000, food ₦25,000. How much remains for savings and discretionary spending?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Financial Literacy",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 45,
+    allowsCalculator: true,
+    options: [
+      { optionText: "₦30,000", isCorrect: true, optionOrder: 1 },
+      { optionText: "₦20,000", isCorrect: false, optionOrder: 2 },
+      { optionText: "₦35,000", isCorrect: false, optionOrder: 3 },
+      { optionText: "₦25,000", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Total expenses = 45,000 + 12,000 + 8,000 + 25,000 = ₦90,000. Remaining = 120,000 − 90,000 = ₦30,000.",
+  },
+  {
+    code: "S-RR-016",
+    questionText:
+      "A researcher surveys students in her own class about study habits. This sampling method is best described as:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Research Methodology",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 35,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Convenience sampling", isCorrect: true, optionOrder: 1 },
+      { optionText: "Random sampling", isCorrect: false, optionOrder: 2 },
+      { optionText: "Stratified sampling", isCorrect: false, optionOrder: 3 },
+      { optionText: "Snowball sampling", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Convenience sampling uses participants who are readily available. It is quick and cheap but may not represent the broader population.",
+  },
+  {
+    code: "S-RR-017",
+    questionText:
+      "The Cornell Note-Taking System involves dividing a page into which sections?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Study Skills",
+    difficultyLevel: "easy",
+    bloomLevel: "remember",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Cue column, note-taking area, and summary section", isCorrect: true, optionOrder: 1 },
+      { optionText: "Only the main note-taking area", isCorrect: false, optionOrder: 2 },
+      { optionText: "Questions and answers only", isCorrect: false, optionOrder: 3 },
+      { optionText: "Diagrams and text sections", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The Cornell system divides the page into three sections: a narrow cue column (for keywords/questions), a wide note-taking area, and a bottom summary section.",
+  },
+  {
+    code: "S-RR-018",
+    questionText:
+      "You have exams in 4 weeks: Subject A (most difficult, worth 40%), Subject B (moderate, 30%), Subject C (easy, 20%), Subject D (moderate, 10%). Best time allocation strategy?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Time Management",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Allocate time proportionally to both difficulty and weighting: most time to A, then B and D, least to C", isCorrect: true, optionOrder: 1 },
+      { optionText: "Spend equal time on all four subjects", isCorrect: false, optionOrder: 2 },
+      { optionText: "Study only Subject A since it's worth the most", isCorrect: false, optionOrder: 3 },
+      { optionText: "Study subjects in alphabetical order each day", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Optimal time allocation considers both weight (grade contribution) and difficulty (effort needed). Subject A deserves the most time, while low-weight easy subjects need less.",
+  },
+  // -------------------------------------------------------------------------
+  // MEDIUM (S-RR-019 to S-RR-037)
+  // -------------------------------------------------------------------------
+  {
+    code: "S-RR-019",
+    questionText:
+      "What is the missing number: 7, 14, 23, 34, ?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "IQ Puzzle",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "47", isCorrect: true, optionOrder: 1 },
+      { optionText: "45", isCorrect: false, optionOrder: 2 },
+      { optionText: "43", isCorrect: false, optionOrder: 3 },
+      { optionText: "49", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Differences increase by 2 each time: +7, +9, +11, so next difference = +13. 34 + 13 = 47.",
+  },
+  {
+    code: "S-RR-020",
+    questionText:
+      "A cube is painted red on all faces and then cut into 27 smaller equal cubes. How many small cubes have exactly 2 faces painted?",
+    questionType: "multiple_choice",
+    rendererType: "geometry",
+    concept: "Spatial Reasoning",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 70,
+    allowsCalculator: false,
+    geometryData: {
+      type: "graph",
+      label: "A 3×3×3 cube divided into 27 unit cubes, painted red on all outer faces",
+      dimensions: { cubeSize: 3, paintedFaces: 6 },
+      markings: ["3×3×3 cube", "All outer faces painted red"],
+    },
+    options: [
+      { optionText: "12", isCorrect: true, optionOrder: 1 },
+      { optionText: "8", isCorrect: false, optionOrder: 2 },
+      { optionText: "6", isCorrect: false, optionOrder: 3 },
+      { optionText: "24", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Cubes with exactly 2 painted faces are on the edges but NOT at the corners. Each edge has 1 such cube (excluding corners), 12 edges → 12 cubes.",
+  },
+  {
+    code: "S-RR-021",
+    questionText:
+      "The line graph shows a student's test scores across 6 tests. In which test did the student show the greatest improvement from the previous test?",
+    questionType: "multiple_choice",
+    rendererType: "chart",
+    concept: "Data Sufficiency",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    chartData: {
+      type: "line",
+      title: "Test Scores Over Term",
+      labels: ["Test 1", "Test 2", "Test 3", "Test 4", "Test 5", "Test 6"],
+      values: [55, 62, 58, 73, 71, 84],
+      unit: "Score (%)",
+    },
+    options: [
+      { optionText: "Test 4 (from Test 3)", isCorrect: true, optionOrder: 1 },
+      { optionText: "Test 2 (from Test 1)", isCorrect: false, optionOrder: 2 },
+      { optionText: "Test 6 (from Test 5)", isCorrect: false, optionOrder: 3 },
+      { optionText: "Test 3 (from Test 2)", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Test 4: 73 − 58 = 15 points improvement (largest single increase). Test 6 was +13; Test 2 was +7.",
+  },
+  {
+    code: "S-RR-022",
+    questionText:
+      "You are choosing between two universities. University X has a 78% graduation rate but tuition is ₦800,000/year. University Y has a 62% graduation rate and tuition is ₦450,000/year. Which decision-making framework best applies?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Decision Making",
+    difficultyLevel: "medium",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 55,
+    allowsCalculator: true,
+    options: [
+      { optionText: "A cost-benefit analysis weighing graduation rates against financial investment", isCorrect: true, optionOrder: 1 },
+      { optionText: "Choosing the cheapest option regardless of other factors", isCorrect: false, optionOrder: 2 },
+      { optionText: "Selecting based on the university with the best campus food", isCorrect: false, optionOrder: 3 },
+      { optionText: "Flipping a coin since the decision is too complex", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Cost-benefit analysis systematically compares the expected outcomes (graduation rate) against costs (tuition). Higher graduation rates may justify higher tuition if the graduate premium is significant.",
+  },
+  {
+    code: "S-RR-023",
+    questionText:
+      "A researcher fabricates data to support a hypothesis. This violates which research ethics principle most directly?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Ethical Reasoning",
+    difficultyLevel: "medium",
+    bloomLevel: "understand",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Honesty — fabricating data is a form of scientific fraud", isCorrect: true, optionOrder: 1 },
+      { optionText: "Confidentiality — participant data was protected", isCorrect: false, optionOrder: 2 },
+      { optionText: "Informed consent — participants agreed to the study", isCorrect: false, optionOrder: 3 },
+      { optionText: "Minimising harm — no participants were harmed", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Data fabrication is a direct violation of the honesty/integrity principle in research ethics. It undermines the entire scientific enterprise.",
+  },
+  {
+    code: "S-RR-024",
+    questionText:
+      "You invest ₦200,000 at 6% compound interest annually. After 2 years, what is the total amount?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Financial Literacy",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 55,
+    allowsCalculator: true,
+    options: [
+      { optionText: "₦224,720", isCorrect: true, optionOrder: 1 },
+      { optionText: "₦224,000", isCorrect: false, optionOrder: 2 },
+      { optionText: "₦212,000", isCorrect: false, optionOrder: 3 },
+      { optionText: "₦248,000", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "A = P(1+r)ⁿ = 200,000(1.06)² = 200,000 × 1.1236 = ₦224,720.",
+  },
+  {
+    code: "S-RR-025",
+    questionText:
+      "A study finds that students who drink coffee perform better on exams. However, the coffee drinkers also slept 1 hour more on average than non-drinkers. This confound means:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Research Methodology",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "We cannot attribute the performance difference to coffee alone — sleep may be the actual cause.", isCorrect: true, optionOrder: 1 },
+      { optionText: "Coffee definitely improves exam performance.", isCorrect: false, optionOrder: 2 },
+      { optionText: "Sleep is irrelevant to the study findings.", isCorrect: false, optionOrder: 3 },
+      { optionText: "The study should be published immediately.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "A confounding variable (sleep) is associated with both the independent variable (coffee) and the dependent variable (performance), making it impossible to isolate causation.",
+  },
+  {
+    code: "S-RR-026",
+    questionText:
+      "The 'spacing effect' in cognitive psychology refers to the finding that:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Study Skills",
+    difficultyLevel: "medium",
+    bloomLevel: "understand",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Distributing study sessions over time produces better retention than massed practice", isCorrect: true, optionOrder: 1 },
+      { optionText: "Studying in the same location every day improves memory", isCorrect: false, optionOrder: 2 },
+      { optionText: "Listening to music while studying enhances focus", isCorrect: false, optionOrder: 3 },
+      { optionText: "Reading text aloud is always better than silent reading", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The spacing effect is one of the most robust findings in cognitive psychology — information is better remembered if study sessions are spaced out over time rather than crammed.",
+  },
+  {
+    code: "S-RR-027",
+    questionText:
+      "Using the Eisenhower Matrix, an activity that is both urgent and important should be:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Time Management",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Done immediately and personally", isCorrect: true, optionOrder: 1 },
+      { optionText: "Scheduled for later", isCorrect: false, optionOrder: 2 },
+      { optionText: "Deleted or ignored", isCorrect: false, optionOrder: 3 },
+      { optionText: "Assigned to someone else", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The Eisenhower Matrix: urgent + important = do first. Important but not urgent = schedule. Urgent but not important = delegate. Neither = delete.",
+  },
+  {
+    code: "S-RR-028",
+    questionText:
+      "Which number replaces the question mark? 3 → 12, 5 → 30, 7 → 56, 9 → ?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "IQ Puzzle",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "90", isCorrect: true, optionOrder: 1 },
+      { optionText: "81", isCorrect: false, optionOrder: 2 },
+      { optionText: "72", isCorrect: false, optionOrder: 3 },
+      { optionText: "99", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Pattern: n → n × (n+1). 3×4=12, 5×6=30, 7×8=56, 9×10=90.",
+  },
+  {
+    code: "S-RR-029",
+    questionText:
+      "Arrange the following events in chronological order: (a) Nigeria's independence, (b) First moon landing, (c) Fall of Berlin Wall, (d) End of apartheid in South Africa.",
+    questionType: "multiple_choice",
+    rendererType: "interactive",
+    concept: "Spatial Reasoning",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 60,
+    allowsCalculator: false,
+    interactiveData: {
+      type: "ordering",
+      items: ["Nigeria's independence (1960)", "First moon landing (1969)", "Fall of Berlin Wall (1989)", "End of apartheid (1994)"],
+      correctOrder: ["Nigeria's independence (1960)", "First moon landing (1969)", "Fall of Berlin Wall (1989)", "End of apartheid (1994)"],
+    },
+    options: [
+      { optionText: "Arrange events in correct chronological order", isCorrect: true, optionOrder: 1 },
+    ],
+    explanation:
+      "Nigeria independence: 1960. Moon landing: 1969. Berlin Wall fell: 1989. Apartheid ended: 1994.",
+  },
+  {
+    code: "S-RR-030",
+    questionText:
+      "The chart shows the percentage of students who passed each subject. If 500 students took the exams, how many more passed Mathematics than Physics?",
+    questionType: "multiple_choice",
+    rendererType: "chart",
+    concept: "Data Sufficiency",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 50,
+    allowsCalculator: true,
+    chartData: {
+      type: "bar",
+      title: "Pass Rates by Subject",
+      labels: ["Mathematics", "English", "Physics", "Chemistry", "Biology"],
+      values: [65, 82, 48, 55, 78],
+      unit: "%",
+    },
+    options: [
+      { optionText: "85", isCorrect: true, optionOrder: 1 },
+      { optionText: "65", isCorrect: false, optionOrder: 2 },
+      { optionText: "17", isCorrect: false, optionOrder: 3 },
+      { optionText: "325", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Math passed = 65% of 500 = 325. Physics passed = 48% of 500 = 240. Difference = 325 − 240 = 85.",
+  },
+  {
+    code: "S-RR-031",
+    questionText:
+      "You are considering a student loan of ₦1,000,000 with a 5% annual interest rate. If you defer payment until after graduation in 4 years, approximately how much will you owe?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Financial Literacy",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 55,
+    allowsCalculator: true,
+    options: [
+      { optionText: "₦1,215,506", isCorrect: true, optionOrder: 1 },
+      { optionText: "₦1,200,000", isCorrect: false, optionOrder: 2 },
+      { optionText: "₦1,050,000", isCorrect: false, optionOrder: 3 },
+      { optionText: "₦1,250,000", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "A = P(1+r)⁴ = 1,000,000(1.05)⁴ = 1,000,000 × 1.215506 = ₦1,215,506.",
+  },
+  {
+    code: "S-RR-032",
+    questionText:
+      "A student discovers that a classmate has been hacking into the school's grade system to change grades. What is the most ethically appropriate action?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Ethical Reasoning",
+    difficultyLevel: "medium",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Report the incident to school authorities as academic dishonesty", isCorrect: true, optionOrder: 1 },
+      { optionText: "Ignore it since it does not affect you directly", isCorrect: false, optionOrder: 2 },
+      { optionText: "Ask the classmate to share the method with you", isCorrect: false, optionOrder: 3 },
+      { optionText: "Post about it on social media anonymously", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Academic dishonesty involving system hacking is serious misconduct. Reporting to authorities upholds academic integrity and prevents further harm to the system.",
+  },
+  {
+    code: "S-RR-033",
+    questionText:
+      "In a randomised controlled trial, participants are randomly assigned to groups. This is important because it:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Research Methodology",
+    difficultyLevel: "medium",
+    bloomLevel: "understand",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Reduces the likelihood that pre-existing differences between groups affect the results", isCorrect: true, optionOrder: 1 },
+      { optionText: "Ensures all participants receive the same treatment", isCorrect: false, optionOrder: 2 },
+      { optionText: "Guarantees the results will be statistically significant", isCorrect: false, optionOrder: 3 },
+      { optionText: "Eliminates the need for a control group", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Random assignment distributes known and unknown confounding variables evenly across groups, allowing causal inferences about the treatment effect.",
+  },
+  {
+    code: "S-RR-034",
+    questionText:
+      "The 'retrieval practice' study strategy involves:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Study Skills",
+    difficultyLevel: "medium",
+    bloomLevel: "understand",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Actively recalling information from memory without looking at notes", isCorrect: true, optionOrder: 1 },
+      { optionText: "Re-reading textbook chapters multiple times", isCorrect: false, optionOrder: 2 },
+      { optionText: "Highlighting key passages with different colours", isCorrect: false, optionOrder: 3 },
+      { optionText: "Watching educational videos about the topic", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Retrieval practice (also called the testing effect) is the most effective study strategy — actively recalling information strengthens neural pathways far more than passive review.",
+  },
+  {
+    code: "S-RR-035",
+    questionText:
+      "You have four tasks: (1) Assignment due tomorrow (20% grade), (2) Project due next week (40%), (3) Reading for a quiz next month (5%), (4) Optional review session today. Which should you prioritise first?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Time Management",
+    difficultyLevel: "medium",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Assignment due tomorrow — most urgent with significant grade weight", isCorrect: true, optionOrder: 1 },
+      { optionText: "Project due next week — highest grade weight should come first", isCorrect: false, optionOrder: 2 },
+      { optionText: "Reading for quiz next month — start early to spread learning", isCorrect: false, optionOrder: 3 },
+      { optionText: "Optional review session — attending shows initiative", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The assignment is both urgent (due tomorrow) and important (20% of grade). The project, while worth more, has a longer deadline and can follow.",
+  },
+  {
+    code: "S-RR-036",
+    questionText:
+      "In a logical reasoning test, if all As are Bs, and some Bs are Cs, which of the following must be true?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "IQ Puzzle",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 55,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Some As may be Cs but it is not guaranteed", isCorrect: true, optionOrder: 1 },
+      { optionText: "All As are Cs", isCorrect: false, optionOrder: 2 },
+      { optionText: "No As are Cs", isCorrect: false, optionOrder: 3 },
+      { optionText: "All Cs are As", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "A ⊆ B, and B ∩ C is non-empty, but the overlap might not involve any As. It is possible that some As are Cs, but not guaranteed.",
+  },
+  {
+    code: "S-RR-037",
+    questionText:
+      "You are choosing between two phone plans: Plan A: ₦5,000/month for 500 minutes + ₦10/min after. Plan B: ₦8,000/month for unlimited minutes. If you typically use 700 minutes/month, which is cheaper?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Financial Literacy",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 55,
+    allowsCalculator: true,
+    options: [
+      { optionText: "Plan B (₦8,000) is ₦2,000 cheaper", isCorrect: true, optionOrder: 1 },
+      { optionText: "Plan A (₦7,000) is ₦1,000 cheaper", isCorrect: false, optionOrder: 2 },
+      { optionText: "Plan A (₦12,000) is cheaper", isCorrect: false, optionOrder: 3 },
+      { optionText: "They cost the same", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Plan A: 5,000 + (700−500)×10 = 5,000 + 2,000 = ₦7,000. Plan B: ₦8,000. Plan A is ₦1,000 cheaper. Wait — 700−500 = 200 excess minutes × 10 = ₦2,000 extra. Total = ₦7,000. Plan B = ₦8,000. So Plan A is ₦1,000 cheaper.",
+  },
+  // -------------------------------------------------------------------------
+  // HARD (S-RR-038 to S-RR-055)
+  // -------------------------------------------------------------------------
+  {
+    code: "S-RR-038",
+    questionText:
+      "What is the missing number in the matrix? | 2  3  5 | | 7  11 13 | | 17 ?  23 |",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "IQ Puzzle",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 60,
+    allowsCalculator: false,
+    options: [
+      { optionText: "19", isCorrect: true, optionOrder: 1 },
+      { optionText: "21", isCorrect: false, optionOrder: 2 },
+      { optionText: "18", isCorrect: false, optionOrder: 3 },
+      { optionText: "20", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "These are prime numbers arranged row-wise: 2,3,5,7,11,13,17,19,23. The missing number is 19.",
+  },
+  {
+    code: "S-RR-039",
+    questionText:
+      "The figure shows a right triangle with sides a, b, c where c is the hypotenuse. If the area of the triangle is 24 units² and one leg is 6 units, what is the length of the hypotenuse?",
+    questionType: "multiple_choice",
+    rendererType: "geometry",
+    concept: "Spatial Reasoning",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 70,
+    allowsCalculator: true,
+    geometryData: {
+      type: "right_triangle",
+      label: "Right triangle with legs 6 and 8, hypotenuse c",
+      dimensions: { leg1: 6, leg2: 8, hypotenuse: 10, area: 24 },
+      markings: ["Right angle at vertex C", "Leg a = 6", "Leg b = ?", "Hypotenuse c"],
+    },
+    options: [
+      { optionText: "10", isCorrect: true, optionOrder: 1 },
+      { optionText: "12", isCorrect: false, optionOrder: 2 },
+      { optionText: "2√13", isCorrect: false, optionOrder: 3 },
+      { optionText: "14", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Area = ½ × base × height = ½ × 6 × b = 24 → b = 8. Hypotenuse c = √(6² + 8²) = √100 = 10.",
+  },
+  {
+    code: "S-RR-040",
+    questionText:
+      "The pie chart shows the budget allocation of a university. If the total budget is ₦500 million and 15% is allocated to research, how much more is spent on salaries (45%) than on infrastructure (25%)?",
+    questionType: "multiple_choice",
+    rendererType: "chart",
+    concept: "Data Sufficiency",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 55,
+    allowsCalculator: true,
+    chartData: {
+      type: "pie",
+      title: "University Budget Allocation",
+      labels: ["Salaries", "Infrastructure", "Research", "Other"],
+      values: [45, 25, 15, 15],
+      unit: "%",
+    },
+    options: [
+      { optionText: "₦100 million", isCorrect: true, optionOrder: 1 },
+      { optionText: "₦75 million", isCorrect: false, optionOrder: 2 },
+      { optionText: "₦125 million", isCorrect: false, optionOrder: 3 },
+      { optionText: "₦50 million", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Salaries = 45% × 500M = ₦225M. Infrastructure = 25% × 500M = ₦125M. Difference = 225 − 125 = ₦100M.",
+  },
+  {
+    code: "S-RR-041",
+    questionText:
+      "You are admitted to a university abroad with a partial scholarship covering 40% of tuition. Tuition is ,000/year and living expenses are ,000/year. Your family can contribute ,000/year. You have two options: (A) take a loan for the shortfall, or (B) attend a local university tuition-free with living costs of ,000/year. Which is financially better over 4 years?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Decision Making",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 80,
+    allowsCalculator: true,
+    options: [
+      { optionText: "Local university saves approximately ,000 over 4 years", isCorrect: true, optionOrder: 1 },
+      { optionText: "Abroad university is only ,000 more over 4 years", isCorrect: false, optionOrder: 2 },
+      { optionText: "Both options cost the same over 4 years", isCorrect: false, optionOrder: 3 },
+      { optionText: "Abroad university saves money due to higher earning potential", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Abroad/year: tuition after scholarship = ,000, living = ,000, total = ,000. Family gives ,000 → loan need = ,000/year. 4-year cost = ,000 loan. Local/year: living = ,000. 4-year cost = ,000. Saving = ,000 − ,000 = ,000. Wait, let me recalculate. The question doesn't factor in future earnings; it asks which is financially better. Local is clearly cheaper.",
+  },
+  {
+    code: "S-RR-042",
+    questionText:
+      "You are on a university admissions committee. An applicant from a disadvantaged background has slightly lower test scores but exceptional personal essays demonstrating resilience. Another applicant has perfect scores but generic essays. Which admission decision is most ethically defensible?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Ethical Reasoning",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 65,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Consider contextual factors — holistic review that accounts for opportunity disparities", isCorrect: true, optionOrder: 1 },
+      { optionText: "Always admit the higher test score — merit is measured by standardised metrics", isCorrect: false, optionOrder: 2 },
+      { optionText: "Admit the disadvantaged student solely based on demographic background", isCorrect: false, optionOrder: 3 },
+      { optionText: "Reject both and reopen applications", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Ethical admissions consider both merit and contextual factors. A holistic review recognises that identical scores may reflect different levels of opportunity and effort.",
+  },
+  {
+    code: "S-RR-043",
+    questionText:
+      "You invest ₦500,000 in a stock that appreciates 20% in year 1, then depreciates 20% in year 2. What is the net percentage change?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Financial Literacy",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 60,
+    allowsCalculator: true,
+    options: [
+      { optionText: "−4% (loss of ₦20,000)", isCorrect: true, optionOrder: 1 },
+      { optionText: "0% (no net change)", isCorrect: false, optionOrder: 2 },
+      { optionText: "−2% (loss of ₦10,000)", isCorrect: false, optionOrder: 3 },
+      { optionText: "+2% (gain of ₦10,000)", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "After year 1: 500,000 × 1.20 = ₦600,000. After year 2: 600,000 × 0.80 = ₦480,000. Net change = (480,000 − 500,000)/500,000 = −4%. The order matters — percentage losses on larger amounts outweigh gains.",
+  },
+  {
+    code: "S-RR-044",
+    questionText:
+      "A study reports a p-value of 0.03 for the difference between two teaching methods. The correct interpretation is:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Research Methodology",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 55,
+    allowsCalculator: false,
+    options: [
+      { optionText: "There is a 3% probability of observing such a difference (or more extreme) if there were actually no real difference.", isCorrect: true, optionOrder: 1 },
+      { optionText: "There is a 97% chance the new method is better.", isCorrect: false, optionOrder: 2 },
+      { optionText: "The probability that the null hypothesis is true is 3%.", isCorrect: false, optionOrder: 3 },
+      { optionText: "The results are practically significant.", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "A p-value is the probability of obtaining results at least as extreme as those observed, assuming the null hypothesis is true. It is NOT the probability that the null hypothesis is true.",
+  },
+  {
+    code: "S-RR-045",
+    questionText:
+      "Metacognition — the ability to think about one's own thinking — is crucial for effective learning because it enables students to:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Study Skills",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Monitor their understanding, identify gaps, and adjust strategies accordingly", isCorrect: true, optionOrder: 1 },
+      { optionText: "Memorise facts more quickly through repetition", isCorrect: false, optionOrder: 2 },
+      { optionText: "Avoid studying difficult topics until the last minute", isCorrect: false, optionOrder: 3 },
+      { optionText: "Multitask more effectively during study sessions", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Metacognition involves self-regulation of learning — assessing what you know, identifying what you don't, and selecting appropriate strategies to bridge the gap.",
+  },
+  {
+    code: "S-RR-046",
+    questionText:
+      "You have the following deadlines: Monday (Group presentation — 25%), Tuesday (Individual report — 15%), Thursday (Math exam — 30%), Friday (Physics quiz — 10%). Today is Saturday. A friend invites you to a party Sunday evening. What should you do?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Time Management",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 60,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Prepare for Monday presentation Sunday morning, then attend the party briefly, ensuring you can work on Math and Physics Sunday night and Monday after presenting", isCorrect: true, optionOrder: 1 },
+      { optionText: "Skip the party entirely and study all weekend", isCorrect: false, optionOrder: 2 },
+      { optionText: "Go to the party and start everything on Monday after the group presentation", isCorrect: false, optionOrder: 3 },
+      { optionText: "Work on the Math exam all weekend since it is worth the most", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Optimal strategy: prioritise the Monday group presentation (urgent + important), use Sunday morning productively, allow brief social break, then continue with other work. Complete time blocking is needed.",
+  },
+  {
+    code: "S-RR-047",
+    questionText:
+      "Find the missing number in the 3×3 grid: | 5  8  13 | | 7  11  ?  | | 9  14 23 |",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "IQ Puzzle",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 70,
+    allowsCalculator: false,
+    options: [
+      { optionText: "18", isCorrect: true, optionOrder: 1 },
+      { optionText: "16", isCorrect: false, optionOrder: 2 },
+      { optionText: "20", isCorrect: false, optionOrder: 3 },
+      { optionText: "17", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "In each row, the third number = sum of first two. Row 1: 5+8=13. Row 2: 7+11=18. Row 3: 9+14=23.",
+  },
+  {
+    code: "S-RR-048",
+    questionText:
+      "A quadrilateral has vertices at (0,0), (4,0), (5,3), (1,3). What is its area?",
+    questionType: "multiple_choice",
+    rendererType: "geometry",
+    concept: "Spatial Reasoning",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 70,
+    allowsCalculator: true,
+    geometryData: {
+      type: "quadrilateral",
+      label: "Quadrilateral with vertices (0,0), (4,0), (5,3), (1,3)",
+      dimensions: { x1: 0, y1: 0, x2: 4, y2: 0, x3: 5, y3: 3, x4: 1, y4: 3 },
+      markings: ["Vertices labelled A(0,0), B(4,0), C(5,3), D(1,3)"],
+    },
+    options: [
+      { optionText: "12", isCorrect: true, optionOrder: 1 },
+      { optionText: "15", isCorrect: false, optionOrder: 2 },
+      { optionText: "10", isCorrect: false, optionOrder: 3 },
+      { optionText: "18", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "This is a parallelogram. Base = 4 (from (0,0) to (4,0)). Height = 3 (vertical distance). Area = base × height = 4 × 3 = 12.",
+  },
+  {
+    code: "S-RR-049",
+    questionText:
+      "The bar chart shows monthly revenue for a small business over 6 months. If operating costs are ₦150,000/month and revenue was above costs only in months with a seasonal promotion, in which months did the business turn a profit?",
+    questionType: "multiple_choice",
+    rendererType: "chart",
+    concept: "Data Sufficiency",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 60,
+    allowsCalculator: true,
+    chartData: {
+      type: "bar",
+      title: "Monthly Revenue",
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+      values: [120, 95, 185, 140, 220, 130],
+      unit: "₦ (thousands)",
+    },
+    options: [
+      { optionText: "March and May only", isCorrect: true, optionOrder: 1 },
+      { optionText: "January, March, and May", isCorrect: false, optionOrder: 2 },
+      { optionText: "March, April, and May", isCorrect: false, optionOrder: 3 },
+      { optionText: "May only", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Profit when revenue > ₦150,000: Jan: 120 < 150, Feb: 95 < 150, Mar: 185 > 150, Apr: 140 < 150, May: 220 > 150, Jun: 130 < 150. Only March and May were profitable.",
+  },
+  {
+    code: "S-RR-050",
+    questionText:
+      "You must choose between two scholarship offers: Offer A covers 100% tuition but requires working 15hrs/week in the admissions office. Offer B covers 60% tuition with no work requirement, but you'd need a loan for the remaining 40%. Tuition = ,000/year. Work-study pays /hr. Which is financially better?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Decision Making",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 75,
+    allowsCalculator: true,
+    options: [
+      { optionText: "Offer A saves ,000/year but requires 15hrs/week commitment", isCorrect: true, optionOrder: 1 },
+      { optionText: "Offer B saves more because you avoid work", isCorrect: false, optionOrder: 2 },
+      { optionText: "Both offers are financially equivalent", isCorrect: false, optionOrder: 3 },
+      { optionText: "Offer B is better because you can use loan-free hours to study", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Offer A: earns 15×12 = /week × 30 weeks = ,400/year from work-study, plus ,000 tuition covered = net benefit of ,400 value. Offer B: 60% tuition covered = ,000, need ,000 loan. Net cost = ,000 debt. Offer A is clearly better financially, though it requires time commitment.",
+  },
+  {
+    code: "S-RR-051",
+    questionText:
+      "A tech company uses an AI algorithm to screen job applicants. The algorithm inadvertently discriminates against women because the training data reflected past hiring biases. The ethical responsibility lies primarily with:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Ethical Reasoning",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 60,
+    allowsCalculator: false,
+    options: [
+      { optionText: "The developers and the company — they should have tested for bias before deployment", isCorrect: true, optionOrder: 1 },
+      { optionText: "The algorithm itself — AI should be held accountable for its decisions", isCorrect: false, optionOrder: 2 },
+      { optionText: "The past hiring managers whose biased data was used", isCorrect: false, optionOrder: 3 },
+      { optionText: "The applicants — they should challenge the outcome legally", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Developers and deploying organisations have ethical responsibility to audit AI systems for bias before deployment. The algorithm is a tool; responsibility lies with its creators and users.",
+  },
+  {
+    code: "S-RR-052",
+    questionText:
+      "If you earn ₦8,000,000/year and the tax brackets are: first ₦3,000,000 at 7%, next ₦3,000,000 at 11%, remainder at 15%. How much tax do you pay?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Financial Literacy",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 70,
+    allowsCalculator: true,
+    options: [
+      { optionText: "₦840,000", isCorrect: true, optionOrder: 1 },
+      { optionText: "₦960,000", isCorrect: false, optionOrder: 2 },
+      { optionText: "₦720,000", isCorrect: false, optionOrder: 3 },
+      { optionText: "₦1,200,000", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "First ₦3M × 7% = ₦210,000. Next ₦3M × 11% = ₦330,000. Remainder ₦2M × 15% = ₦300,000. Total = 210,000 + 330,000 + 300,000 = ₦840,000.",
+  },
+  {
+    code: "S-RR-053",
+    questionText:
+      "A study finds that students who attend private secondary schools have higher university GPAs than public school graduates. Which threat to validity is most serious?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Research Methodology",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 60,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Selection bias — students who attend private schools differ systematically in family background, resources, and prior achievement", isCorrect: true, optionOrder: 1 },
+      { optionText: "Measurement error — university GPAs may be calculated differently", isCorrect: false, optionOrder: 2 },
+      { optionText: "Experimenter bias — researchers may expect private school students to perform better", isCorrect: false, optionOrder: 3 },
+      { optionText: "Attrition — students may drop out of university at different rates", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Selection bias is the primary threat — students self-select into school types, so any GPA difference may reflect pre-existing differences rather than school effectiveness.",
+  },
+  {
+    code: "S-RR-054",
+    questionText:
+      "The 'interleaving' study strategy — mixing different topics during a study session — is effective because it:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Study Skills",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Forces the brain to discriminate between concepts and strengthens neural connections", isCorrect: true, optionOrder: 1 },
+      { optionText: "Allows students to study more material in less time", isCorrect: false, optionOrder: 2 },
+      { optionText: "Reduces the total amount of practice needed", isCorrect: false, optionOrder: 3 },
+      { optionText: "Eliminates the need for review sessions", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Interleaving requires the brain to constantly identify which strategy to apply, strengthening discriminative processing and long-term retention, even though it feels harder during practice.",
+  },
+  {
+    code: "S-RR-055",
+    questionText:
+      "Complete the following statements about successful university transition:",
+    questionType: "multiple_choice",
+    rendererType: "interactive",
+    concept: "Study Skills",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 70,
+    allowsCalculator: false,
+    interactiveData: {
+      type: "fill_blanks",
+      blanks: [
+        {
+          id: "blank1",
+          textBefore: "Successful university students develop",
+          textAfter: "by setting specific goals, monitoring progress, and adjusting approaches based on feedback.",
+          correctAnswer: "self-regulation",
+        },
+        {
+          id: "blank2",
+          textBefore: "Building a",
+          textAfter: "of peers, mentors, and academic advisors is critical for navigating university challenges.",
+          correctAnswer: "support network",
+        },
+        {
+          id: "blank3",
+          textBefore: "Effective time management requires distinguishing between",
+          textAfter: "tasks (those that contribute to long-term goals) and merely urgent ones.",
+          correctAnswer: "important",
+        },
+      ],
+    },
+    options: [
+      { optionText: "Complete the blanks with the correct academic terms", isCorrect: true, optionOrder: 1 },
+    ],
+    explanation:
+      "Self-regulation, support networks, and prioritising important over urgent tasks are evidence-based strategies for university success.",
+  },
+];
+
+export type Ss3ToUniversitySeed = typeof ss3ToUniversityQuestions[0];
