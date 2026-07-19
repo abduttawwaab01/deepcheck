@@ -26,6 +26,8 @@ export default function LoginPage() {
     if (res?.error) {
       setError("Invalid email or password");
       setLoading(false);
+    } else if (res?.url) {
+      router.push(res.url);
     } else {
       router.push("/student");
     }

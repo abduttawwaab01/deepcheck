@@ -19,7 +19,7 @@ import bcrypt from "bcryptjs";
 
 async function seed() {
   console.log("🌱 Seeding Deep Check diagnostic database...\n");
-  const pwHash = await bcrypt.hash("password123", 10);
+  const pwHash = await bcrypt.hash("successor", 10);
 
   // ─── Roles ─────────────────────────────────────────────────────────
   const roleData = await db.insert(roles).values([
@@ -39,7 +39,7 @@ async function seed() {
 
   // ─── Admin User ────────────────────────────────────────────────────
   const [adminUser] = await db.insert(users).values([
-    { email: "admin@deepcheck.app", firstName: "Deep", lastName: "Admin", passwordHash: pwHash, isVerified: true, isActive: true },
+    { email: "admin@skoolar.org", firstName: "Deep", lastName: "Admin", passwordHash: pwHash, isVerified: true, isActive: true },
   ]).returning();
   await db.insert(userRoles).values([{ userId: adminUser.id, roleId: adminRole.id }]);
   console.log("✓ Admin user created");
