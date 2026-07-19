@@ -14,8 +14,9 @@ const features = [
 
 export function DeepIntelligence() {
   return (
-    <section id="features" className="bg-neutral-50 py-20 dark:bg-neutral-900/50 lg:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="features" className="relative border-y border-neutral-200 bg-neutral-50 py-20 dark:border-neutral-800 dark:bg-neutral-900/50 lg:py-28">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary-500/10 via-transparent to-transparent" />
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -29,7 +30,7 @@ export function DeepIntelligence() {
           <h2 className="mt-4 text-3xl font-bold text-neutral-900 dark:text-white lg:text-4xl">
             Beyond Simple Testing
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-neutral-500 dark:text-neutral-400">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-neutral-600 dark:text-neutral-400">
             Deep Check is not another exam platform. It's a diagnostic intelligence engine powered by cognitive science and AI.
           </p>
         </motion.div>
@@ -42,13 +43,16 @@ export function DeepIntelligence() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
               viewport={{ once: true }}
-              className="group rounded-xl border border-neutral-200 bg-white p-6 transition-all duration-300 hover:border-primary-200 hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-950 dark:hover:border-primary-800"
+              className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-6 transition-all duration-300 hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-950"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-50 to-secondary-50 text-primary-600 transition-colors group-hover:from-primary-500 group-hover:to-secondary-500 group-hover:text-white dark:from-primary-950 dark:to-secondary-950 dark:group-hover:from-primary-600 dark:group-hover:to-secondary-600">
+              {/* Animated border gradient on hover */}
+              <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary-500/0 via-secondary-500/0 to-primary-500/0 opacity-0 transition-opacity duration-500 group-hover:from-primary-500/10 group-hover:via-secondary-500/10 group-hover:to-primary-500/10 group-hover:opacity-100" />
+
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-50 to-secondary-50 text-primary-600 transition-all duration-300 group-hover:scale-110 group-hover:from-primary-500 group-hover:to-secondary-500 group-hover:text-white dark:from-primary-950 dark:to-secondary-950 dark:text-primary-400 dark:group-hover:from-primary-600 dark:group-hover:to-secondary-600 dark:group-hover:text-white">
                 <feature.icon className="h-6 w-6" />
               </div>
               <h3 className="mt-4 text-lg font-semibold text-neutral-900 dark:text-white">{feature.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">{feature.description}</p>
+              <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">{feature.description}</p>
             </motion.div>
           ))}
         </div>

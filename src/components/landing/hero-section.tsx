@@ -30,7 +30,7 @@ export function HeroSection() {
               </span>
             </h1>
 
-            <p className="mt-6 text-lg leading-relaxed text-neutral-600 dark:text-neutral-400">
+            <p className="mt-6 text-lg leading-relaxed text-neutral-700 dark:text-neutral-300">
               The world's most advanced learning diagnostic intelligence platform. 
               We uncover every hidden gap, misconception, and cognitive weakness 
               before your child moves to the next class.
@@ -45,7 +45,7 @@ export function HeroSection() {
                   </svg>
                 </Button>
               </Link>
-              <Button variant="outline" size="lg">
+              <Button variant="outline" size="lg" className="dark:text-neutral-300 dark:border-neutral-700">
                 <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>
@@ -53,10 +53,10 @@ export function HeroSection() {
               </Button>
             </div>
 
-            <div className="mt-8 flex items-center gap-4 text-sm text-neutral-500">
+            <div className="mt-8 flex items-center gap-4 text-sm text-neutral-500 dark:text-neutral-400">
               <div className="flex -space-x-2">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-8 w-8 rounded-full border-2 border-white bg-gradient-to-br from-primary-400 to-secondary-400" />
+                  <div key={i} className="h-8 w-8 rounded-full border-2 border-white bg-gradient-to-br from-primary-400 to-secondary-400 dark:border-neutral-900" />
                 ))}
               </div>
               <span>Join <strong className="text-neutral-900 dark:text-white">12,000+</strong> parents already using Deep Check</span>
@@ -69,9 +69,9 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative"
           >
-            <div className="glass rounded-2xl p-6 shadow-2xl">
+            <div className="glass-strong rounded-2xl p-6 shadow-2xl">
               <div className="mb-4 flex items-center justify-between">
-                <span className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">Live Diagnostic Preview</span>
+                <span className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">Live Diagnostic Preview</span>
                 <span className="rounded-full bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success">AI-Powered</span>
               </div>
 
@@ -89,13 +89,13 @@ export function HeroSection() {
               </div>
 
               <div className="mt-4 grid grid-cols-2 gap-3">
-                <div className="rounded-xl bg-neutral-50 p-3 dark:bg-neutral-800/50">
-                  <div className="text-2xl font-bold text-primary-600">62%</div>
-                  <div className="text-xs text-neutral-500">Overall Readiness</div>
+                <div className="rounded-xl bg-neutral-50 p-3 dark:bg-neutral-800/80">
+                  <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">62%</div>
+                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Overall Readiness</div>
                 </div>
-                <div className="rounded-xl bg-neutral-50 p-3 dark:bg-neutral-800/50">
+                <div className="rounded-xl bg-neutral-50 p-3 dark:bg-neutral-800/80">
                   <div className="text-2xl font-bold text-error">3</div>
-                  <div className="text-xs text-neutral-500">Critical Gaps</div>
+                  <div className="text-xs text-neutral-500 dark:text-neutral-400">Critical Gaps</div>
                 </div>
               </div>
 
@@ -112,7 +112,7 @@ export function HeroSection() {
             </div>
 
             <div className="absolute -bottom-4 -right-4 h-24 w-24 rounded-2xl bg-gradient-to-br from-secondary-500 to-secondary-700 p-0.5 shadow-lg">
-              <div className="flex h-full w-full items-center justify-center rounded-2xl bg-white text-center text-xs font-bold text-secondary-600 dark:bg-neutral-900">
+              <div className="flex h-full w-full items-center justify-center rounded-2xl bg-white text-center text-xs font-bold text-secondary-600 dark:bg-neutral-900 dark:text-secondary-400">
                 AI <br />Powered
               </div>
             </div>

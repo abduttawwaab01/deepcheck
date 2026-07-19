@@ -4,12 +4,13 @@ import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard, ClipboardCheck, BarChart3, Settings, LogOut,
   ChevronLeft, Bell, Menu, X, User, School, Users, BookOpen,
   FileText, Wallet, GraduationCap, HeartHandshake, Sparkles,
-  Brain, Target, ShieldCheck,
+  Brain, Target, ShieldCheck, Sun, Moon,
 } from "lucide-react";
 
 const portalConfig: Record<string, { href: string; label: string; icon: any }[]> = {
@@ -63,7 +64,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const role = (session?.user as any)?.role as string | undefined;
+
+  useEffect(() => { setMounted(true); }, []);
   const links = role ? portalConfig[role] || portalConfig.student : portalConfig.student;
   const gradient = role ? roleColors[role] || roleColors.student : roleColors.student;
 
@@ -149,7 +154,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </button>
 
           <div className="ml-auto flex items-center gap-3">
-            <button className="relative rounded-lg p-2 text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800">
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="relative rounded-lg p-2 text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                aria-label="Toggle theme"
+              >
+                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute left-1/2 top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              </button>
+            )}
+            <button className="relative rounded-lg p-2 text-neutral-600 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800">
               <Bell className="h-5 w-5" />
               <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-error" />
             </button>

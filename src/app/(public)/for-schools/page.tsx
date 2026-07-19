@@ -14,7 +14,6 @@ const features = [
 export default function ForSchoolsPage() {
   return (
     <main>
-      {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-b from-primary-900 via-primary-800 to-primary-700 px-4 py-24 text-white">
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10" />
         <div className="relative mx-auto max-w-4xl text-center">
@@ -29,28 +28,26 @@ export default function ForSchoolsPage() {
         </div>
       </section>
 
-      {/* Features */}
       <section className="mx-auto max-w-6xl px-4 py-20">
         <h2 className="text-center text-3xl font-bold text-neutral-900 dark:text-white">Everything your school needs</h2>
-        <p className="mx-auto mt-2 max-w-2xl text-center text-neutral-500">One platform for assessment, analytics, and improvement.</p>
+        <p className="mx-auto mt-2 max-w-2xl text-center text-neutral-500 dark:text-neutral-400">One platform for assessment, analytics, and improvement.</p>
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {features.map((f) => (
-            <div key={f.title} className="glass rounded-2xl p-6 transition-all hover:-translate-y-1 hover:shadow-lg">
+            <div key={f.title} className="glass-strong rounded-2xl p-6 transition-all hover:-translate-y-1 hover:shadow-lg">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 dark:bg-primary-950">
-                <f.icon className="h-6 w-6 text-primary-600" />
+                <f.icon className="h-6 w-6 text-primary-600 dark:text-primary-400" />
               </div>
               <h3 className="mt-4 text-lg font-semibold text-neutral-900 dark:text-white">{f.title}</h3>
-              <p className="mt-2 text-sm text-neutral-500">{f.desc}</p>
+              <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">{f.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Pricing CTA */}
-      <section className="bg-neutral-50 px-4 py-20 dark:bg-neutral-950">
+      <section className="bg-neutral-50 px-4 py-20 dark:bg-neutral-900/50">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-3xl font-bold text-neutral-900 dark:text-white">Simple, transparent pricing</h2>
-          <p className="mx-auto mt-2 max-w-xl text-neutral-500">
+          <p className="mx-auto mt-2 max-w-xl text-neutral-600 dark:text-neutral-400">
             ₦150,000/school/term. Bulk discounts available for multi-campus schools. Includes all features, unlimited assessments, and priority support.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
@@ -59,13 +56,12 @@ export default function ForSchoolsPage() {
         </div>
       </section>
 
-      {/* Stats */}
       <section className="mx-auto max-w-4xl px-4 py-20 text-center">
         <div className="grid gap-8 md:grid-cols-3">
           {[{ value: "500+", label: "Schools Trust Us" }, { value: "50K+", label: "Assessments Delivered" }, { value: "98%", label: "Uptime SLA" }].map((s) => (
             <div key={s.value}>
-              <div className="text-4xl font-extrabold text-primary-600">{s.value}</div>
-              <div className="mt-1 text-sm text-neutral-500">{s.label}</div>
+              <div className="text-4xl font-extrabold text-primary-600 dark:text-primary-400">{s.value}</div>
+              <div className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">{s.label}</div>
             </div>
           ))}
         </div>

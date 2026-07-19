@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HeroSection } from "@/components/landing/hero-section";
+import { IntelligenceDemoBar } from "@/components/landing/intelligence-demo-bar";
 import { StatsCounter } from "@/components/landing/stats-counter";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { DeepIntelligence } from "@/components/landing/deep-intelligence";
@@ -15,6 +16,7 @@ export default function LandingPage() {
       <Navbar />
       <main>
         <HeroSection />
+        <IntelligenceDemoBar />
         <StatsCounter />
         <HowItWorks />
         <DeepIntelligence />

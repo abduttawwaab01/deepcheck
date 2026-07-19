@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { formatNaira } from "@/lib/utils";
@@ -38,11 +39,16 @@ const plans = [
 
 export function PricingSection() {
   return (
-    <section id="pricing" className="py-20 lg:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="pricing" className="relative py-20 lg:py-28">
+      <div className="absolute inset-0 bg-gradient-to-b from-neutral-50 via-transparent to-neutral-50 dark:from-neutral-900/50 dark:via-transparent dark:to-neutral-900/50" />
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
-          <h2 className="text-3xl font-bold text-neutral-900 dark:text-white lg:text-4xl">Simple, Transparent Pricing</h2>
-          <p className="mt-4 text-lg text-neutral-500 dark:text-neutral-400">Start free. Upgrade when you need deeper insights.</p>
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-primary-50 px-4 py-1.5 text-sm font-medium text-primary-700 dark:border-primary-800 dark:bg-primary-950/50 dark:text-primary-300">
+            <Sparkles className="h-4 w-4" />
+            Simple, Transparent Pricing
+          </div>
+          <h2 className="mt-4 text-3xl font-bold text-neutral-900 dark:text-white lg:text-4xl">Start Free. Upgrade When Ready.</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-neutral-600 dark:text-neutral-400">No hidden fees. No surprise charges. Just clear, affordable access to the world's most advanced learning diagnostic.</p>
         </motion.div>
 
         <div className="mt-12 grid gap-8 lg:grid-cols-3">
@@ -53,10 +59,10 @@ export function PricingSection() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.15 }}
               viewport={{ once: true }}
-              className={`relative rounded-2xl border p-8 transition-all duration-300 ${
+              className={`relative rounded-2xl border p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
                 plan.popular
-                  ? "border-primary-500 bg-gradient-to-b from-primary-50 to-white shadow-xl dark:from-primary-950/50 dark:to-neutral-950"
-                  : "border-neutral-200 bg-white hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-950"
+                  ? "border-primary-500 bg-gradient-to-b from-primary-50 to-white shadow-lg dark:from-primary-950/50 dark:to-neutral-950"
+                  : "border-neutral-200 bg-white hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:border-neutral-700"
               }`}
             >
               {plan.popular && (
@@ -70,15 +76,15 @@ export function PricingSection() {
                 <span className="text-4xl font-extrabold text-neutral-900 dark:text-white">
                   {plan.price === 0 ? "Free" : formatNaira(plan.price)}
                 </span>
-                {plan.price > 0 && <span className="ml-1 text-sm text-neutral-500">one-time</span>}
+                {plan.price > 0 && <span className="ml-1 text-sm text-neutral-500 dark:text-neutral-400">one-time</span>}
               </div>
-              <p className="mt-2 text-sm text-neutral-500">{plan.description}</p>
+              <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">{plan.description}</p>
 
               <ul className="mt-6 space-y-3">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-sm">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-                    <span className="text-neutral-600 dark:text-neutral-300">{f}</span>
+                    <span className="text-neutral-700 dark:text-neutral-300">{f}</span>
                   </li>
                 ))}
               </ul>

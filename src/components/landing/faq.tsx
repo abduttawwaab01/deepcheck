@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, Sparkles } from "lucide-react";
 
 const faqs = [
   { q: "What is Deep Check?", a: "Deep Check is a learning diagnostic intelligence platform that identifies every learning gap, misconception, and cognitive weakness before a learner progresses to the next educational level. It is not an exam or quiz platform." },
@@ -19,28 +19,51 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="bg-neutral-50 py-20 dark:bg-neutral-900/50 lg:py-28">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+    <section className="relative py-20 lg:py-28">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary-500/[0.02] to-transparent" />
+      <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
-          <h2 className="text-3xl font-bold text-neutral-900 dark:text-white lg:text-4xl">Frequently Asked Questions</h2>
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-primary-50 px-4 py-1.5 text-sm font-medium text-primary-700 dark:border-primary-800 dark:bg-primary-950/50 dark:text-primary-300">
+            <Sparkles className="h-4 w-4" />
+            Got Questions?
+          </div>
+          <h2 className="mt-4 text-3xl font-bold text-neutral-900 dark:text-white lg:text-4xl">Frequently Asked Questions</h2>
         </motion.div>
 
         <div className="mt-12 space-y-3">
           {faqs.map((faq, i) => (
-            <div key={i} className="overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950">
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.05 }}
+              viewport={{ once: true }}
+              className="overflow-hidden rounded-xl border border-neutral-200 bg-white transition-colors hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:border-neutral-700"
+            >
               <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 className="flex w-full items-center justify-between px-6 py-4 text-left transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900"
               >
                 <span className="font-medium text-neutral-900 dark:text-white">{faq.q}</span>
-                <ChevronDown className={`h-5 w-5 shrink-0 text-neutral-400 transition-transform duration-200 ${openIndex === i ? "rotate-180" : ""}`} />
+                <ChevronDown
+                  className={`h-5 w-5 shrink-0 text-neutral-400 transition-transform duration-300 ${openIndex === i ? "rotate-180" : ""}`}
+                />
               </button>
-              <div className={`overflow-hidden transition-all duration-300 ${openIndex === i ? "max-h-96" : "max-h-0"}`}>
-                <p className="border-t border-neutral-100 px-6 py-4 text-sm leading-relaxed text-neutral-600 dark:border-neutral-800 dark:text-neutral-400">
-                  {faq.a}
-                </p>
-              </div>
-            </div>
+              <AnimatePresence>
+                {openIndex === i && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    <p className="border-t border-neutral-100 px-6 py-4 text-sm leading-relaxed text-neutral-600 dark:border-neutral-800 dark:text-neutral-300">
+                      {faq.a}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           ))}
         </div>
       </div>
