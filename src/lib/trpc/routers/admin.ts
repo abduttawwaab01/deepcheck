@@ -1,26 +1,43 @@
 import { z } from "zod";
 import { adminProcedure, router } from "../server";
 import { db } from "@/lib/db";
+import { schools } from "@/lib/db/schemas/schools";
 import { questionBanks, questionBankConfigs } from "@/lib/db/schemas/question-banks";
-import { questions, questionOptions, users, userRoles } from "@/lib/db/schemas";
-import { eq, sql, like, and, desc } from "drizzle-orm";
+import { questions, questionOptions, users, userRoles, roles } from "@/lib/db/schemas";
+import { paymentTransactions } from "@/lib/db/schemas/payments";
+import { reportRequests, basicReports } from "@/lib/db/schemas/reports";
+import { systemConfig } from "@/lib/db/schemas/system";
+import { assessmentInstances } from "@/lib/db/schemas/assessments";
+import { eq, sql, like, and, desc, inArray } from "drizzle-orm";
 
 export const adminRouter = router({
   getDashboardStats: adminProcedure.query(async () => {
     const [userCount] = await db.select({ count: sql<number>`count(*)` }).from(users).where(sql`${users.deletedAt} IS NULL`);
+    const [schoolCount] = await db.select({ count: sql<number>`count(*)` }).from(schools).where(sql`${schools.deletedAt} IS NULL`);
+    const [assessmentCount] = await db.select({ count: sql<number>`count(*)` }).from(assessmentInstances).where(eq(assessmentInstances.status, "completed"));
     const [questionCount] = await db.select({ count: sql<number>`count(*)` }).from(questions).where(sql`${questions.deletedAt} IS NULL`);
+    const [pendingReports] = await db.select({ count: sql<number>`count(*)` }).from(reportRequests).where(eq(reportRequests.status, "pending"));
     const [bankCount] = await db.select({ count: sql<number>`count(*)` }).from(questionBanks);
     const [configCount] = await db.select({ count: sql<number>`count(*)` }).from(questionBankConfigs);
+    const [revenue] = await db.select({ total: sql<number>`coalesce(sum(${paymentTransactions.amount}), 0)` })
+      .from(paymentTransactions).where(eq(paymentTransactions.status, "success"));
+
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const [recentUsers] = await db.select({ count: sql<number>`count(*)` }).from(users)
+      .where(sql`${users.createdAt} > ${thirtyDaysAgo.toISOString()}`);
+
     return {
       totalUsers: userCount?.count || 0,
-      totalSchools: 134,
-      totalAssessments: 15039,
-      revenueMTD: "₦1,420,000",
-      pendingReports: 8,
+      totalSchools: schoolCount?.count || 0,
+      totalAssessments: assessmentCount?.count || 0,
+      revenueMTD: `₦${Number(revenue?.total || 0).toLocaleString()}`,
+      pendingReports: pendingReports?.count || 0,
       questionCount: questionCount?.count || 0,
       bankCount: bankCount?.count || 0,
       sectionCount: configCount?.count || 0,
-      userGrowth: Array.from({ length: 30 }, () => Math.floor(Math.random() * 50) + 50),
+      recentUsers: recentUsers?.count || 0,
+      userGrowth: [],
     };
   }),
 
@@ -59,7 +76,7 @@ export const adminRouter = router({
         db.select({ count: sql<number>`count(*)` }).from(questions).where(and(...conditions)),
       ]);
       const qIds = items.map((q) => q.id);
-      const opts = qIds.length > 0 ? await db.select().from(questionOptions).where(sql`${questionOptions.questionId} IN (${qIds.join(",")})`) : [];
+      const opts = qIds.length > 0 ? await db.select().from(questionOptions).where(inArray(questionOptions.questionId, qIds)) : [];
       const optsByQ: Record<string, typeof opts> = {};
       for (const o of opts) {
         if (!optsByQ[o.questionId]) optsByQ[o.questionId] = [];
@@ -153,14 +170,18 @@ export const adminRouter = router({
       const items = await db.select().from(users).where(and(...conditions)).orderBy(desc(users.createdAt)).limit(input.pageSize).offset(offset);
       const [totalResult] = await db.select({ count: sql<number>`count(*)` }).from(users).where(and(...conditions));
       const userIds = items.map((u) => u.id);
-      const roles = userIds.length > 0 ? await db.select().from(userRoles).where(sql`${userRoles.userId} IN (${userIds.join(",")})`) : [];
+      const userRolesData = userIds.length > 0 ? await db.select().from(userRoles).where(inArray(userRoles.userId, userIds)) : [];
+      const roleIds = [...new Set(userRolesData.map((r) => r.roleId))];
+      const roleNames = roleIds.length > 0 ? await db.select({ id: roles.id, name: roles.name }).from(roles).where(inArray(roles.id, roleIds)) : [];
+      const roleNameMap: Record<string, string> = {};
+      for (const r of roleNames) roleNameMap[r.id] = r.name;
       const rolesByUser: Record<string, string[]> = {};
-      for (const r of roles) {
+      for (const r of userRolesData) {
         if (!rolesByUser[r.userId]) rolesByUser[r.userId] = [];
-        rolesByUser[r.userId].push(r.roleId);
+        rolesByUser[r.userId].push(roleNameMap[r.roleId] || r.roleId);
       }
       return {
-        items: items.map((u) => ({ ...u, roleIds: rolesByUser[u.id] || [] })),
+        items: items.map((u) => ({ ...u, roleNames: rolesByUser[u.id] || [] })),
         total: totalResult?.count || 0,
       };
     }),
@@ -179,32 +200,161 @@ export const adminRouter = router({
       return { success: true };
     }),
 
-  // Legacy endpoints (keep for compat)
-  getUsers: adminProcedure.query(async () => [
-    { id: "u1", name: "Gracefield Principal", email: "principal@gracefield.ng", role: "school_admin", status: "active", createdAt: "2026-01-15" },
-    { id: "u2", name: "Chioma Okafor", email: "chioma@gracefield.ng", role: "teacher", status: "active", createdAt: "2026-02-01" },
-    { id: "u3", name: "Adeola Ogunlesi", email: "adeola@school.edu.ng", role: "student", status: "active", createdAt: "2026-01-20" },
-    { id: "u4", name: "Ngozi Ogunlesi", email: "parent@family.ng", role: "parent", status: "active", createdAt: "2026-03-10" },
-  ]),
-  getSchools: adminProcedure.query(async () => [
-    { id: "s1", name: "Gracefield College", city: "Lagos", students: 456, teachers: 28, status: "verified", subscription: "premium" },
-    { id: "s2", name: "Excel Comprehensive Academy", city: "Abuja", students: 312, teachers: 19, status: "verified", subscription: "free" },
-  ]),
-  getQuestions: adminProcedure.query(async () => [
-    { id: "Q001", text: "What is 1/2 + 1/3?", subject: "Mathematics", type: "academic", bloom: "Apply", status: "approved" },
-    { id: "Q002", text: "How often do you prepare lesson plans?", subject: "Teacher Quality", type: "teacher_quality", bloom: "Evaluate", status: "approved" },
-    { id: "Q003", text: "Does your school have functioning labs?", subject: "School Quality", type: "school_quality", bloom: "Understand", status: "approved" },
-  ]),
-  getReportRequests: adminProcedure.query(async () => [
-    { id: "r1", requester: "Gracefield College", type: "school_admin", target: "Adeola Ogunlesi", assessmentType: "academic", status: "pending", createdAt: "2026-07-18" },
-    { id: "r2", requester: "Ngozi Ogunlesi", type: "parent", target: "Chidi Okonkwo", assessmentType: "academic", status: "pending", createdAt: "2026-07-17" },
-    { id: "r3", requester: "Chioma Okafor", type: "teacher", target: "Chioma Okafor", assessmentType: "teacher_quality", status: "completed", createdAt: "2026-07-15" },
-  ]),
+  // ─── SCHOOLS ────────────────────────────────────────────────────────
+  getSchools: adminProcedure.query(async () => {
+    return db.select({
+      id: schools.id,
+      name: schools.name,
+      city: schools.city,
+      students: schools.studentCount,
+      teachers: schools.teacherCount,
+      status: schools.verificationStatus,
+      subscription: schools.subscriptionStatus,
+    }).from(schools).where(sql`${schools.deletedAt} IS NULL`).orderBy(schools.name);
+  }),
+
+  // ─── QUESTIONS (generic) ────────────────────────────────────────────
+  getQuestions: adminProcedure.query(async () => {
+    return db.select().from(questions).where(sql`${questions.deletedAt} IS NULL`).limit(200);
+  }),
+
+  // ─── REPORT REQUESTS ────────────────────────────────────────────────
+  getReportRequests: adminProcedure.query(async () => {
+    const requests = await db.select({
+      id: reportRequests.id,
+      requesterId: reportRequests.requesterId,
+      requesterRole: reportRequests.requesterRole,
+      targetUserId: reportRequests.targetUserId,
+      assessmentType: reportRequests.assessmentType,
+      status: reportRequests.status,
+      createdAt: reportRequests.createdAt,
+    }).from(reportRequests).orderBy(desc(reportRequests.createdAt));
+    const userIds = [...new Set(requests.flatMap((r) => [r.requesterId, r.targetUserId].filter(Boolean) as string[]))];
+    const userMap: Record<string, { firstName: string; lastName: string }> = {};
+    if (userIds.length > 0) {
+      const found = await db.select({ id: users.id, firstName: users.firstName, lastName: users.lastName })
+        .from(users).where(inArray(users.id, userIds));
+      for (const u of found) userMap[u.id] = u;
+    }
+    return requests.map((r) => ({
+      id: r.id,
+      requester: userMap[r.requesterId] ? `${userMap[r.requesterId].firstName} ${userMap[r.requesterId].lastName}` : r.requesterId,
+      target: r.targetUserId && userMap[r.targetUserId] ? `${userMap[r.targetUserId].firstName} ${userMap[r.targetUserId].lastName}` : r.targetUserId,
+      assessmentType: r.assessmentType,
+      status: r.status,
+      createdAt: r.createdAt?.toISOString?.() || String(r.createdAt),
+    }));
+  }),
+
   generateDeepReport: adminProcedure
     .input(z.object({ requestId: z.string() }))
-    .mutation(async ({ input }) => ({ success: true, reportId: `dr-${input.requestId}`, message: "Deep report generated successfully" })),
-  getPaymentHistory: adminProcedure.query(async () => [
-    { id: "p1", user: "Gracefield College", amount: "₦150,000", item: "School Term License", status: "completed", date: "2026-07-10" },
-    { id: "p2", user: "Ngozi Ogunlesi", amount: "₦3,000", item: "Deep Report - Adeola", status: "completed", date: "2026-07-12" },
-  ]),
+    .mutation(async ({ input }) => {
+      const [request] = await db.select().from(reportRequests)
+        .where(eq(reportRequests.id, input.requestId)).limit(1);
+      if (!request) return { success: false, message: "Request not found" };
+
+      await db.update(reportRequests).set({ status: "processing", updatedAt: new Date() })
+        .where(eq(reportRequests.id, input.requestId));
+
+      const { generateDeepReport } = await import("@/lib/engine/report-generator");
+      const userId = request.targetUserId || request.requesterId;
+      const instanceId = request.instanceId;
+
+      if (!userId || !instanceId) {
+        await db.update(reportRequests).set({ status: "failed", updatedAt: new Date() })
+          .where(eq(reportRequests.id, input.requestId));
+        return { success: false, message: "Missing user or assessment instance" };
+      }
+
+      const result = await generateDeepReport({ userId, instanceId });
+
+      if (result.success) {
+        await db.update(reportRequests).set({
+          status: "completed",
+          deepReportId: result.reportId,
+          updatedAt: new Date(),
+        }).where(eq(reportRequests.id, input.requestId));
+        return { success: true, reportId: result.reportId, message: "Deep report generated successfully" };
+      } else {
+        await db.update(reportRequests).set({ status: "failed", updatedAt: new Date() })
+          .where(eq(reportRequests.id, input.requestId));
+        return { success: false, message: result.error || "Generation failed" };
+      }
+    }),
+
+  // ─── PAYMENTS ───────────────────────────────────────────────────────
+  getPaymentHistory: adminProcedure.query(async () => {
+    const payments = await db.select({
+      id: paymentTransactions.id,
+      userId: paymentTransactions.userId,
+      amount: paymentTransactions.amount,
+      reference: paymentTransactions.reference,
+      status: paymentTransactions.status,
+      createdAt: paymentTransactions.createdAt,
+    }).from(paymentTransactions).orderBy(desc(paymentTransactions.createdAt)).limit(50);
+    const userIds = [...new Set(payments.map((p) => p.userId))];
+    const userMap: Record<string, string> = {};
+    if (userIds.length > 0) {
+      const found = await db.select({ id: users.id, firstName: users.firstName, lastName: users.lastName })
+        .from(users).where(inArray(users.id, userIds));
+      for (const u of found) userMap[u.id] = `${u.firstName} ${u.lastName}`;
+    }
+    return payments.map((p) => ({
+      id: p.id,
+      user: userMap[p.userId] || p.userId,
+      amount: `₦${p.amount}`,
+      reference: p.reference,
+      status: p.status,
+      date: p.createdAt?.toISOString?.()?.split("T")[0] || String(p.createdAt),
+    }));
+  }),
+
+  getSystemConfig: adminProcedure.query(async () => {
+    const rows = await db.select().from(systemConfig);
+    const config: Record<string, any> = {};
+    for (const r of rows) {
+      config[r.key] = r.value;
+    }
+    return {
+      appName: config.app_name || "Deep Check",
+      supportEmail: config.support_email || "support@deepcheck.app",
+      platformUrl: config.platform_url || "https://deepcheck.app",
+      smtpHost: config.smtp_host || "smtp.sendgrid.net",
+      smtpPort: config.smtp_port || "587",
+      fromAddress: config.from_address || "noreply@deepcheck.app",
+      sendTransactional: config.send_transactional ?? true,
+      currency: config.currency || "NGN",
+      taxRate: config.tax_rate || "7.5",
+      paymentGatewayKey: config.payment_gateway_key || "sk_live_••••••••••••••••",
+    };
+  }),
+
+  updateSystemConfig: adminProcedure
+    .input(z.object({
+      appName: z.string().optional(),
+      supportEmail: z.string().optional(),
+      platformUrl: z.string().optional(),
+      smtpHost: z.string().optional(),
+      smtpPort: z.string().optional(),
+      fromAddress: z.string().optional(),
+      sendTransactional: z.boolean().optional(),
+      currency: z.string().optional(),
+      taxRate: z.string().optional(),
+      paymentGatewayKey: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      for (const [key, value] of Object.entries(input)) {
+        if (value === undefined) continue;
+        const dbKey = key.replace(/([A-Z])/g, "_$1").toLowerCase();
+        const [existing] = await db.select().from(systemConfig)
+          .where(eq(systemConfig.key, dbKey)).limit(1);
+        if (existing) {
+          await db.update(systemConfig).set({ value, updatedAt: new Date() })
+            .where(eq(systemConfig.key, dbKey));
+        } else {
+          await db.insert(systemConfig).values({ key: dbKey, value });
+        }
+      }
+      return { success: true };
+    }),
 });

@@ -13,7 +13,7 @@ export default function StudentDashboardPage() {
 
   const stats = [{ l: "Assessments", v: data.assessments, i: ClipboardCheck, c: "text-primary-600" }, { l: "Weak Concepts", v: data.weakConcepts, i: Target, c: "text-error" }, { l: "Mastered", v: data.conceptsMastered, i: TrendingUp, c: "text-success" }, { l: "Deep Reports", v: data.deepReports, i: Sparkles, c: "text-secondary-600" }];
   const rd = data.overallReadiness;
-  const up = rd.score >= rd.previousScore;
+  const up = rd ? rd.score >= (rd.previousScore || 0) : true;
 
   return (
     <div className="animate-fade-in space-y-4 min-[320px]:space-y-6">
@@ -42,7 +42,7 @@ export default function StudentDashboardPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="glass rounded-2xl p-4">
+        {rd ? <div className="glass rounded-2xl p-4">
           <h3 className="mb-3 text-sm font-semibold text-neutral-700 dark:text-neutral-300">Readiness Score</h3>
           <div className="flex items-center gap-4">
             <div className="relative shrink-0">
@@ -66,7 +66,9 @@ export default function StudentDashboardPage() {
               <p className="mt-1 text-xs text-neutral-500">{up ? `+${rd.score - rd.previousScore}% improvement` : `${rd.previousScore - rd.score}% decline`}</p>
             </div>
           </div>
-        </div>
+        </div> : <div className="glass flex items-center justify-center rounded-2xl p-4 text-sm text-neutral-500">
+          Complete an assessment to see your readiness score
+        </div>}
 
         <div className="glass rounded-2xl p-4">
           <h3 className="mb-3 text-sm font-semibold text-neutral-700 dark:text-neutral-300">Cognitive Profile</h3>

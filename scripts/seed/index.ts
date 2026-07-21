@@ -9,7 +9,8 @@ import { subjects, topics, concepts, conceptPrerequisites, conceptMisconceptions
 import { questions as questionsTable, questionOptions } from "@/lib/db/schemas/questions";
 import { questionBanks, questionBankConfigs } from "@/lib/db/schemas/question-banks";
 import { assessmentConfigs } from "@/lib/db/schemas/assessments";
-import { subscriptionPlans } from "@/lib/db/schemas/payments";
+import { paymentTransactions, subscriptionPlans } from "@/lib/db/schemas/payments";
+import { schoolAssessmentQuestions, schoolAssessmentOptions } from "@/lib/db/schemas/school-assessments";
 import {
   primaryToJss1Questions,
   jss3ToSs1Questions,
@@ -17,6 +18,15 @@ import {
 } from "@/data/assessments/seeds";
 import bcrypt from "bcryptjs";
 import { sql } from "drizzle-orm";
+
+function shuffleArray<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 async function seed() {
   console.log("🌱 Seeding Deep Check diagnostic database...\n");
@@ -329,6 +339,11 @@ async function seed() {
   }
   console.log(`\n✓ ${insertedCount} questions inserted`);
 
+  // Shuffle options for each question so correct answer is not always first
+  for (const q of insertedQuestions) {
+    q.options = shuffleArray(q.options).map((o, i) => ({ ...o, optionOrder: i + 1 }));
+  }
+
   // Insert all options in one batch
   const allOptions = insertedQuestions.flatMap(({ id, options }) =>
     options.map((o: any) => ({ ...o, questionId: id }))
@@ -340,11 +355,127 @@ async function seed() {
 
   // ─── Terminal Assessment Configs ────────────────────────────────────
   await db.insert(assessmentConfigs).values([
-    { title: "Primary → JSS1 Terminal Assessment", subjectId: mathId, questionCount: 30, timeLimitMinutes: 45, isAdaptive: true },
-    { title: "JSS3 → SS1 Terminal Assessment", subjectId: mathId, questionCount: 30, timeLimitMinutes: 45, isAdaptive: true },
-    { title: "SS3 → University Terminal Assessment", subjectId: mathId, questionCount: 30, timeLimitMinutes: 45, isAdaptive: true },
+    { title: "Primary → JSS1 Terminal Assessment", subjectId: mathId, questionCount: 30, timeLimitMinutes: 45, isAdaptive: true, isPublic: true },
+    { title: "JSS3 → SS1 Terminal Assessment", subjectId: mathId, questionCount: 30, timeLimitMinutes: 45, isAdaptive: true, isPublic: true },
+    { title: "SS3 → University Terminal Assessment", subjectId: mathId, questionCount: 30, timeLimitMinutes: 45, isAdaptive: true, isPublic: true },
   ]);
-  console.log("✓ Terminal assessment configs created\n");
+  console.log("✓ Terminal assessment configs created");
+
+  // ─── Teacher Quality Bank ──────────────────────────────────────────
+  const tqBankData = await db.insert(questionBanks).values([
+    { level: "TCH-QUALITY", title: "Teacher Quality Assessment", description: "Assessment of teaching practice and professional competencies", displayOrder: 4 },
+  ]).returning();
+  const tqBankId = tqBankData[0].id;
+
+  const tqQuestions = [
+    {
+      questionText: "When planning a lesson, what is the MOST important first step?",
+      concept: "lesson-planning", bloomLevel: "understand", difficultyLevel: "medium", expectedTimeSecs: 60, allowsCalculator: false,
+      options: [
+        { optionText: "Selecting assessment methods", isCorrect: false, optionOrder: 1 },
+        { optionText: "Defining clear learning objectives", isCorrect: true, optionOrder: 2 },
+        { optionText: "Choosing instructional materials", isCorrect: false, optionOrder: 3 },
+        { optionText: "Arranging the classroom layout", isCorrect: false, optionOrder: 4 },
+      ],
+    },
+    {
+      questionText: "Which strategy BEST supports differentiated instruction in a mixed-ability classroom?",
+      concept: "differentiation", bloomLevel: "apply", difficultyLevel: "medium", expectedTimeSecs: 60, allowsCalculator: false,
+      options: [
+        { optionText: "Using tiered assignments at varied complexity levels", isCorrect: true, optionOrder: 1 },
+        { optionText: "Having all students complete the same worksheet", isCorrect: false, optionOrder: 2 },
+        { optionText: "Grouping only by student ability permanently", isCorrect: false, optionOrder: 3 },
+        { optionText: "Moving through content as quickly as possible", isCorrect: false, optionOrder: 4 },
+      ],
+    },
+    {
+      questionText: "Formative assessment is BEST described as:",
+      concept: "assessment-strategies", bloomLevel: "understand", difficultyLevel: "easy", expectedTimeSecs: 45, allowsCalculator: false,
+      options: [
+        { optionText: "End-of-term examinations", isCorrect: false, optionOrder: 1 },
+        { optionText: "Ongoing checks for understanding during instruction", isCorrect: true, optionOrder: 2 },
+        { optionText: "Standardized testing for accountability", isCorrect: false, optionOrder: 3 },
+        { optionText: "Summative projects at the end of a unit", isCorrect: false, optionOrder: 4 },
+      ],
+    },
+    {
+      questionText: "A student consistently interrupts class discussions. The MOST effective first response is to:",
+      concept: "classroom-management", bloomLevel: "apply", difficultyLevel: "medium", expectedTimeSecs: 45, allowsCalculator: false,
+      options: [
+        { optionText: "Send the student to the principal's office", isCorrect: false, optionOrder: 1 },
+        { optionText: "Privately discuss the behavior and set expectations", isCorrect: true, optionOrder: 2 },
+        { optionText: "Ignore the behavior entirely", isCorrect: false, optionOrder: 3 },
+        { optionText: "Publicly reprimand the student in front of peers", isCorrect: false, optionOrder: 4 },
+      ],
+    },
+    {
+      questionText: "When communicating with parents about student progress, it is BEST to:",
+      concept: "parent-communication", bloomLevel: "apply", difficultyLevel: "easy", expectedTimeSecs: 45, allowsCalculator: false,
+      options: [
+        { optionText: "Only contact parents when there is a problem", isCorrect: false, optionOrder: 1 },
+        { optionText: "Share both strengths and areas for growth constructively", isCorrect: true, optionOrder: 2 },
+        { optionText: "Compare the student negatively to classmates", isCorrect: false, optionOrder: 3 },
+        { optionText: "Use educational jargon to demonstrate expertise", isCorrect: false, optionOrder: 4 },
+      ],
+    },
+    {
+      questionText: "Which practice BEST promotes an inclusive classroom environment?",
+      concept: "inclusive-education", bloomLevel: "evaluate", difficultyLevel: "hard", expectedTimeSecs: 60, allowsCalculator: false,
+      options: [
+        { optionText: "Using multiple representation formats for content", isCorrect: true, optionOrder: 1 },
+        { optionText: "Teaching all students in exactly the same way", isCorrect: false, optionOrder: 2 },
+        { optionText: "Separating students with learning differences", isCorrect: false, optionOrder: 3 },
+        { optionText: "Focusing only on average-performing students", isCorrect: false, optionOrder: 4 },
+      ],
+    },
+  ];
+
+  for (const q of tqQuestions) {
+    const { options, ...fields } = q;
+    const [inserted] = await db.insert(questionsTable).values({
+      bankId: tqBankId,
+      questionType: "multiple_choice",
+      assessmentType: "teacher_quality",
+      rendererType: "standard",
+      difficultyParam: q.difficultyLevel === "easy" ? "-1.5" : q.difficultyLevel === "medium" ? "0" : "1.5",
+      discriminationParam: "1.2",
+      guessingParam: "0.25",
+      ...fields,
+    } as any).returning();
+    const shuffled = shuffleArray(q.options).map((o, i) => ({ ...o, optionOrder: i + 1 }));
+    await db.insert(questionOptions).values(
+      shuffled.map((o) => ({ questionId: inserted.id, optionText: o.optionText, isCorrect: o.isCorrect, optionOrder: o.optionOrder })),
+    );
+  }
+  console.log("✓ Teacher quality bank seeded with 6 questions\n");
+
+  // ─── School Assessment Questions ────────────────────────────────────
+  const schoolQBank = [
+    { text: "How would you rate the quality of teaching in your school?", opts: ["Excellent", "Good", "Average", "Poor"] },
+    { text: "Are the school facilities adequate for effective learning?", opts: ["Very Adequate", "Adequate", "Somewhat Adequate", "Inadequate"] },
+    { text: "How satisfied are you with the school's communication with parents?", opts: ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied"] },
+    { text: "Does the school provide adequate learning materials?", opts: ["Always", "Often", "Sometimes", "Rarely"] },
+    { text: "How safe do students feel at this school?", opts: ["Very Safe", "Safe", "Somewhat Safe", "Unsafe"] },
+    { text: "Are teachers available for extra help outside class hours?", opts: ["Always Available", "Often Available", "Sometimes Available", "Rarely Available"] },
+    { text: "How effective is the school's discipline policy?", opts: ["Very Effective", "Effective", "Somewhat Effective", "Ineffective"] },
+    { text: "Does the school adequately prepare students for examinations?", opts: ["Very Well", "Well", "Adequately", "Poorly"] },
+    { text: "How would you rate the school's extracurricular activities?", opts: ["Excellent", "Good", "Fair", "Poor"] },
+    { text: "Would you recommend this school to other parents?", opts: ["Definitely Yes", "Probably Yes", "Uncertain", "No"] },
+    { text: "Are classrooms equipped with modern teaching technology?", opts: ["Fully Equipped", "Partially Equipped", "Minimally Equipped", "Not Equipped"] },
+    { text: "How well does the school support students with special needs?", opts: ["Very Well", "Well", "Limited Support", "No Support"] },
+  ];
+  for (let i = 0; i < schoolQBank.length; i++) {
+    const sq = schoolQBank[i];
+    const [q] = await db.insert(schoolAssessmentQuestions).values({
+      questionText: sq.text,
+      displayOrder: i + 1,
+      isActive: true,
+    }).returning();
+    await db.insert(schoolAssessmentOptions).values(
+      sq.opts.map((text, j) => ({ questionId: q.id, optionText: text, optionOrder: j + 1, score: 4 - j })),
+    );
+  }
+  console.log("✓ School assessment seeded with 12 questions\n");
 
   // ─── Subscription Plans ────────────────────────────────────────────
   await db.insert(subscriptionPlans).values([

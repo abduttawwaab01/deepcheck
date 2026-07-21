@@ -29,3 +29,5 @@ export * from "./reports";
 export * from "./payments";
 export * from "./ai";
 export * from "./system";
+export * from "./school-assessments";
+export * from "./gamification";

@@ -1,21 +1,32 @@
 "use client";
 
-import { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { getAllAssessmentMeta } from "@/data/assessments/registry";
+import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Clock, FileText, Play, GraduationCap, ArrowRight, School, Sparkles, BarChart3 } from "lucide-react";
 
 const levelConfig: Record<string, { icon: any; gradient: string; label: string }> = {
-  primary_to_jss1: { icon: GraduationCap, gradient: "from-emerald-500 to-teal-500", label: "Primary → JSS" },
-  jss3_to_ss1: { icon: School, gradient: "from-blue-500 to-indigo-500", label: "JSS → SSS" },
-  ss3_to_university: { icon: Sparkles, gradient: "from-primary-500 to-secondary-500", label: "SSS → University" },
+  "primary-to-jss1": { icon: GraduationCap, gradient: "from-emerald-500 to-teal-500", label: "Primary → JSS" },
+  "jss3-to-ss1": { icon: School, gradient: "from-blue-500 to-indigo-500", label: "JSS → SSS" },
+  "ss3-to-university": { icon: Sparkles, gradient: "from-primary-500 to-secondary-500", label: "SSS → University" },
 };
 
 export default function AssessmentsPage() {
   const router = useRouter();
-  const assessments = useMemo(() => getAllAssessmentMeta(), []);
+  const { data: assessments = [], isLoading } = trpc.student.getAssessmentListings.useQuery();
+
+  if (isLoading) return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="glass rounded-2xl p-5 animate-pulse">
+          <div className="h-12 w-12 rounded-xl bg-neutral-200 dark:bg-neutral-800" />
+          <div className="mt-4 h-5 w-3/4 rounded bg-neutral-200 dark:bg-neutral-800" />
+          <div className="mt-2 h-4 w-full rounded bg-neutral-200 dark:bg-neutral-800" />
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div className="animate-fade-in space-y-6">
@@ -28,7 +39,7 @@ export default function AssessmentsPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {assessments.map((a) => {
-          const config = levelConfig[a.level] || levelConfig.primary_to_jss1;
+          const config = levelConfig[a.level] || levelConfig["primary-to-jss1"];
           const Icon = config.icon;
           return (
             <div key={a.id} className="glass rounded-2xl p-5 transition-all hover:shadow-md flex flex-col">

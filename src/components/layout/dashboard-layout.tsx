@@ -10,7 +10,7 @@ import {
   LayoutDashboard, ClipboardCheck, BarChart3, Settings, LogOut,
   ChevronLeft, Bell, Menu, X, User, School, Users, BookOpen,
   FileText, Wallet, GraduationCap, HeartHandshake, Sparkles,
-  Brain, Target, ShieldCheck, Sun, Moon,
+  Brain, Target, ShieldCheck, Shield, Sun, Moon,
 } from "lucide-react";
 
 const portalConfig: Record<string, { href: string; label: string; icon: any }[]> = {
@@ -25,23 +25,28 @@ const portalConfig: Record<string, { href: string; label: string; icon: any }[]>
   ],
   school_admin: [
     { href: "/school", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/school/analytics", label: "Analytics", icon: BarChart3 },
     { href: "/school/teachers", label: "Teachers", icon: Users },
     { href: "/school/students", label: "Students", icon: GraduationCap },
     { href: "/school/assessment", label: "School Assessment", icon: ShieldCheck },
     { href: "/school/reports", label: "Reports", icon: FileText },
     { href: "/school/settings", label: "Settings", icon: Settings },
   ],
-  teacher: [
-    { href: "/teacher", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/teacher/assessment", label: "Take Assessment", icon: ClipboardCheck },
-    { href: "/teacher/reports", label: "My Reports", icon: BarChart3 },
-    { href: "/teacher/settings", label: "Settings", icon: Settings },
-  ],
   student: [
     { href: "/student", label: "Dashboard", icon: LayoutDashboard },
     { href: "/student/assessments", label: "Assessments", icon: ClipboardCheck },
+    { href: "/student/practice", label: "Practice", icon: Target },
+    { href: "/student/reviews", label: "Review Schedule", icon: Brain },
     { href: "/student/reports", label: "Reports", icon: BarChart3 },
     { href: "/student/settings", label: "Settings", icon: Settings },
+  ],
+  teacher: [
+    { href: "/teacher", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/teacher/assessment", label: "Take Assessment", icon: ClipboardCheck },
+    { href: "/teacher/analytics", label: "Item Analysis", icon: Brain },
+    { href: "/teacher/insights", label: "Class Insights", icon: Shield },
+    { href: "/teacher/reports", label: "My Reports", icon: BarChart3 },
+    { href: "/teacher/settings", label: "Settings", icon: Settings },
   ],
   parent: [
     { href: "/parent", label: "Dashboard", icon: LayoutDashboard },

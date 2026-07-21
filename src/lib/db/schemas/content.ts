@@ -74,3 +74,31 @@ export const cognitiveSkills = pgTable("cognitive_skills", {
   displayOrder: integer("display_order").default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+export const cognitiveAttributes = pgTable("cognitive_attributes", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  code: varchar("code", { length: 30 }).unique().notNull(),
+  description: text("description"),
+  category: varchar("category", { length: 50 }),
+  subjectId: uuid("subject_id").references(() => subjects.id, { onDelete: "cascade" }),
+  parentAttributeId: uuid("parent_attribute_id"),
+  hierarchyLevel: integer("hierarchy_level").default(0),
+  displayOrder: integer("display_order").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_cognitive_attributes_subject").on(table.subjectId),
+]);
+
+export const itemAttributeMatrix = pgTable("item_attribute_matrix", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  questionId: uuid("question_id").notNull(),
+  attributeId: uuid("attribute_id").references(() => cognitiveAttributes.id, { onDelete: "cascade" }).notNull(),
+  weight: numeric("weight", { precision: 3, scale: 2 }).default("1"),
+  isRequired: boolean("is_required").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_item_attribute_question").on(table.questionId),
+  index("idx_item_attribute_attr").on(table.attributeId),
+]);

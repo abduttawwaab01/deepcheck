@@ -19,34 +19,49 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="relative py-20 lg:py-28">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary-500/[0.02] to-transparent" />
+    <section className="relative overflow-hidden bg-slate-900/30 py-24 lg:py-32">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary-500/[0.02] to-transparent" />
       <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-primary-50 px-4 py-1.5 text-sm font-medium text-primary-700 dark:border-primary-800 dark:bg-primary-950/50 dark:text-primary-300">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center"
+        >
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary-500/20 bg-gradient-to-r from-primary-500/10 to-secondary-500/10 px-5 py-2 text-sm font-medium text-primary-300 backdrop-blur-sm">
             <Sparkles className="h-4 w-4" />
             Got Questions?
           </div>
-          <h2 className="mt-4 text-3xl font-bold text-neutral-900 dark:text-white lg:text-4xl">Frequently Asked Questions</h2>
+          <h2 className="mt-6 text-4xl font-bold text-white lg:text-5xl">Frequently Asked Questions</h2>
         </motion.div>
 
-        <div className="mt-12 space-y-3">
+        <div className="mt-14 space-y-3">
           {faqs.map((faq, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: i * 0.05 }}
+              transition={{ duration: 0.3, delay: i * 0.04 }}
               viewport={{ once: true }}
-              className="overflow-hidden rounded-xl border border-neutral-200 bg-white transition-colors hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:border-neutral-700"
+              className={`group overflow-hidden rounded-xl border transition-all duration-300 ${
+                openIndex === i
+                  ? "border-primary-500/30 bg-slate-900/80 shadow-lg shadow-primary-500/5"
+                  : "border-white/5 bg-slate-900/40 hover:border-white/10 hover:bg-slate-900/60"
+              }`}
             >
               <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="flex w-full items-center justify-between px-6 py-4 text-left transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900"
+                className="flex w-full items-center justify-between px-6 py-5 text-left transition-colors"
               >
-                <span className="font-medium text-neutral-900 dark:text-white">{faq.q}</span>
+                <span className="font-medium text-white transition-colors group-hover:text-primary-300">
+                  {faq.q}
+                </span>
                 <ChevronDown
-                  className={`h-5 w-5 shrink-0 text-neutral-400 transition-transform duration-300 ${openIndex === i ? "rotate-180" : ""}`}
+                  className={`h-5 w-5 shrink-0 transition-all duration-500 ${
+                    openIndex === i
+                      ? "rotate-180 text-primary-400"
+                      : "text-slate-600"
+                  }`}
                 />
               </button>
               <AnimatePresence>
@@ -55,11 +70,13 @@ export function FAQ() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    transition={{ duration: 0.35, ease: "easeInOut" }}
                   >
-                    <p className="border-t border-neutral-100 px-6 py-4 text-sm leading-relaxed text-neutral-600 dark:border-neutral-800 dark:text-neutral-300">
-                      {faq.a}
-                    </p>
+                    <div className="border-t border-white/5 px-6 py-5">
+                      <p className="text-sm leading-relaxed text-slate-400">
+                        {faq.a}
+                      </p>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>

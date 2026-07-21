@@ -14,8 +14,11 @@ const features = [
 
 export function DeepIntelligence() {
   return (
-    <section id="features" className="relative border-y border-neutral-200 bg-neutral-50 py-20 dark:border-neutral-800 dark:bg-neutral-900/50 lg:py-28">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary-500/10 via-transparent to-transparent" />
+    <section id="features" className="relative overflow-hidden border-y border-white/5 bg-slate-900/30 py-24 lg:py-32">
+      {/* Floating gradient orbs specific to this section */}
+      <div className="pointer-events-none absolute top-0 right-0 h-[400px] w-[400px] translate-x-1/2 -translate-y-1/2 rounded-full bg-primary-500/5 blur-[120px]" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-[300px] w-[300px] -translate-x-1/3 translate-y-1/3 rounded-full bg-secondary-500/5 blur-[100px]" />
+
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -23,36 +26,41 @@ export function DeepIntelligence() {
           viewport={{ once: true }}
           className="text-center"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-secondary-200 bg-secondary-50 px-4 py-1.5 text-sm font-medium text-secondary-700 dark:border-secondary-800 dark:bg-secondary-950/50 dark:text-secondary-300">
+          <div className="inline-flex items-center gap-2 rounded-full border border-secondary-500/20 bg-gradient-to-r from-secondary-500/10 to-primary-500/10 px-5 py-2 text-sm font-medium text-secondary-300 backdrop-blur-sm">
             <Sparkles className="h-4 w-4" />
             Deep Intelligence Platform
           </div>
-          <h2 className="mt-4 text-3xl font-bold text-neutral-900 dark:text-white lg:text-4xl">
+          <h2 className="mt-6 text-4xl font-bold text-white lg:text-5xl">
             Beyond Simple Testing
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-neutral-600 dark:text-neutral-400">
-            Deep Check is not another exam platform. It's a diagnostic intelligence engine powered by cognitive science and AI.
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-400">
+            Deep Check is not another exam platform. It&apos;s a diagnostic intelligence engine powered by cognitive science and AI.
           </p>
         </motion.div>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, i) => (
             <motion.div
               key={feature.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
+              transition={{ duration: 0.4, delay: i * 0.08 }}
               viewport={{ once: true }}
-              className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-6 transition-all duration-300 hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-950"
+              className="group relative"
             >
-              {/* Animated border gradient on hover */}
-              <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary-500/0 via-secondary-500/0 to-primary-500/0 opacity-0 transition-opacity duration-500 group-hover:from-primary-500/10 group-hover:via-secondary-500/10 group-hover:to-primary-500/10 group-hover:opacity-100" />
+              {/* Animated gradient border */}
+              <div className="animated-border">
+                <div className="animated-border-content rounded-xl border border-white/5 bg-slate-900/60 p-6 backdrop-blur-sm transition-all duration-500 group-hover:border-white/10 group-hover:bg-slate-900/80">
+                  {/* Hover glow */}
+                  <div className="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-br from-primary-500/0 via-secondary-500/0 to-primary-500/0 opacity-0 transition-opacity duration-500 group-hover:from-primary-500/5 group-hover:via-secondary-500/5 group-hover:to-primary-500/5 group-hover:opacity-100" />
 
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-50 to-secondary-50 text-primary-600 transition-all duration-300 group-hover:scale-110 group-hover:from-primary-500 group-hover:to-secondary-500 group-hover:text-white dark:from-primary-950 dark:to-secondary-950 dark:text-primary-400 dark:group-hover:from-primary-600 dark:group-hover:to-secondary-600 dark:group-hover:text-white">
-                <feature.icon className="h-6 w-6" />
+                  <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500/10 to-secondary-500/10 text-primary-400 transition-all duration-500 group-hover:scale-110 group-hover:from-primary-500 group-hover:to-secondary-500 group-hover:text-white group-hover:shadow-lg">
+                    <feature.icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="mt-5 text-lg font-semibold text-white">{feature.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-400">{feature.description}</p>
+                </div>
               </div>
-              <h3 className="mt-4 text-lg font-semibold text-neutral-900 dark:text-white">{feature.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">{feature.description}</p>
             </motion.div>
           ))}
         </div>

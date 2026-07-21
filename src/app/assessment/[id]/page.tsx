@@ -2,17 +2,22 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getRandomizedAssessment } from "@/data/assessments/registry";
+import { trpc } from "@/lib/trpc/client";
 import { StandardRenderer, PassageRenderer, ChartQuestionRenderer, GeometryQuestionRenderer, InteractiveRenderer } from "@/components/assessment/question-renderer";
 import { FloatingCalculator } from "@/components/calculator/floating-calculator";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Clock, Flag, CheckCircle2, AlertCircle, BarChart3 } from "lucide-react";
+import { ProctoringMonitor } from "@/lib/engine/client-proctoring";
 
 export default function AssessmentPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
-  const assessment = getRandomizedAssessment(id);
+  const { data: assessment, isLoading } = trpc.assessment.getBySlug.useQuery({ slug: id }, { enabled: !!id });
+  const [instanceId, setInstanceId] = useState<string | null>(null);
+  const startMutation = trpc.assessment.startAssessment.useMutation();
+  const completeMutation = trpc.assessment.completeAssessment.useMutation();
+  const logProctorMutation = trpc.assessment.logProctorEvent.useMutation();
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -22,7 +27,12 @@ export default function AssessmentPage() {
   const [completed, setCompleted] = useState(false);
   const [score, setScore] = useState(0);
   const [showReview, setShowReview] = useState(false);
+  const [saving, setSaving] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const startTimeRef = useRef<number>(0);
+  const questionStartTimeRef = useRef<number>(0);
+  const questionTimesRef = useRef<Record<string, number>>({});
+  const proctorRef = useRef<ProctoringMonitor | null>(null);
 
   useEffect(() => {
     if (assessment && !started) {
@@ -41,16 +51,80 @@ export default function AssessmentPage() {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [started, completed]);
 
-  const handleComplete = useCallback(() => {
+  const recordQuestionTime = useCallback(() => {
+    if (questionStartTimeRef.current > 0) {
+      const elapsed = Math.round((Date.now() - questionStartTimeRef.current) / 1000);
+      const qId = assessment?.questions[currentIndex]?.id;
+      if (qId) {
+        questionTimesRef.current[qId] = (questionTimesRef.current[qId] || 0) + elapsed;
+      }
+    }
+    questionStartTimeRef.current = Date.now();
+  }, [assessment, currentIndex]);
+
+  const handleComplete = useCallback(async () => {
     if (timerRef.current) clearInterval(timerRef.current);
-    if (!assessment) return;
+    if (!assessment || !instanceId) return;
+    recordQuestionTime();
+    proctorRef.current?.stop();
     let correct = 0;
     assessment.questions.forEach((q) => {
       if (answers[q.id] === q.correctOptionId) correct++;
     });
-    setScore(Math.round((correct / assessment.questions.length) * 100));
+    const pct = Math.round((correct / assessment.questions.length) * 100);
+    setScore(pct);
     setCompleted(true);
-  }, [assessment, answers]);
+    setSaving(true);
+    try {
+      const timeSpent = startTimeRef.current ? Math.floor((Date.now() - startTimeRef.current) / 1000) : 0;
+      await completeMutation.mutateAsync({
+        instanceId,
+        answers,
+        timeSpentSeconds: timeSpent,
+        questionTimes: questionTimesRef.current,
+      });
+    } catch {
+      // silently fail - score is still shown client-side
+    }
+    setSaving(false);
+  }, [assessment, answers, instanceId, completeMutation, recordQuestionTime]);
+
+  const handleStart = async () => {
+    try {
+      const res = await startMutation.mutateAsync({ slug: id });
+      if (res.error) return;
+      setInstanceId(res.instanceId!);
+      startTimeRef.current = Date.now();
+      questionStartTimeRef.current = Date.now();
+      setStarted(true);
+      // Start proctoring monitor
+      const monitor = new ProctoringMonitor(res.instanceId!, (event) => {
+        logProctorMutation.mutate({
+          instanceId: res.instanceId!,
+          eventType: event.eventType as any,
+          metadata: event.metadata,
+        });
+      });
+      monitor.start();
+      proctorRef.current = monitor;
+    } catch {
+      startTimeRef.current = Date.now();
+      questionStartTimeRef.current = Date.now();
+      setStarted(true);
+    }
+  };
+
+  useEffect(() => {
+    return () => { proctorRef.current?.stop(); };
+  }, []);
+
+  if (isLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center p-4">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary-600 border-t-transparent" />
+      </main>
+    );
+  }
 
   if (!assessment) {
     return (
@@ -132,7 +206,7 @@ export default function AssessmentPage() {
 
             <div className="mt-6 flex flex-col gap-3">
               <p className="text-xs text-neutral-400">A calculator is available during the assessment.</p>
-              <Button size="lg" className="w-full min-h-[48px]" onClick={() => setStarted(true)}>
+              <Button size="lg" className="w-full min-h-[48px]" onClick={handleStart}>
                 Start Assessment
               </Button>
             </div>
@@ -153,7 +227,7 @@ export default function AssessmentPage() {
         <div className="mx-auto w-full max-w-lg">
           <div className="glass rounded-2xl p-6 sm:p-8 text-center animate-fade-in">
             <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-secondary-500">
-              <CheckCircle2 className="h-10 w-10 text-white" />
+              <CheckCircle2 className={`h-10 w-10 ${saving ? "animate-pulse" : ""}`} />
             </div>
             <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Assessment Complete</h1>
             <p className="mt-2 text-sm text-neutral-500">You have completed the {assessment.title}</p>
@@ -200,7 +274,6 @@ export default function AssessmentPage() {
     <main className="mx-auto min-h-screen max-w-3xl p-4 sm:p-6">
       <FloatingCalculator />
 
-      {/* Top bar */}
       <div className="mb-4 flex items-center justify-between">
         <button onClick={() => router.back()} className="flex items-center gap-1 text-sm text-neutral-500 hover:text-neutral-700">
           <ArrowLeft className="h-4 w-4" /> Back
@@ -218,12 +291,10 @@ export default function AssessmentPage() {
         </div>
       </div>
 
-      {/* Progress bar */}
       <div className="mb-4 h-2 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-800">
         <div className="h-full rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 transition-all duration-500" style={{ width: `${progress}%` }} />
       </div>
 
-      {/* Section info */}
       {section && (
         <div className="mb-3 flex items-center gap-2 text-xs text-neutral-500">
           <span className="rounded-md bg-primary-50 px-2 py-0.5 font-medium text-primary-700 dark:bg-primary-950 dark:text-primary-300">
@@ -233,7 +304,6 @@ export default function AssessmentPage() {
         </div>
       )}
 
-      {/* Question card */}
       <div className="glass rounded-2xl p-4 sm:p-6">
         {current && (
           <>
@@ -262,7 +332,7 @@ export default function AssessmentPage() {
         <div className="mt-6 flex items-center justify-between border-t border-neutral-100 pt-4 dark:border-neutral-800">
           <Button
             variant="ghost"
-            onClick={() => setCurrentIndex(Math.max(0, currentIndex - 1))}
+            onClick={() => { recordQuestionTime(); setCurrentIndex(Math.max(0, currentIndex - 1)); }}
             disabled={currentIndex === 0}
             className="gap-1"
           >
@@ -275,7 +345,7 @@ export default function AssessmentPage() {
 
           {currentIndex < questions.length - 1 ? (
             <Button
-              onClick={() => setCurrentIndex(currentIndex + 1)}
+              onClick={() => { recordQuestionTime(); setCurrentIndex(currentIndex + 1); }}
               className="gap-1"
               disabled={!answers[current?.id]}
             >
@@ -289,7 +359,6 @@ export default function AssessmentPage() {
         </div>
       </div>
 
-      {/* Review modal */}
       {showReview && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 p-4">
           <div className="w-full max-w-md rounded-2xl bg-white p-6 dark:bg-neutral-900 animate-slide-up">
@@ -316,7 +385,9 @@ export default function AssessmentPage() {
 
             <div className="mt-6 flex gap-3">
               <Button variant="outline" className="flex-1" onClick={() => setShowReview(false)}>Continue</Button>
-              <Button className="flex-1" onClick={handleComplete}>Submit All</Button>
+              <Button className="flex-1" onClick={handleComplete} disabled={saving}>
+                {saving ? "Saving..." : "Submit All"}
+              </Button>
             </div>
           </div>
         </div>

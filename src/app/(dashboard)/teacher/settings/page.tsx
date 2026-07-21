@@ -1,19 +1,75 @@
 "use client";
 
 import { useState } from "react";
+import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
-import { User, Mail, BookOpen, School, KeyRound, Eye, EyeOff, Save, Trash2 } from "lucide-react";
+import { User, Mail, BookOpen, School, KeyRound, Eye, EyeOff, Trash2 } from "lucide-react";
 
 export default function TeacherSettingsPage() {
+  const { data: profile, isLoading } = trpc.teacher.getProfile.useQuery();
+  const deleteAccount = trpc.teacher.deleteAccount.useMutation({
+    onSuccess: () => { window.location.href = "/login"; },
+  });
+
   const [showPassword, setShowPassword] = useState(false);
   const [passwords, setPasswords] = useState({ current: "", new: "", confirm: "" });
+  const [pwLoading, setPwLoading] = useState(false);
+  const [pwSuccess, setPwSuccess] = useState("");
+  const [pwError, setPwError] = useState("");
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deleteError, setDeleteError] = useState("");
 
-  const profile = {
-    name: "Chioma Okafor",
-    email: "chioma.okafor@gracefield.edu.ng",
-    subject: "Mathematics",
-    school: "Gracefield College",
-  };
+  async function handlePasswordChange() {
+    setPwError("");
+    setPwSuccess("");
+    if (!passwords.current || !passwords.new || !passwords.confirm) {
+      setPwError("All fields are required.");
+      return;
+    }
+    if (passwords.new !== passwords.confirm) {
+      setPwError("New passwords do not match.");
+      return;
+    }
+    if (passwords.new.length < 8) {
+      setPwError("New password must be at least 8 characters.");
+      return;
+    }
+    setPwLoading(true);
+    try {
+      const res = await fetch("/api/auth/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword: passwords.current, newPassword: passwords.new }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setPwError(data.error || "Failed to change password.");
+      } else {
+        setPwSuccess("Password updated successfully.");
+        setPasswords({ current: "", new: "", confirm: "" });
+      }
+    } catch {
+      setPwError("Something went wrong. Please try again.");
+    } finally {
+      setPwLoading(false);
+    }
+  }
+
+  function handleDeleteAccount() {
+    if (deleteConfirm !== "DELETE") {
+      setDeleteError('Type "DELETE" exactly to confirm.');
+      return;
+    }
+    setDeleteError("");
+    deleteAccount.mutate({ confirmation: "DELETE" });
+  }
+
+  if (isLoading) return (
+    <div className="animate-fade-in space-y-6">
+      <div className="h-8 w-48 animate-pulse rounded-lg bg-neutral-200 dark:bg-neutral-800" />
+      <div className="h-48 animate-pulse rounded-2xl bg-neutral-200 dark:bg-neutral-800" />
+    </div>
+  );
 
   return (
     <div className="animate-fade-in space-y-6">
@@ -29,10 +85,10 @@ export default function TeacherSettingsPage() {
         </div>
         <div className="mt-4 space-y-4">
           {[
-            { label: "Full Name", value: profile.name, icon: User },
-            { label: "Email Address", value: profile.email, icon: Mail },
-            { label: "Subject", value: profile.subject, icon: BookOpen },
-            { label: "School", value: profile.school, icon: School },
+            { label: "Full Name", value: profile ? `${profile.firstName} ${profile.lastName}` : "", icon: User },
+            { label: "Email Address", value: profile?.email || "", icon: Mail },
+            { label: "Subject", value: profile?.subject || "", icon: BookOpen },
+            { label: "School", value: profile?.schoolName || "", icon: School },
           ].map((field) => (
             <div key={field.label}>
               <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">{field.label}</label>
@@ -83,7 +139,11 @@ export default function TeacherSettingsPage() {
                 style={{ minHeight: "44px" }} placeholder="Confirm new password" />
             </div>
           </div>
-          <Button className="gap-2 min-h-[44px]"><KeyRound className="h-4 w-4" /> Update Password</Button>
+          {pwError && <p className="text-xs text-error">{pwError}</p>}
+          {pwSuccess && <p className="text-xs text-success">{pwSuccess}</p>}
+          <Button onClick={handlePasswordChange} disabled={pwLoading} className="gap-2 min-h-[44px]">
+            <KeyRound className="h-4 w-4" /> {pwLoading ? "Updating..." : "Update Password"}
+          </Button>
         </div>
       </div>
 
@@ -97,11 +157,15 @@ export default function TeacherSettingsPage() {
         </p>
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
           <input
+            value={deleteConfirm}
+            onChange={e => setDeleteConfirm(e.target.value)}
             className="flex-1 rounded-xl border border-error/30 bg-white px-4 py-2.5 text-sm outline-none focus:border-error dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
             placeholder='Type "DELETE" to confirm'
           />
-          <Button className="min-h-[44px] gap-2 shrink-0 bg-error hover:bg-error/90">
-            <Trash2 className="h-4 w-4" />Delete My Account
+          {deleteError && <p className="text-xs text-error sm:col-span-2">{deleteError}</p>}
+          <Button onClick={handleDeleteAccount} disabled={deleteAccount.isPending}
+            className="min-h-[44px] gap-2 shrink-0 bg-error hover:bg-error/90">
+            <Trash2 className="h-4 w-4" />{deleteAccount.isPending ? "Deleting..." : "Delete My Account"}
           </Button>
         </div>
       </div>

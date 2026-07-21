@@ -9,10 +9,12 @@ import { PricingSection } from "@/components/landing/pricing-section";
 import { FAQ } from "@/components/landing/faq";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
+import { BackgroundEffects } from "@/components/landing/background-effects";
 
 export default function LandingPage() {
   return (
     <>
+      <BackgroundEffects />
       <Navbar />
       <main>
         <HeroSection />

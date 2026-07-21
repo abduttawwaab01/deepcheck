@@ -49,3 +49,6 @@ export const requireRole = (...roles: string[]) =>
 
 export const adminProcedure = t.procedure.use(requireRole("admin"));
 export const schoolProcedure = t.procedure.use(requireRole("admin", "school_admin"));
+export const studentProcedure = t.procedure.use(requireRole("student", "admin"));
+export const teacherProcedure = t.procedure.use(requireRole("teacher", "admin"));
+export const parentProcedure = t.procedure.use(requireRole("parent", "admin"));
