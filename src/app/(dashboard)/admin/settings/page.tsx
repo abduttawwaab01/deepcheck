@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc/client";
-import { Save, Loader2 } from "lucide-react";
+import { Save, Loader2, Shield, CreditCard, Bell, Mail, Globe, Key } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default function AdminSettingsPage() {
   const { data: config, isLoading, refetch } = trpc.admin.getSystemConfig.useQuery();
@@ -12,20 +13,19 @@ export default function AdminSettingsPage() {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => { if (config) setForm({ ...config }); }, [config]);
+
   useEffect(() => {
-    if (config) setForm({ ...config });
-  }, [config]);
+    if (saved) { const t = setTimeout(() => setSaved(false), 3000); return () => clearTimeout(t); }
+  }, [saved]);
 
   const handleSave = async () => {
-    setSaved(false);
-    setError("");
+    setSaved(false); setError("");
     try {
       await updateMutation.mutateAsync(form);
       setSaved(true);
       refetch();
-    } catch (err: any) {
-      setError(err?.message || "Failed to save settings. Please try again.");
-    }
+    } catch (err: any) { setError(err?.message || "Failed to save settings."); }
   };
 
   if (isLoading) return (
@@ -39,19 +39,19 @@ export default function AdminSettingsPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Admin Settings</h1>
         <Button size="sm" onClick={handleSave} disabled={updateMutation.isPending}>
-          {updateMutation.isPending ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <Save className="mr-2 h-4 w-4" />
-          )}
+          {updateMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
           {updateMutation.isPending ? "Saving..." : "Save Changes"}
         </Button>
       </div>
       {saved && <div className="rounded-xl bg-success/10 px-4 py-2 text-sm text-success">Settings saved successfully.</div>}
       {error && <div className="rounded-xl bg-error/10 px-4 py-2 text-sm text-error">{error}</div>}
 
+      {/* System Configuration */}
       <div className="glass rounded-2xl p-5">
-        <h3 className="mb-4 text-sm font-semibold text-neutral-700 dark:text-neutral-300">System Configuration</h3>
+        <div className="mb-4 flex items-center gap-2">
+          <Globe className="h-4 w-4 text-primary-600" />
+          <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">System Configuration</h3>
+        </div>
         <div className="space-y-4">
           <div>
             <label className="mb-1.5 block text-xs font-medium text-neutral-500">Application Name</label>
@@ -73,8 +73,12 @@ export default function AdminSettingsPage() {
         </div>
       </div>
 
+      {/* Email Settings */}
       <div className="glass rounded-2xl p-5">
-        <h3 className="mb-4 text-sm font-semibold text-neutral-700 dark:text-neutral-300">Email Settings</h3>
+        <div className="mb-4 flex items-center gap-2">
+          <Mail className="h-4 w-4 text-primary-600" />
+          <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">Email Settings</h3>
+        </div>
         <div className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
@@ -101,8 +105,12 @@ export default function AdminSettingsPage() {
         </div>
       </div>
 
+      {/* Payment Settings */}
       <div className="glass rounded-2xl p-5">
-        <h3 className="mb-4 text-sm font-semibold text-neutral-700 dark:text-neutral-300">Payment Settings</h3>
+        <div className="mb-4 flex items-center gap-2">
+          <CreditCard className="h-4 w-4 text-primary-600" />
+          <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">Payment Settings</h3>
+        </div>
         <div className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
@@ -120,9 +128,57 @@ export default function AdminSettingsPage() {
             </div>
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-neutral-500">Payment Gateway API Key</label>
+            <label className="mb-1.5 block text-xs font-medium text-neutral-500">Paystack Secret Key</label>
             <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
               value={form.paymentGatewayKey || ""} onChange={(e) => setForm({ ...form, paymentGatewayKey: e.target.value })} type="password" />
+            <p className="mt-1 text-[11px] text-neutral-400">Used for Paystack payment verification. Never shared with clients.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Notification Settings */}
+      <div className="glass rounded-2xl p-5">
+        <div className="mb-4 flex items-center gap-2">
+          <Bell className="h-4 w-4 text-primary-600" />
+          <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">Notification Settings</h3>
+        </div>
+        <div className="space-y-3">
+          {[
+            { key: "notifyOnNewRegistration", label: "Email on new user registration" },
+            { key: "notifyOnReportRequest", label: "Email on new deep report request" },
+            { key: "notifyOnPayment", label: "Email on successful payment" },
+            { key: "notifyOnSchoolSignup", label: "Email when a new school registers" },
+          ].map(({ key, label }) => (
+            <div key={key} className="flex items-center gap-3">
+              <input type="checkbox" className="h-4 w-4 rounded border-neutral-300 text-primary-600"
+                checked={!!form[key]} onChange={(e) => setForm({ ...form, [key]: e.target.checked })} />
+              <span className="text-sm text-neutral-600 dark:text-neutral-400">{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Security */}
+      <div className="glass rounded-2xl p-5">
+        <div className="mb-4 flex items-center gap-2">
+          <Shield className="h-4 w-4 text-primary-600" />
+          <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">Security</h3>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-neutral-500">Minimum Password Length</label>
+            <input type="number" className="w-32 rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+              value={form.minPasswordLength || "8"} onChange={(e) => setForm({ ...form, minPasswordLength: e.target.value })} min={6} max={32} />
+          </div>
+          <div className="flex items-center gap-3">
+            <input type="checkbox" className="h-4 w-4 rounded border-neutral-300 text-primary-600"
+              checked={!!form.requireEmailVerification} onChange={(e) => setForm({ ...form, requireEmailVerification: e.target.checked })} />
+            <span className="text-sm text-neutral-600 dark:text-neutral-400">Require email verification for new accounts</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <input type="checkbox" className="h-4 w-4 rounded border-neutral-300 text-primary-600"
+              checked={!!form.enable2FA} onChange={(e) => setForm({ ...form, enable2FA: e.target.checked })} />
+            <span className="text-sm text-neutral-600 dark:text-neutral-400">Enable two-factor authentication (coming soon)</span>
           </div>
         </div>
       </div>

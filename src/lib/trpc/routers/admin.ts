@@ -206,12 +206,55 @@ export const adminRouter = router({
       id: schools.id,
       name: schools.name,
       city: schools.city,
+      state: schools.state,
+      email: schools.email,
+      phone: schools.phone,
+      address: schools.address,
+      schoolType: schools.schoolType,
       students: schools.studentCount,
       teachers: schools.teacherCount,
       status: schools.verificationStatus,
       subscription: schools.subscriptionStatus,
+      credits: schools.deepReportCredits,
+      isActive: schools.isActive,
+      createdAt: schools.createdAt,
     }).from(schools).where(sql`${schools.deletedAt} IS NULL`).orderBy(schools.name);
   }),
+
+  verifySchool: adminProcedure
+    .input(z.object({ schoolId: z.string(), status: z.enum(["verified", "pending", "rejected"]) }))
+    .mutation(async ({ input }) => {
+      await db.update(schools).set({ verificationStatus: input.status, updatedAt: new Date() }).where(eq(schools.id, input.schoolId));
+      return { success: true };
+    }),
+
+  updateSchoolCredits: adminProcedure
+    .input(z.object({ schoolId: z.string(), credits: z.number().min(0).max(9999) }))
+    .mutation(async ({ input }) => {
+      await db.update(schools).set({ deepReportCredits: input.credits, updatedAt: new Date() }).where(eq(schools.id, input.schoolId));
+      return { success: true };
+    }),
+
+  updateSchoolSubscription: adminProcedure
+    .input(z.object({ schoolId: z.string(), status: z.enum(["free", "basic", "pro", "enterprise"]) }))
+    .mutation(async ({ input }) => {
+      await db.update(schools).set({ subscriptionStatus: input.status, updatedAt: new Date() }).where(eq(schools.id, input.schoolId));
+      return { success: true };
+    }),
+
+  toggleSchoolActive: adminProcedure
+    .input(z.object({ schoolId: z.string(), isActive: z.boolean() }))
+    .mutation(async ({ input }) => {
+      await db.update(schools).set({ isActive: input.isActive, updatedAt: new Date() }).where(eq(schools.id, input.schoolId));
+      return { success: true };
+    }),
+
+  deleteSchool: adminProcedure
+    .input(z.object({ schoolId: z.string() }))
+    .mutation(async ({ input }) => {
+      await db.update(schools).set({ deletedAt: new Date() }).where(eq(schools.id, input.schoolId));
+      return { success: true };
+    }),
 
   // ─── QUESTIONS (generic) ────────────────────────────────────────────
   getQuestions: adminProcedure.query(async () => {
