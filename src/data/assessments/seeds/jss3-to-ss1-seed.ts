@@ -3284,7 +3284,563 @@
       { optionText: "All D are C", isCorrect: false, optionOrder: 4 }
     ],
     explanation: "Some D are A. All A are B → Some D are B. All B are C → Some D are C. This must be true."
-  }
+  },
+
+  // ===========================================================================
+  // SUPPLEMENTAL: CONSOLIDATED CORE CONCEPTS — J-SUP-001 onwards
+  // ===========================================================================
+
+  // --- Quadratic Equations (5 questions) ---
+  {
+    code: "J-SUP-001",
+    questionText: "Solve: x² − 5x + 6 = 0",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Quadratic Equations",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "x = 2 or x = 3", isCorrect: true, optionOrder: 1 },
+      { optionText: "x = 1 or x = 6", isCorrect: false, optionOrder: 2 },
+      { optionText: "x = −2 or x = −3", isCorrect: false, optionOrder: 3 },
+      { optionText: "x = −1 or x = −6", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "Factor: (x − 2)(x − 3) = 0. So x = 2 or x = 3."
+  },
+  {
+    code: "J-SUP-002",
+    questionText: "What are the roots of x² + 2x − 8 = 0?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Quadratic Equations",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "x = 2 or x = −4", isCorrect: true, optionOrder: 1 },
+      { optionText: "x = −2 or x = 4", isCorrect: false, optionOrder: 2 },
+      { optionText: "x = 1 or x = −8", isCorrect: false, optionOrder: 3 },
+      { optionText: "x = −1 or x = 8", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "Factor: (x + 4)(x − 2) = 0. So x = −4 or x = 2."
+  },
+  {
+    code: "J-SUP-003",
+    questionText: "Using the formula, find x in: 2x² − 3x − 5 = 0",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Quadratic Equations",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 60,
+    allowsCalculator: false,
+    options: [
+      { optionText: "x = 2.5 or x = −1", isCorrect: true, optionOrder: 1 },
+      { optionText: "x = 5 or x = −2", isCorrect: false, optionOrder: 2 },
+      { optionText: "x = −2.5 or x = 1", isCorrect: false, optionOrder: 3 },
+      { optionText: "x = 3 or x = −1", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "a=2, b=−3, c=−5. Discriminant = 9+40=49. x = (3±7)/4. x = 10/4 = 2.5 or x = −4/4 = −1."
+  },
+  {
+    code: "J-SUP-004",
+    questionText: "For the equation x² − 6x + k = 0 to have equal roots, what must k be?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Quadratic Equations",
+    difficultyLevel: "hard",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "9", isCorrect: true, optionOrder: 1 },
+      { optionText: "6", isCorrect: false, optionOrder: 2 },
+      { optionText: "12", isCorrect: false, optionOrder: 3 },
+      { optionText: "36", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "Equal roots require discriminant = 0. b² − 4ac = 36 − 4k = 0. So k = 9."
+  },
+  {
+    code: "J-SUP-005",
+    questionText: "The sum of the roots of x² − 7x + 10 = 0 is:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Quadratic Equations",
+    difficultyLevel: "medium",
+    bloomLevel: "remember",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "7", isCorrect: true, optionOrder: 1 },
+      { optionText: "10", isCorrect: false, optionOrder: 2 },
+      { optionText: "−7", isCorrect: false, optionOrder: 3 },
+      { optionText: "17", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "For ax² + bx + c = 0, sum of roots = −b/a = −(−7)/1 = 7."
+  },
+
+  // --- Trigonometry (5 questions) ---
+  {
+    code: "J-SUP-006",
+    questionText: "What is sin 30°?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Trigonometry",
+    difficultyLevel: "easy",
+    bloomLevel: "remember",
+    expectedTimeSecs: 25,
+    allowsCalculator: false,
+    options: [
+      { optionText: "1/2", isCorrect: true, optionOrder: 1 },
+      { optionText: "√3/2", isCorrect: false, optionOrder: 2 },
+      { optionText: "1/√2", isCorrect: false, optionOrder: 3 },
+      { optionText: "1", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "sin 30° = 1/2. This is a standard trigonometric value from the 30-60-90 triangle."
+  },
+  {
+    code: "J-SUP-007",
+    questionText: "In a right-angled triangle, if the opposite side is 5 and the hypotenuse is 13, what is sin θ?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Trigonometry",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "5/13", isCorrect: true, optionOrder: 1 },
+      { optionText: "12/13", isCorrect: false, optionOrder: 2 },
+      { optionText: "5/12", isCorrect: false, optionOrder: 3 },
+      { optionText: "13/5", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "sin θ = opposite/hypotenuse = 5/13."
+  },
+  {
+    code: "J-SUP-008",
+    questionText: "If tan θ = 3/4 and the adjacent side is 8, what is the opposite side?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Trigonometry",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "6", isCorrect: true, optionOrder: 1 },
+      { optionText: "4", isCorrect: false, optionOrder: 2 },
+      { optionText: "12", isCorrect: false, optionOrder: 3 },
+      { optionText: "10.67", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "tan θ = opposite/adjacent. 3/4 = opposite/8. opposite = (3/4) × 8 = 6."
+  },
+  {
+    code: "J-SUP-009",
+    questionText: "What is cos 60°?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Trigonometry",
+    difficultyLevel: "easy",
+    bloomLevel: "remember",
+    expectedTimeSecs: 25,
+    allowsCalculator: false,
+    options: [
+      { optionText: "1/2", isCorrect: true, optionOrder: 1 },
+      { optionText: "√3/2", isCorrect: false, optionOrder: 2 },
+      { optionText: "√2/2", isCorrect: false, optionOrder: 3 },
+      { optionText: "0", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "cos 60° = 1/2. This is a standard value from the 30-60-90 triangle."
+  },
+  {
+    code: "J-SUP-010",
+    questionText: "Simplify: sin²θ + cos²θ",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Trigonometry",
+    difficultyLevel: "medium",
+    bloomLevel: "remember",
+    expectedTimeSecs: 25,
+    allowsCalculator: false,
+    options: [
+      { optionText: "1", isCorrect: true, optionOrder: 1 },
+      { optionText: "0", isCorrect: false, optionOrder: 2 },
+      { optionText: "2 sin²θ", isCorrect: false, optionOrder: 3 },
+      { optionText: "2 cos²θ", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "The Pythagorean identity: sin²θ + cos²θ = 1 for all values of θ."
+  },
+
+  // --- Sets & Venn Diagrams (5 questions) ---
+  {
+    code: "J-SUP-011",
+    questionText: "If A = {1, 2, 3, 4} and B = {3, 4, 5, 6}, what is A ∩ B?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Sets & Venn Diagrams",
+    difficultyLevel: "easy",
+    bloomLevel: "remember",
+    expectedTimeSecs: 25,
+    allowsCalculator: false,
+    options: [
+      { optionText: "{3, 4}", isCorrect: true, optionOrder: 1 },
+      { optionText: "{1, 2, 3, 4, 5, 6}", isCorrect: false, optionOrder: 2 },
+      { optionText: "{1, 2, 5, 6}", isCorrect: false, optionOrder: 3 },
+      { optionText: "{1, 2, 3, 4}", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "A ∩ B (intersection) contains elements in BOTH A and B: {3, 4}."
+  },
+  {
+    code: "J-SUP-012",
+    questionText: "If A = {2, 4, 6} and B = {1, 3, 5}, what is A ∪ B?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Sets & Venn Diagrams",
+    difficultyLevel: "easy",
+    bloomLevel: "remember",
+    expectedTimeSecs: 25,
+    allowsCalculator: false,
+    options: [
+      { optionText: "{1, 2, 3, 4, 5, 6}", isCorrect: true, optionOrder: 1 },
+      { optionText: "{}", isCorrect: false, optionOrder: 2 },
+      { optionText: "{2, 4, 6, 1, 3, 5, 2, 4, 6}", isCorrect: false, optionOrder: 3 },
+      { optionText: "{6}", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "A ∪ B (union) contains all elements in A or B (or both): {1, 2, 3, 4, 5, 6}."
+  },
+  {
+    code: "J-SUP-013",
+    questionText: "In a class of 40 students, 25 study Physics, 20 study Chemistry, and 8 study both. How many study neither?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Sets & Venn Diagrams",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "3", isCorrect: true, optionOrder: 1 },
+      { optionText: "5", isCorrect: false, optionOrder: 2 },
+      { optionText: "8", isCorrect: false, optionOrder: 3 },
+      { optionText: "13", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "P(C ∪ H) = P + C − Both = 25 + 20 − 8 = 37. Neither = 40 − 37 = 3."
+  },
+  {
+    code: "J-SUP-014",
+    questionText: "If U = {1,2,3,4,5,6,7,8} and A = {2,4,6,8}, what is A' (complement of A)?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Sets & Venn Diagrams",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "{1, 3, 5, 7}", isCorrect: true, optionOrder: 1 },
+      { optionText: "{2, 4, 6, 8}", isCorrect: false, optionOrder: 2 },
+      { optionText: "{}", isCorrect: false, optionOrder: 3 },
+      { optionText: "{1, 2, 3, 4, 5, 6, 7, 8}", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "A' contains all elements in U that are NOT in A: {1, 3, 5, 7}."
+  },
+  {
+    code: "J-SUP-015",
+    questionText: "If n(A ∪ B) = 50, n(A) = 30, and n(B) = 25, what is n(A ∩ B)?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Sets & Venn Diagrams",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "5", isCorrect: true, optionOrder: 1 },
+      { optionText: "10", isCorrect: false, optionOrder: 2 },
+      { optionText: "55", isCorrect: false, optionOrder: 3 },
+      { optionText: "15", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "n(A ∪ B) = n(A) + n(B) − n(A ∩ B). So 50 = 30 + 25 − n(A ∩ B). n(A ∩ B) = 5."
+  },
+
+  // --- Mensuration (5 questions) ---
+  {
+    code: "J-SUP-016",
+    questionText: "Find the area of a triangle with base 12 cm and height 8 cm.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Mensuration",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 25,
+    allowsCalculator: false,
+    options: [
+      { optionText: "48 cm²", isCorrect: true, optionOrder: 1 },
+      { optionText: "96 cm²", isCorrect: false, optionOrder: 2 },
+      { optionText: "20 cm²", isCorrect: false, optionOrder: 3 },
+      { optionText: "24 cm²", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "Area = ½ × base × height = ½ × 12 × 8 = 48 cm²."
+  },
+  {
+    code: "J-SUP-017",
+    questionText: "What is the circumference of a circle with radius 7 cm? (Use π = 22/7)",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Mensuration",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "44 cm", isCorrect: true, optionOrder: 1 },
+      { optionText: "154 cm", isCorrect: false, optionOrder: 2 },
+      { optionText: "22 cm", isCorrect: false, optionOrder: 3 },
+      { optionText: "88 cm", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "Circumference = 2πr = 2 × (22/7) × 7 = 44 cm."
+  },
+  {
+    code: "J-SUP-018",
+    questionText: "Find the volume of a cylinder with radius 3 cm and height 10 cm. (Use π = 3.14)",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Mensuration",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: true,
+    options: [
+      { optionText: "282.6 cm³", isCorrect: true, optionOrder: 1 },
+      { optionText: "94.2 cm³", isCorrect: false, optionOrder: 2 },
+      { optionText: "30 cm³", isCorrect: false, optionOrder: 3 },
+      { optionText: "188.4 cm³", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "Volume = πr²h = 3.14 × 9 × 10 = 282.6 cm³."
+  },
+  {
+    code: "J-SUP-019",
+    questionText: "A rectangular room is 5 m long and 4 m wide. What is its area?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Mensuration",
+    difficultyLevel: "easy",
+    bloomLevel: "remember",
+    expectedTimeSecs: 20,
+    allowsCalculator: false,
+    options: [
+      { optionText: "20 m²", isCorrect: true, optionOrder: 1 },
+      { optionText: "18 m²", isCorrect: false, optionOrder: 2 },
+      { optionText: "9 m²", isCorrect: false, optionOrder: 3 },
+      { optionText: "40 m²", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "Area = length × width = 5 × 4 = 20 m²."
+  },
+  {
+    code: "J-SUP-020",
+    questionText: "Find the surface area of a cube with side 4 cm.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Mensuration",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "96 cm²", isCorrect: true, optionOrder: 1 },
+      { optionText: "64 cm²", isCorrect: false, optionOrder: 2 },
+      { optionText: "16 cm²", isCorrect: false, optionOrder: 3 },
+      { optionText: "48 cm²", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "A cube has 6 faces. Surface area = 6 × side² = 6 × 16 = 96 cm²."
+  },
+
+  // --- Linear Equations (5 questions) ---
+  {
+    code: "J-SUP-021",
+    questionText: "Solve for x: 3x + 7 = 22",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Linear Equations",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "x = 5", isCorrect: true, optionOrder: 1 },
+      { optionText: "x = 29", isCorrect: false, optionOrder: 2 },
+      { optionText: "x = 3", isCorrect: false, optionOrder: 3 },
+      { optionText: "x = 15", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "3x + 7 = 22. 3x = 15. x = 5."
+  },
+  {
+    code: "J-SUP-022",
+    questionText: "If 2(x − 3) = 10, what is x?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Linear Equations",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 35,
+    allowsCalculator: false,
+    options: [
+      { optionText: "x = 8", isCorrect: true, optionOrder: 1 },
+      { optionText: "x = 2", isCorrect: false, optionOrder: 2 },
+      { optionText: "x = 5", isCorrect: false, optionOrder: 3 },
+      { optionText: "x = 13", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "2(x − 3) = 10. 2x − 6 = 10. 2x = 16. x = 8."
+  },
+  {
+    code: "J-SUP-023",
+    questionText: "Solve simultaneously: x + y = 10 and x − y = 4",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Linear Equations",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "x = 7, y = 3", isCorrect: true, optionOrder: 1 },
+      { optionText: "x = 3, y = 7", isCorrect: false, optionOrder: 2 },
+      { optionText: "x = 6, y = 4", isCorrect: false, optionOrder: 3 },
+      { optionText: "x = 5, y = 5", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "Add the equations: 2x = 14, x = 7. Then y = 10 − 7 = 3."
+  },
+  {
+    code: "J-SUP-024",
+    questionText: "What is the gradient of the line y = 3x − 5?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Linear Equations",
+    difficultyLevel: "easy",
+    bloomLevel: "remember",
+    expectedTimeSecs: 20,
+    allowsCalculator: false,
+    options: [
+      { optionText: "3", isCorrect: true, optionOrder: 1 },
+      { optionText: "−5", isCorrect: false, optionOrder: 2 },
+      { optionText: "5", isCorrect: false, optionOrder: 3 },
+      { optionText: "−3", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "In y = mx + c, m is the gradient. Here m = 3."
+  },
+  {
+    code: "J-SUP-025",
+    questionText: "A phone costs ₦x. If a 10% discount reduces the price by ₦500, what is x?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Linear Equations",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "₦5,000", isCorrect: true, optionOrder: 1 },
+      { optionText: "₦500", isCorrect: false, optionOrder: 2 },
+      { optionText: "₦50,000", isCorrect: false, optionOrder: 3 },
+      { optionText: "₦4,500", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "10% of x = 500. 0.1x = 500. x = 5,000."
+  },
+
+  // --- Statistics & Probability (5 questions) ---
+  {
+    code: "J-SUP-026",
+    questionText: "Find the mean of: 4, 8, 6, 10, 12",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Statistics",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "8", isCorrect: true, optionOrder: 1 },
+      { optionText: "6", isCorrect: false, optionOrder: 2 },
+      { optionText: "10", isCorrect: false, optionOrder: 3 },
+      { optionText: "7", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "Mean = (4+8+6+10+12)/5 = 40/5 = 8."
+  },
+  {
+    code: "J-SUP-027",
+    questionText: "What is the median of: 3, 7, 1, 9, 5?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Statistics",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 35,
+    allowsCalculator: false,
+    options: [
+      { optionText: "5", isCorrect: true, optionOrder: 1 },
+      { optionText: "3", isCorrect: false, optionOrder: 2 },
+      { optionText: "7", isCorrect: false, optionOrder: 3 },
+      { optionText: "1", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "Order: 1, 3, 5, 7, 9. The middle value (3rd of 5) is 5."
+  },
+  {
+    code: "J-SUP-028",
+    questionText: "A bag contains 4 red, 3 blue, and 5 green balls. What is the probability of picking a blue ball?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Probability",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "1/4", isCorrect: true, optionOrder: 1 },
+      { optionText: "3/12", isCorrect: false, optionOrder: 2 },
+      { optionText: "1/3", isCorrect: false, optionOrder: 3 },
+      { optionText: "5/12", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "Total balls = 4+3+5 = 12. P(blue) = 3/12 = 1/4."
+  },
+  {
+    code: "J-SUP-029",
+    questionText: "The mode of the data set 2, 3, 3, 5, 7, 3, 8 is:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Statistics",
+    difficultyLevel: "easy",
+    bloomLevel: "remember",
+    expectedTimeSecs: 25,
+    allowsCalculator: false,
+    options: [
+      { optionText: "3", isCorrect: true, optionOrder: 1 },
+      { optionText: "5", isCorrect: false, optionOrder: 2 },
+      { optionText: "7", isCorrect: false, optionOrder: 3 },
+      { optionText: "4", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "The mode is the most frequent value. 3 appears 3 times, more than any other value."
+  },
+  {
+    code: "J-SUP-030",
+    questionText: "If two fair dice are thrown, what is the probability that the sum is 7?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Probability",
+    difficultyLevel: "hard",
+    bloomLevel: "apply",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "1/6", isCorrect: true, optionOrder: 1 },
+      { optionText: "1/12", isCorrect: false, optionOrder: 2 },
+      { optionText: "7/36", isCorrect: false, optionOrder: 3 },
+      { optionText: "6/36", isCorrect: false, optionOrder: 4 }
+    ],
+    explanation: "Total outcomes = 36. Ways to get 7: (1,6)(2,5)(3,4)(4,3)(5,2)(6,1) = 6 ways. P = 6/36 = 1/6."
+  },
 ];
 
 export type Jss3ToSs1Seed = typeof jss3ToSs1Questions[0];

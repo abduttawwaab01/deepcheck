@@ -3610,6 +3610,362 @@
     explanation:
       "Self-regulation, support networks, and prioritising important over urgent tasks are evidence-based strategies for university success.",
   },
+
+  // =========================================================================
+  // SUPPLEMENTAL: EXPANDED THIN CONCEPTS — S-SUP-001 onwards
+  // =========================================================================
+
+  // --- Proof Techniques (expanding from 2 to 5) ---
+  {
+    code: "S-SUP-001",
+    questionText:
+      "In a proof by contradiction, what do you assume to be true at the start?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Proof Techniques",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "The negation of what you want to prove", isCorrect: true, optionOrder: 1 },
+      { optionText: "The statement itself", isCorrect: false, optionOrder: 2 },
+      { optionText: "A related but different statement", isCorrect: false, optionOrder: 3 },
+      { optionText: "Nothing — you start from axioms only", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "In proof by contradiction (reductio ad absurdum), you assume the negation of the proposition and derive a logical contradiction, thereby proving the original statement.",
+  },
+  {
+    code: "S-SUP-002",
+    questionText:
+      "To prove 'If P then Q' by contrapositive, you would prove:",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Proof Techniques",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "If not Q then not P", isCorrect: true, optionOrder: 1 },
+      { optionText: "If not P then not Q", isCorrect: false, optionOrder: 2 },
+      { optionText: "If Q then P", isCorrect: false, optionOrder: 3 },
+      { optionText: "P and not Q", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The contrapositive of 'If P then Q' is 'If not Q then not P'. These are logically equivalent, so proving one proves the other.",
+  },
+  {
+    code: "S-SUP-003",
+    questionText:
+      "Which proof technique is most appropriate for proving that √2 is irrational?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Proof Techniques",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Proof by contradiction", isCorrect: true, optionOrder: 1 },
+      { optionText: "Direct proof", isCorrect: false, optionOrder: 2 },
+      { optionText: "Mathematical induction", isCorrect: false, optionOrder: 3 },
+      { optionText: "Proof by exhaustion", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The classic proof assumes √2 is rational (i.e. √2 = a/b in lowest terms), then derives a contradiction (both a and b must be even, contradicting 'lowest terms').",
+  },
+
+  // --- Inferences (expanding from 2 to 5) ---
+  {
+    code: "S-SUP-004",
+    questionText:
+      "All students who study hard pass the exam. Chidi passed the exam. What can you validly infer?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Inferences",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Nothing definite — passing does not prove Chidi studied hard", isCorrect: true, optionOrder: 1 },
+      { optionText: "Chidi studied hard", isCorrect: false, optionOrder: 2 },
+      { optionText: "Chidi is a hardworking student", isCorrect: false, optionOrder: 3 },
+      { optionText: "Chidi would have failed without studying", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "This is the fallacy of affirming the consequent. 'If study → pass' does not mean 'If pass → studied'. Chidi could have passed for other reasons.",
+  },
+  {
+    code: "S-SUP-005",
+    questionText:
+      "Read: 'The experiment showed that 85% of patients recovered within a week.' Which is a valid inference?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Inferences",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "The treatment is effective for the majority of patients in the study", isCorrect: true, optionOrder: 1 },
+      { optionText: "The treatment will cure 85% of all patients everywhere", isCorrect: false, optionOrder: 2 },
+      { optionText: "The remaining 15% did not recover at all", isCorrect: false, optionOrder: 3 },
+      { optionText: "The experiment proves the treatment is the best available", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "We can only infer about the study population. Generalizing to all patients or claiming it is 'the best' goes beyond what the data supports. The 15% may have recovered later.",
+  },
+
+  // --- Author's Purpose (expanding from 3 to 5) ---
+  {
+    code: "S-SUP-006",
+    questionText:
+      "A newspaper editorial argues that the government should increase funding for public libraries. What is the author's primary purpose?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Author's Purpose",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 35,
+    allowsCalculator: false,
+    options: [
+      { optionText: "To persuade", isCorrect: true, optionOrder: 1 },
+      { optionText: "To inform", isCorrect: false, optionOrder: 2 },
+      { optionText: "To entertain", isCorrect: false, optionOrder: 3 },
+      { optionText: "To describe", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "An editorial that argues for a specific action ('should increase funding') is primarily persuasive — it aims to convince readers of a particular viewpoint.",
+  },
+  {
+    code: "S-SUP-007",
+    questionText:
+      "An author includes a humorous anecdote at the beginning of a serious research paper. Why might they do this?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Author's Purpose",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "To engage the reader and create a relatable entry point", isCorrect: true, optionOrder: 1 },
+      { optionText: "Because the paper is not serious", isCorrect: false, optionOrder: 2 },
+      { optionText: "To fill space in the introduction", isCorrect: false, optionOrder: 3 },
+      { optionText: "Because the author forgot the paper was serious", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Authors often use anecdotes to hook readers, make abstract topics relatable, and create a smooth transition into complex material — a deliberate rhetorical strategy.",
+  },
+
+  // --- NEW CONCEPTS FOR SS3→UNIVERSITY ---
+
+  // --- Integration (5 questions) ---
+  {
+    code: "S-NC-001",
+    questionText:
+      "Evaluate ∫₀² 3x² dx.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Integration",
+    difficultyLevel: "easy",
+    bloomLevel: "apply",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "8", isCorrect: true, optionOrder: 1 },
+      { optionText: "6", isCorrect: false, optionOrder: 2 },
+      { optionText: "12", isCorrect: false, optionOrder: 3 },
+      { optionText: "4", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "∫3x² dx = x³ + C. Evaluating from 0 to 2: [x³]₀² = 2³ − 0³ = 8.",
+  },
+  {
+    code: "S-NC-002",
+    questionText:
+      "What is the integral of 1/x with respect to x?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Integration",
+    difficultyLevel: "easy",
+    bloomLevel: "remember",
+    expectedTimeSecs: 25,
+    allowsCalculator: false,
+    options: [
+      { optionText: "ln|x| + C", isCorrect: true, optionOrder: 1 },
+      { optionText: "1/x² + C", isCorrect: false, optionOrder: 2 },
+      { optionText: "x ln x + C", isCorrect: false, optionOrder: 3 },
+      { optionText: "−1/x² + C", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "The standard integral of 1/x is ln|x| + C, where C is the constant of integration.",
+  },
+  {
+    code: "S-NC-003",
+    questionText:
+      "Using integration, find the area under the curve y = 2x from x = 0 to x = 3.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Integration",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 50,
+    allowsCalculator: false,
+    options: [
+      { optionText: "9", isCorrect: true, optionOrder: 1 },
+      { optionText: "6", isCorrect: false, optionOrder: 2 },
+      { optionText: "12", isCorrect: false, optionOrder: 3 },
+      { optionText: "3", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "∫₀³ 2x dx = [x²]₀³ = 9 − 0 = 9 square units.",
+  },
+  {
+    code: "S-NC-004",
+    questionText:
+      "Evaluate ∫(4x³ − 6x) dx.",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Integration",
+    difficultyLevel: "medium",
+    bloomLevel: "apply",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "x⁴ − 3x² + C", isCorrect: true, optionOrder: 1 },
+      { optionText: "4x⁴ − 6x² + C", isCorrect: false, optionOrder: 2 },
+      { optionText: "x⁴ − 6x² + C", isCorrect: false, optionOrder: 3 },
+      { optionText: "x³ − 3x + C", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "∫4x³ dx = x⁴ and ∫6x dx = 3x². So ∫(4x³ − 6x) dx = x⁴ − 3x² + C.",
+  },
+  {
+    code: "S-NC-005",
+    questionText:
+      "What does the definite integral ∫ₐᵇ f(x) dx represent geometrically?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Integration",
+    difficultyLevel: "hard",
+    bloomLevel: "understand",
+    expectedTimeSecs: 35,
+    allowsCalculator: false,
+    options: [
+      { optionText: "The signed area between the curve y = f(x) and the x-axis from x = a to x = b", isCorrect: true, optionOrder: 1 },
+      { optionText: "The slope of the curve at x = b", isCorrect: false, optionOrder: 2 },
+      { optionText: "The length of the curve from a to b", isCorrect: false, optionOrder: 3 },
+      { optionText: "The average value of f(x) at x = a", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "A definite integral gives the signed (net) area bounded by the curve, the x-axis, and the vertical lines x = a and x = b.",
+  },
+
+  // --- Logical Reasoning (5 questions) ---
+  {
+    code: "S-NC-006",
+    questionText:
+      "If 'All doctors are professionals' and 'Some professionals are wealthy', which conclusion is valid?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Logical Reasoning",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 45,
+    allowsCalculator: false,
+    options: [
+      { optionText: "No valid conclusion can be drawn about doctors and wealth", isCorrect: true, optionOrder: 1 },
+      { optionText: "Some doctors are wealthy", isCorrect: false, optionOrder: 2 },
+      { optionText: "All wealthy people are doctors", isCorrect: false, optionOrder: 3 },
+      { optionText: "No doctors are wealthy", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "From 'All A are B' and 'Some B are C', we cannot conclude anything about the relationship between A and C. The 'some B' that are C may not include any A.",
+  },
+  {
+    code: "S-NC-007",
+    questionText:
+      "A valid argument has true premises but a false conclusion. What is this called?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Logical Reasoning",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "This cannot happen — a valid argument with true premises always has a true conclusion", isCorrect: true, optionOrder: 1 },
+      { optionText: "A fallacy", isCorrect: false, optionOrder: 2 },
+      { optionText: "An invalid deduction", isCorrect: false, optionOrder: 3 },
+      { optionText: "A paradox", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "By definition, a valid argument is one where IF the premises are true, the conclusion MUST be true. True premises + valid form = true conclusion always.",
+  },
+  {
+    code: "S-NC-008",
+    questionText:
+      "Identify the type of reasoning: 'The sun has risen every morning so far. Therefore, it will rise tomorrow.'",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Logical Reasoning",
+    difficultyLevel: "easy",
+    bloomLevel: "understand",
+    expectedTimeSecs: 30,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Inductive reasoning", isCorrect: true, optionOrder: 1 },
+      { optionText: "Deductive reasoning", isCorrect: false, optionOrder: 2 },
+      { optionText: "Abductive reasoning", isCorrect: false, optionOrder: 3 },
+      { optionText: "Circular reasoning", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Drawing a general conclusion from specific observations (past sunrises) is inductive reasoning. It is probable but not certain.",
+  },
+  {
+    code: "S-NC-009",
+    questionText:
+      "If P → Q is true and Q is true, what can we conclude about P?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Logical Reasoning",
+    difficultyLevel: "medium",
+    bloomLevel: "analyze",
+    expectedTimeSecs: 35,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Nothing — P may or may not be true (affirming the consequent)", isCorrect: true, optionOrder: 1 },
+      { optionText: "P must be true", isCorrect: false, optionOrder: 2 },
+      { optionText: "P must be false", isCorrect: false, optionOrder: 3 },
+      { optionText: "P → Q is false", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Knowing P → Q and Q does not let us determine P. This is the fallacy of affirming the consequent. Q could be true for reasons unrelated to P.",
+  },
+  {
+    code: "S-NC-010",
+    questionText:
+      "Which argument form is always valid?",
+    questionType: "multiple_choice",
+    rendererType: "standard",
+    concept: "Logical Reasoning",
+    difficultyLevel: "hard",
+    bloomLevel: "evaluate",
+    expectedTimeSecs: 40,
+    allowsCalculator: false,
+    options: [
+      { optionText: "Modus ponens: P → Q, P, therefore Q", isCorrect: true, optionOrder: 1 },
+      { optionText: "Affirming the consequent: P → Q, Q, therefore P", isCorrect: false, optionOrder: 2 },
+      { optionText: "Denying the antecedent: P → Q, ¬P, therefore ¬Q", isCorrect: false, optionOrder: 3 },
+      { optionText: "Circular reasoning: P, therefore P", isCorrect: false, optionOrder: 4 },
+    ],
+    explanation:
+      "Modus ponens (P → Q, P ⊢ Q) is a fundamental valid argument form. The others are formal fallacies.",
+  },
 ];
 
 export type Ss3ToUniversitySeed = typeof ss3ToUniversityQuestions[0];
