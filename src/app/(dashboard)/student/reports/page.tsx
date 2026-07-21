@@ -1,10 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { FileText, Eye, Sparkles, ChevronRight } from "lucide-react";
+import { FileText, Eye, Sparkles, ChevronRight, Loader2 } from "lucide-react";
 
 const categoryColors: Record<string, string> = {
   mastered: "bg-success/10 text-success", strong: "bg-info/10 text-info",
@@ -13,7 +14,23 @@ const categoryColors: Record<string, string> = {
 };
 
 export default function ReportsPage() {
+  const utils = trpc.useUtils();
   const { data: reports, isLoading } = trpc.student.getReports.useQuery();
+  const [requestingId, setRequestingId] = useState<string | null>(null);
+  const requestDeep = trpc.student.requestDeepReport.useMutation({
+    onSuccess: (data) => {
+      if (data.success && data.deepReportId) {
+        window.location.href = `/student/reports/deep/${data.deepReportId}`;
+      } else if (data.paymentUrl) {
+        window.location.href = data.paymentUrl;
+      } else {
+        alert(data.message || "Could not generate deep report");
+      }
+      setRequestingId(null);
+      utils.student.getReports.invalidate();
+    },
+    onError: () => setRequestingId(null),
+  });
 
   if (isLoading) return (
     <div className="space-y-4">
@@ -52,15 +69,24 @@ export default function ReportsPage() {
                 </div>
               </div>
               <div className="shrink-0">
-                {r.hasDeep ? (
+                {r.hasDeep && r.deepId ? (
                   <Link href={`/student/reports/deep/${r.deepId}`}>
                     <Button size="sm" variant="outline" className="min-h-[44px] gap-1.5">
                       <Sparkles className="h-4 w-4" /> Deep Report
                     </Button>
                   </Link>
                 ) : (
-                  <Button size="sm" className="min-h-[44px] gap-1.5">
-                    <Sparkles className="h-4 w-4" /> Request Deep
+                  <Button
+                    size="sm"
+                    className="min-h-[44px] gap-1.5"
+                    disabled={requestingId === r.id}
+                    onClick={() => {
+                      setRequestingId(r.id);
+                      requestDeep.mutate({ instanceId: r.instanceId });
+                    }}
+                  >
+                    {requestingId === r.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                    {requestingId === r.id ? "Processing..." : "Request Deep"}
                   </Button>
                 )}
               </div>

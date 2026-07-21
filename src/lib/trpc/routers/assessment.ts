@@ -24,7 +24,7 @@ function shuffleArray<T>(arr: T[]): T[] {
 
 export const assessmentRouter = router({
   getBySlug: protectedProcedure
-    .input(z.object({ slug: z.string() }))
+    .input(z.object({ slug: z.string(), department: z.string().optional() }))
     .query(async ({ input }) => {
       const slugToLevel: Record<string, string> = {
         "primary-to-jss1": "PRI-JSS1",
@@ -43,8 +43,12 @@ export const assessmentRouter = router({
         .where(eq(questionBankConfigs.bankId, bank.id))
         .orderBy(questionBankConfigs.displayOrder);
 
+      const whereConditions = [eq(questionsTable.bankId, bank.id), sql`${questionsTable.deletedAt} IS NULL`, eq(questionsTable.isActive, true)];
+      if (input.department && input.department !== "general") {
+        whereConditions.push(sql`${questionsTable.department} IN (${input.department}, 'general')`);
+      }
       const qs = await db.select().from(questionsTable)
-        .where(and(eq(questionsTable.bankId, bank.id), sql`${questionsTable.deletedAt} IS NULL`));
+        .where(and(...whereConditions));
 
       const qIds = qs.map((q: any) => q.id);
       const opts = qIds.length > 0 ? await db.select().from(questionOptions)
@@ -72,7 +76,6 @@ export const assessmentRouter = router({
           geometryData: q.geometryData,
           interactiveData: q.interactiveData,
           options: shuffledOpts,
-          correctOptionId: qOpts.find((o: any) => o.isCorrect)?.id || "",
           concept: q.concept || "",
           topicId: q.topicId || "",
           bloomLevel: q.bloomLevel || "understand",
@@ -113,7 +116,7 @@ export const assessmentRouter = router({
     .mutation(async ({ input, ctx }) => {
       const levelMap: Record<string, string> = {
         "primary-to-jss1": "PRI-JSS1", "jss3-to-ss1": "JSS3-SS1",
-        "ss3-to-university": "SS3-UNI", "teacher-quality": "TQ",
+        "ss3-to-university": "SS3-UNI", "teacher-quality": "TCH-QUALITY",
       };
       const level = levelMap[input.slug];
       if (!level) return { error: "Invalid assessment type" };
@@ -445,7 +448,7 @@ export const assessmentRouter = router({
       if (!bank) return null;
 
       let qs = await db.select().from(questionsTable)
-        .where(and(eq(questionsTable.bankId, bank.id), sql`${questionsTable.deletedAt} IS NULL`));
+        .where(and(eq(questionsTable.bankId, bank.id), sql`${questionsTable.deletedAt} IS NULL`, eq(questionsTable.isActive, true)));
 
       if (input.conceptFilter) {
         qs = qs.filter((q) => q.concept?.toLowerCase().includes(input.conceptFilter!.toLowerCase()));

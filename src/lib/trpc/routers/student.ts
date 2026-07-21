@@ -126,6 +126,7 @@ export const studentRouter = router({
     const results: {
       id: string; title: string; level: string; description: string;
       questionCount: number; timeLimitMinutes: number; sections: { name: string; count: number }[];
+      requiresDepartment?: boolean;
     }[] = [];
     for (const bank of banks) {
       const slug = bank.level === "PRI-JSS1" ? "primary-to-jss1"
@@ -144,6 +145,7 @@ export const studentRouter = router({
         description: bank.description || "",
         questionCount: totalQ,
         timeLimitMinutes: 45,
+        requiresDepartment: slug === "ss3-to-university",
         sections: configs.map((c) => ({
           name: c.sectionName,
           count: Math.min(c.questionCount ?? 10, Math.ceil(totalQ / configs.length)),
@@ -154,17 +156,28 @@ export const studentRouter = router({
   }),
 
   getReports: protectedProcedure.query(async ({ ctx }) => {
+    const { deepReports } = await import("@/lib/db/schemas/reports");
     const reports = await db.select().from(basicReports)
       .where(eq(basicReports.userId, ctx.user.id)).orderBy(desc(basicReports.createdAt));
-    return reports.map((r) => ({
-      id: r.id,
-      title: "Assessment Report",
-      score: Number(r.overallScore),
-      category: r.category,
-      date: r.createdAt?.toISOString?.()?.split("T")[0] || "",
-      hasDeep: r.isDeepReportAvailable || false,
-      deepId: null,
-    }));
+
+    const userDeepReports = await db.select({ basicReportId: deepReports.basicReportId, id: deepReports.id, status: deepReports.status })
+      .from(deepReports).where(eq(deepReports.userId, ctx.user.id));
+    const deepMap: Record<string, { id: string; status: string | null }> = {};
+    for (const dr of userDeepReports) deepMap[dr.basicReportId] = { id: dr.id, status: dr.status };
+
+    return reports.map((r) => {
+      const deep = deepMap[r.id];
+      return {
+        id: r.id,
+        instanceId: r.instanceId,
+        title: "Assessment Report",
+        score: Number(r.overallScore),
+        category: r.category,
+        date: r.createdAt?.toISOString?.()?.split("T")[0] || "",
+        hasDeep: deep?.status === "completed" || false,
+        deepId: deep?.id || null,
+      };
+    });
   }),
 
   getBasicReport: protectedProcedure
@@ -208,15 +221,50 @@ export const studentRouter = router({
   requestDeepReport: protectedProcedure
     .input(z.object({ instanceId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const { reportRequests } = await import("@/lib/db/schemas/reports");
+      const { deepReports, reportRequests } = await import("@/lib/db/schemas/reports");
+      const { subscriptionCredits } = await import("@/lib/db/schemas/payments");
+
+      const [basicReport] = await db.select().from(basicReports)
+        .where(and(eq(basicReports.instanceId, input.instanceId), eq(basicReports.userId, ctx.user.id)))
+        .limit(1);
+      if (!basicReport) return { success: false, message: "Assessment report not found" };
+
+      const [existingDeep] = await db.select().from(deepReports)
+        .where(eq(deepReports.basicReportId, basicReport.id)).limit(1);
+      if (existingDeep && existingDeep.status === "completed") {
+        return { success: true, deepReportId: existingDeep.id, message: "Deep report already available" };
+      }
+
+      const [credits] = await db.select({ total: sql<number>`coalesce(sum(${subscriptionCredits.creditsRemaining}), 0)` })
+        .from(subscriptionCredits).where(eq(subscriptionCredits.userId, ctx.user.id));
+      if ((credits?.total || 0) <= 0) {
+        return { success: false, message: "No deep report credits remaining. Please purchase a plan.", paymentUrl: "/pricing" };
+      }
+
+      await db.update(subscriptionCredits).set({
+        creditsRemaining: sql`${subscriptionCredits.creditsRemaining} - 1`,
+      }).where(and(
+        eq(subscriptionCredits.userId, ctx.user.id),
+        sql`${subscriptionCredits.creditsRemaining} > 0`
+      ));
+
+      const { generateDeepReport } = await import("@/lib/engine/report-generator");
+      const result = await generateDeepReport({ userId: ctx.user.id, instanceId: input.instanceId });
+
+      if (!result.success) {
+        return { success: false, message: result.error || "Failed to generate deep report" };
+      }
+
       await db.insert(reportRequests).values({
         requesterId: ctx.user.id,
         requesterRole: "student",
         instanceId: input.instanceId,
         assessmentType: "academic",
-        status: "pending",
+        status: "completed",
+        deepReportId: result.reportId,
       });
-      return { success: true, paymentUrl: "" };
+
+      return { success: true, deepReportId: result.reportId, message: "Deep report generated successfully" };
     }),
 
   getProfile: protectedProcedure.query(async ({ ctx }) => {

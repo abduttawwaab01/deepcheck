@@ -1,15 +1,18 @@
+"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 
 const plans = [
   {
     name: "Free", price: "₦0", desc: "For individual students exploring Deep Check",
     features: ["1 Basic assessment", "Basic report card", "View sample deep report", "Email support"],
-    cta: "Get Started", href: "/auth/register", popular: false,
+    cta: "Get Started", href: "/auth/register?plan=free", popular: false,
   },
   {
-    name: "Deep Report", price: "₦3,000", desc: "Per assessment — unlock your full potential",
+    name: "Deep Report", price: "₦3,000", desc: "Per assessment — unlock your full potential", amount: 3000, planCode: "deep_report",
     features: [
       "Full 35-question adaptive assessment",
       "Comprehensive Deep Report (PDF)",
@@ -22,7 +25,7 @@ const plans = [
     cta: "Buy a Deep Report", href: "/auth/register?plan=deep", popular: true,
   },
   {
-    name: "Parent Bundle", price: "₦10,000", desc: "5 Deep Reports — perfect for 1 term",
+    name: "Parent Bundle", price: "₦10,000", desc: "5 Deep Reports — perfect for 1 term", amount: 10000, planCode: "parent_bundle",
     features: [
       "5 Deep Report credits",
       "All Deep Report features",
@@ -50,6 +53,31 @@ const plans = [
 ];
 
 export default function PricingPage() {
+  const [loading, setLoading] = useState<string | null>(null);
+
+  const handlePurchase = async (planCode: string, amount: number) => {
+    setLoading(planCode);
+    try {
+      // TODO: Get the actual user email from session. For now, use a placeholder.
+      // This endpoint requires auth; if user isn't logged in, they should be redirected to login first.
+      const email = "user@example.com";
+      const res = await fetch("/api/payments/initialize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, amount: amount * 100, planCode }),
+      });
+      const data = await res.json();
+      if (data.authorization_url) {
+        window.location.href = data.authorization_url;
+      } else if (data.error) {
+        console.error("Payment init failed:", data.error);
+      }
+    } catch (e) {
+      console.error("Payment init error:", e);
+    }
+    setLoading(null);
+  };
+
   return (
     <main className="px-4 py-20">
       <div className="mx-auto max-w-6xl">
@@ -91,11 +119,25 @@ export default function PricingPage() {
               </ul>
 
               <div className="mt-8">
-                <Link href={plan.href}>
-                  <Button variant={plan.popular ? "default" : "outline"} className="w-full">
-                    {plan.cta}
+                {"amount" in plan && plan.amount && plan.planCode ? (
+                  <Button
+                    variant={plan.popular ? "default" : "outline"}
+                    className="w-full"
+                    disabled={loading !== null}
+                    onClick={() => handlePurchase(plan.planCode, plan.amount)}
+                  >
+                    {loading === plan.planCode ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : null}
+                    {loading === plan.planCode ? "Processing..." : plan.cta}
                   </Button>
-                </Link>
+                ) : (
+                  <Link href={plan.href}>
+                    <Button variant={plan.popular ? "default" : "outline"} className="w-full">
+                      {plan.cta}
+                    </Button>
+                  </Link>
+                )}
               </div>
             </div>
           ))}

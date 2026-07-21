@@ -7,7 +7,7 @@ export interface AssessmentQuestion {
   geometryData?: GeometryData;
   interactiveData?: InteractiveData;
   options: { id: string; text: string }[];
-  correctOptionId: string;
+  correctOptionId?: string;
   concept: string;
   bloomLevel: "remember" | "understand" | "apply" | "analyze" | "evaluate";
   difficulty: number;
@@ -15,6 +15,7 @@ export interface AssessmentQuestion {
   guessing: number;
   expectedTimeSecs: number;
   allowsCalculator: boolean;
+  department?: string;
 }
 
 export interface ChartData {

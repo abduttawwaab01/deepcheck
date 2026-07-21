@@ -31,3 +31,4 @@ export * from "./ai";
 export * from "./system";
 export * from "./school-assessments";
 export * from "./gamification";
+export * from "./parent-assessments";

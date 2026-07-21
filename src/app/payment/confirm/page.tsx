@@ -40,18 +40,20 @@ function PaymentConfirmContent() {
         </h1>
         <p className="mt-2 text-sm text-neutral-500">
           {isSuccess
-            ? `Your payment of ₦${amount ? (Number(amount) / 100).toLocaleString() : "0"} has been received.`
+            ? `Your payment of ₦${amount ? (Number(amount) / 100).toLocaleString() : "0"} has been received. Your credits have been added.`
             : "Your payment could not be processed. Please try again."}
         </p>
         <div className="mt-4 rounded-xl bg-neutral-50 p-3 text-xs text-neutral-500 dark:bg-neutral-900">
           Reference: {reference}
         </div>
-        {isSuccess && (
-          <p className="mt-3 text-xs text-neutral-400">
-            Your deep report will be available shortly. The admin will generate it and notify you.
-          </p>
-        )}
-        <Button className="mt-6 w-full" onClick={() => router.push("/")}>Go to Dashboard</Button>
+        <div className="mt-6 flex gap-3">
+          {isSuccess && (
+            <Button variant="outline" className="flex-1" onClick={() => router.push("/student/reports")}>
+              View Reports
+            </Button>
+          )}
+          <Button className="flex-1" onClick={() => router.push("/")}>Go to Dashboard</Button>
+        </div>
       </div>
     </main>
   );

@@ -64,10 +64,7 @@ export default function TeacherAssessmentPage() {
       });
       setResult({ score: res.score, category: res.category });
     } catch {
-      const correctCount = assessment.questions.filter((q) => answers[q.id] === q.correctOptionId).length;
-      const pct = Math.round((correctCount / assessment.questions.length) * 100);
-      const cat = pct >= 80 ? "strong" : pct >= 65 ? "competent" : pct >= 50 ? "developing" : "weak";
-      setResult({ score: pct, category: cat });
+      setResult({ score: 0, category: "weak" });
     }
     setSaving(false);
   }, [assessment, answers, instanceId, completeMutation, recordQuestionTime]);

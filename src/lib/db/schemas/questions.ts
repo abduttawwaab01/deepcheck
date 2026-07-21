@@ -14,6 +14,7 @@ export const questions = pgTable("questions", {
   topicId: uuid("topic_id"),
   conceptId: uuid("concept_id"),
   concept: varchar("concept", { length: 200 }),
+  department: varchar("department", { length: 30 }).default("general"),
   difficultyLevel: varchar("difficulty_level", { length: 10 }).default("medium"),
   difficultyParam: numeric("difficulty_param", { precision: 5, scale: 2 }).default("0"),
   discriminationParam: numeric("discrimination_param", { precision: 5, scale: 2 }).default("1"),

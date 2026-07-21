@@ -6,7 +6,9 @@ import { teacherProfiles } from "@/lib/db/schemas/teachers";
 import { users, studentProfiles, roles, userRoles } from "@/lib/db/schemas/users";
 import { assessmentInstances } from "@/lib/db/schemas/assessments";
 import { basicReports, reportRequests } from "@/lib/db/schemas/reports";
-import { schoolAssessmentQuestions, schoolAssessmentOptions, schoolAssessmentResponses } from "@/lib/db/schemas/school-assessments";
+import { schoolAssessmentQuestions, schoolAssessmentOptions, schoolAssessmentResponses, schoolAssessmentDeepReports } from "@/lib/db/schemas/school-assessments";
+import { subscriptionCredits } from "@/lib/db/schemas/payments";
+import { generateSchoolDeepReport } from "@/lib/engine/school-report-generator";
 import { eq, sql, and, desc, inArray } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 
@@ -191,7 +193,10 @@ export const schoolRouter = router({
   getSchoolAssessment: schoolProcedure.query(async ({ ctx }) => {
     const rows = await db.select({
       id: schoolAssessmentQuestions.id,
+      code: schoolAssessmentQuestions.code,
       text: schoolAssessmentQuestions.questionText,
+      domain: schoolAssessmentQuestions.domain,
+      dimension: schoolAssessmentQuestions.dimension,
       order: schoolAssessmentQuestions.displayOrder,
     }).from(schoolAssessmentQuestions)
       .where(eq(schoolAssessmentQuestions.isActive, true))
@@ -207,8 +212,11 @@ export const schoolRouter = router({
     }
     return rows.map((q) => ({
       id: q.id,
+      code: q.code,
       text: q.text,
-      options: (optsByQ[q.id] || []).map((o) => ({ id: o.id, text: o.optionText, order: o.optionOrder })),
+      domain: q.domain,
+      dimension: q.dimension,
+      options: (optsByQ[q.id] || []).map((o) => ({ id: o.id, text: o.optionText, score: o.score || 0, order: o.optionOrder })),
     }));
   }),
 
@@ -219,19 +227,233 @@ export const schoolRouter = router({
     .mutation(async ({ ctx, input }) => {
       const schoolId = await getSchoolId(ctx.user.id);
       if (!schoolId) throw new Error("School not found");
+
       const optIds = input.responses.map((r) => r.optionId);
-      const optScores = optIds.length > 0 ? await db.select({ id: schoolAssessmentOptions.id, score: schoolAssessmentOptions.score })
-        .from(schoolAssessmentOptions).where(inArray(schoolAssessmentOptions.id, optIds)) : [];
+      const optData = optIds.length > 0 ? await db.select({
+        id: schoolAssessmentOptions.id,
+        score: schoolAssessmentOptions.score,
+        questionId: schoolAssessmentOptions.questionId,
+      }).from(schoolAssessmentOptions).where(inArray(schoolAssessmentOptions.id, optIds)) : [];
+
       const scoreMap: Record<string, number> = {};
-      for (const o of optScores) scoreMap[o.id] = o.score || 0;
+      for (const o of optData) scoreMap[o.id] = o.score || 0;
+
+      const qIds = input.responses.map((r) => r.questionId);
+      const questionData = qIds.length > 0 ? await db.select({
+        id: schoolAssessmentQuestions.id,
+        domain: schoolAssessmentQuestions.domain,
+      }).from(schoolAssessmentQuestions).where(inArray(schoolAssessmentQuestions.id, qIds)) : [];
+
+      const domainMap: Record<string, string> = {};
+      for (const q of questionData) domainMap[q.id] = q.domain;
+
       const totalScore = input.responses.reduce((sum, r) => sum + (scoreMap[r.optionId] || 0), 0);
-      await db.insert(schoolAssessmentResponses).values({
+      const maxPossible = input.responses.length * 5;
+
+      const domainScores: Record<string, { score: number; max: number; count: number }> = {};
+      for (const r of input.responses) {
+        const domain = domainMap[r.questionId] || "Unknown";
+        if (!domainScores[domain]) domainScores[domain] = { score: 0, max: 0, count: 0 };
+        domainScores[domain].score += scoreMap[r.optionId] || 0;
+        domainScores[domain].max += 5;
+        domainScores[domain].count++;
+      }
+
+      const domainPercentages: Record<string, number> = {};
+      for (const [domain, data] of Object.entries(domainScores)) {
+        domainPercentages[domain] = Math.round((data.score / data.max) * 100);
+      }
+
+      const pct = Math.round((totalScore / maxPossible) * 100);
+      let category: "needs_improvement" | "developing" | "adequate" | "good" | "excellent";
+      if (pct < 20) category = "needs_improvement";
+      else if (pct < 40) category = "developing";
+      else if (pct < 60) category = "adequate";
+      else if (pct < 80) category = "good";
+      else category = "excellent";
+
+      const [response] = await db.insert(schoolAssessmentResponses).values({
         schoolId,
         submittedBy: ctx.user.id,
         responses: input.responses,
         totalScore,
-      });
-      return { success: true, score: totalScore, maxScore: input.responses.length * 4 };
+        maxPossibleScore: maxPossible,
+        domainScores: domainPercentages,
+        category,
+        completedAt: new Date(),
+      }).returning();
+
+      return {
+        success: true,
+        score: totalScore,
+        maxScore: maxPossible,
+        percentage: pct,
+        category,
+        domainScores: domainPercentages,
+        responseId: response.id,
+      };
+    }),
+
+  getSchoolAssessmentResults: schoolProcedure
+    .input(z.object({ responseId: z.string().optional() }))
+    .query(async ({ ctx, input }) => {
+      const schoolId = await getSchoolId(ctx.user.id);
+      if (!schoolId) return null;
+
+      let response;
+      if (input.responseId) {
+        const [r] = await db.select().from(schoolAssessmentResponses)
+          .where(and(eq(schoolAssessmentResponses.id, input.responseId), eq(schoolAssessmentResponses.schoolId, schoolId)))
+          .limit(1);
+        response = r;
+      } else {
+        const [r] = await db.select().from(schoolAssessmentResponses)
+          .where(eq(schoolAssessmentResponses.schoolId, schoolId))
+          .orderBy(desc(schoolAssessmentResponses.createdAt)).limit(1);
+        response = r;
+      }
+      if (!response) return null;
+
+      const [deepReport] = await db.select().from(schoolAssessmentDeepReports)
+        .where(eq(schoolAssessmentDeepReports.responseId, response.id))
+        .orderBy(desc(schoolAssessmentDeepReports.createdAt)).limit(1);
+
+      return {
+        id: response.id,
+        totalScore: response.totalScore,
+        maxPossibleScore: response.maxPossibleScore,
+        percentage: response.maxPossibleScore ? Math.round((response.totalScore || 0) / response.maxPossibleScore * 100) : 0,
+        category: response.category,
+        domainScores: response.domainScores,
+        responses: response.responses,
+        completedAt: response.completedAt,
+        deepReport: deepReport ? {
+          id: deepReport.id,
+          status: deepReport.status,
+          overallScore: deepReport.overallScore,
+          aiSummary: deepReport.aiSummary,
+        } : null,
+      };
+    }),
+
+  getSchoolAssessmentHistory: schoolProcedure.query(async ({ ctx }) => {
+    const schoolId = await getSchoolId(ctx.user.id);
+    if (!schoolId) return [];
+    const responses = await db.select().from(schoolAssessmentResponses)
+      .where(eq(schoolAssessmentResponses.schoolId, schoolId))
+      .orderBy(desc(schoolAssessmentResponses.createdAt));
+    return responses.map((r) => ({
+      id: r.id,
+      totalScore: r.totalScore,
+      maxPossibleScore: r.maxPossibleScore,
+      percentage: r.maxPossibleScore ? Math.round((r.totalScore || 0) / r.maxPossibleScore * 100) : 0,
+      category: r.category,
+      completedAt: r.completedAt,
+    }));
+  }),
+
+  requestSchoolDeepReport: schoolProcedure
+    .input(z.object({ responseId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const schoolId = await getSchoolId(ctx.user.id);
+      if (!schoolId) throw new Error("School not found");
+
+      const [response] = await db.select().from(schoolAssessmentResponses)
+        .where(and(eq(schoolAssessmentResponses.id, input.responseId), eq(schoolAssessmentResponses.schoolId, schoolId)))
+        .limit(1);
+      if (!response) throw new Error("Assessment response not found");
+
+      const [existing] = await db.select().from(schoolAssessmentDeepReports)
+        .where(eq(schoolAssessmentDeepReports.responseId, input.responseId)).limit(1);
+      if (existing && existing.status === "completed") {
+        return { success: true, deepReportId: existing.id, message: "Deep report already exists" };
+      }
+
+      const [school] = await db.select().from(schools).where(eq(schools.id, schoolId)).limit(1);
+      if (!school || (school.deepReportCredits || 0) <= 0) {
+        return { success: false, message: "No deep report credits remaining. Please purchase more credits.", paymentUrl: "/school/settings" };
+      }
+
+      await db.update(schools).set({
+        deepReportCredits: sql`${schools.deepReportCredits} - 1`,
+        updatedAt: new Date(),
+      }).where(eq(schools.id, schoolId));
+
+      const responseData = response.responses as { questionId: string; optionId: string }[];
+      const optIds = responseData.map((r) => r.optionId);
+      const optData = optIds.length > 0 ? await db.select({
+        id: schoolAssessmentOptions.id,
+        score: schoolAssessmentOptions.score,
+        questionId: schoolAssessmentOptions.questionId,
+      }).from(schoolAssessmentOptions).where(inArray(schoolAssessmentOptions.id, optIds)) : [];
+
+      const scoreMap: Record<string, number> = {};
+      for (const o of optData) scoreMap[o.id] = o.score || 0;
+
+      const qIds = responseData.map((r) => r.questionId);
+      const questionData = qIds.length > 0 ? await db.select({
+        id: schoolAssessmentQuestions.id,
+        domain: schoolAssessmentQuestions.domain,
+      }).from(schoolAssessmentQuestions).where(inArray(schoolAssessmentQuestions.id, qIds)) : [];
+
+      const domainMap: Record<string, string> = {};
+      for (const q of questionData) domainMap[q.id] = q.domain;
+
+      const reportResponses = responseData.map((r) => ({
+        questionId: r.questionId,
+        score: scoreMap[r.optionId] || 0,
+        domain: domainMap[r.questionId] || "Unknown",
+      }));
+
+      const report = generateSchoolDeepReport(reportResponses);
+
+      const [deepReport] = await db.insert(schoolAssessmentDeepReports).values({
+        responseId: input.responseId,
+        schoolId,
+        requestedBy: ctx.user.id,
+        status: "completed",
+        overallScore: String(report.overallScore),
+        domainAnalysis: report.domainAnalysis,
+        criticalGaps: report.criticalGaps,
+        strengths: report.strengths,
+        priorityActionPlan: report.priorityActions,
+        benchmarkComparison: report.benchmarkComparison,
+        resourceRecommendations: report.resourceRecommendations,
+        improvementTimeline: report.improvementTimeline,
+        aiSummary: report.aiSummary,
+        generatedAt: new Date(),
+      }).returning();
+
+      return { success: true, deepReportId: deepReport.id, message: "Deep report generated successfully" };
+    }),
+
+  getSchoolDeepReport: schoolProcedure
+    .input(z.object({ deepReportId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const schoolId = await getSchoolId(ctx.user.id);
+      if (!schoolId) return null;
+
+      const [report] = await db.select().from(schoolAssessmentDeepReports)
+        .where(and(
+          eq(schoolAssessmentDeepReports.id, input.deepReportId),
+          eq(schoolAssessmentDeepReports.schoolId, schoolId)
+        )).limit(1);
+      if (!report) return null;
+
+      return {
+        id: report.id,
+        status: report.status,
+        overallScore: report.overallScore,
+        domainAnalysis: report.domainAnalysis,
+        criticalGaps: report.criticalGaps,
+        strengths: report.strengths,
+        priorityActionPlan: report.priorityActionPlan,
+        benchmarkComparison: report.benchmarkComparison,
+        resourceRecommendations: report.resourceRecommendations,
+        improvementTimeline: report.improvementTimeline,
+        aiSummary: report.aiSummary,
+        generatedAt: report.generatedAt,
+      };
     }),
 
   getSettings: schoolProcedure.query(async ({ ctx }) => {

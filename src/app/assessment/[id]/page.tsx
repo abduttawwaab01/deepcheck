@@ -13,7 +13,11 @@ export default function AssessmentPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
-  const { data: assessment, isLoading } = trpc.assessment.getBySlug.useQuery({ slug: id }, { enabled: !!id });
+  const [department, setDepartment] = useState<string>("general");
+  const { data: assessment, isLoading } = trpc.assessment.getBySlug.useQuery(
+    { slug: id, department: id === "ss3-to-university" ? department : undefined },
+    { enabled: !!id }
+  );
   const [instanceId, setInstanceId] = useState<string | null>(null);
   const startMutation = trpc.assessment.startAssessment.useMutation();
   const completeMutation = trpc.assessment.completeAssessment.useMutation();
@@ -67,22 +71,18 @@ export default function AssessmentPage() {
     if (!assessment || !instanceId) return;
     recordQuestionTime();
     proctorRef.current?.stop();
-    let correct = 0;
-    assessment.questions.forEach((q) => {
-      if (answers[q.id] === q.correctOptionId) correct++;
-    });
-    const pct = Math.round((correct / assessment.questions.length) * 100);
-    setScore(pct);
+    setScore(0);
     setCompleted(true);
     setSaving(true);
     try {
       const timeSpent = startTimeRef.current ? Math.floor((Date.now() - startTimeRef.current) / 1000) : 0;
-      await completeMutation.mutateAsync({
+      const result = await completeMutation.mutateAsync({
         instanceId,
         answers,
         timeSpentSeconds: timeSpent,
         questionTimes: questionTimesRef.current,
       });
+      if (result?.score != null) setScore(result.score);
     } catch {
       // silently fail - score is still shown client-side
     }
@@ -205,6 +205,31 @@ export default function AssessmentPage() {
               </div>
 
             <div className="mt-6 flex flex-col gap-3">
+              {id === "ss3-to-university" && (
+                <div>
+                  <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Select your department:</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { value: "arts", label: "Arts", icon: "📚" },
+                      { value: "commerce", label: "Commerce", icon: "💼" },
+                      { value: "sciences", label: "Sciences", icon: "🔬" },
+                    ].map((d) => (
+                      <button
+                        key={d.value}
+                        onClick={() => setDepartment(d.value)}
+                        className={`rounded-xl border-2 p-3 text-center transition-all ${
+                          department === d.value
+                            ? "border-primary-500 bg-primary-50 text-primary-700"
+                            : "border-neutral-200 hover:border-neutral-300 dark:border-neutral-700"
+                        }`}
+                      >
+                        <span className="text-2xl">{d.icon}</span>
+                        <p className="mt-1 text-sm font-medium">{d.label}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
               <p className="text-xs text-neutral-400">A calculator is available during the assessment.</p>
               <Button size="lg" className="w-full min-h-[48px]" onClick={handleStart}>
                 Start Assessment
@@ -217,8 +242,8 @@ export default function AssessmentPage() {
   }
 
   if (completed) {
-    const correctCount = questions.filter((q) => answers[q.id] === q.correctOptionId).length;
     const total = questions.length;
+    const correctCount = Math.round((score / 100) * total);
     const grade = score >= 80 ? "Excellent" : score >= 65 ? "Good" : score >= 50 ? "Fair" : score >= 35 ? "Weak" : "Critical";
     const gradeColor = score >= 80 ? "text-success" : score >= 65 ? "text-primary-500" : score >= 50 ? "text-warning" : "text-error";
 

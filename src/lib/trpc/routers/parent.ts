@@ -11,6 +11,9 @@ import { topics } from "@/lib/db/schemas/content";
 import { eq, sql, desc, inArray, and } from "drizzle-orm";
 import { computeEarlyWarning, extractStudentInput } from "@/lib/engine/early-warning";
 import { computeStudentDetail, type StudentRecord } from "@/lib/engine/class-insights";
+import { parentAssessmentQuestions, parentAssessmentOptions, parentAssessmentResponses, parentAssessmentDeepReports } from "@/lib/db/schemas/parent-assessments";
+import { generateParentDeepReport } from "@/lib/engine/parent-report-generator";
+import { subscriptionCredits } from "@/lib/db/schemas/payments";
 
 export const parentRouter = router({
   getDashboard: protectedProcedure.query(async ({ ctx }) => {
@@ -254,6 +257,266 @@ export const parentRouter = router({
           date: p.recordedAt,
         })),
       });
+    }),
+
+  getParentAssessment: protectedProcedure.query(async ({ ctx }) => {
+    const rows = await db.select({
+      id: parentAssessmentQuestions.id,
+      code: parentAssessmentQuestions.code,
+      text: parentAssessmentQuestions.questionText,
+      domain: parentAssessmentQuestions.domain,
+      dimension: parentAssessmentQuestions.dimension,
+      order: parentAssessmentQuestions.displayOrder,
+    }).from(parentAssessmentQuestions)
+      .where(eq(parentAssessmentQuestions.isActive, true))
+      .orderBy(parentAssessmentQuestions.displayOrder);
+    
+    const qIds = rows.map((r) => r.id);
+    const opts = qIds.length > 0 ? await db.select().from(parentAssessmentOptions)
+      .where(inArray(parentAssessmentOptions.questionId, qIds))
+      .orderBy(parentAssessmentOptions.optionOrder) : [];
+    
+    const optsByQ: Record<string, typeof opts> = {};
+    for (const o of opts) {
+      if (!optsByQ[o.questionId]) optsByQ[o.questionId] = [];
+      optsByQ[o.questionId].push(o);
+    }
+    
+    return rows.map((q) => ({
+      id: q.id,
+      code: q.code,
+      text: q.text,
+      domain: q.domain,
+      dimension: q.dimension,
+      options: (optsByQ[q.id] || []).map((o) => ({ id: o.id, text: o.optionText, score: o.score || 0, order: o.optionOrder })),
+    }));
+  }),
+
+  submitParentAssessment: protectedProcedure
+    .input(z.object({
+      responses: z.array(z.object({ questionId: z.string(), optionId: z.string() })),
+      childId: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      // Fetch options with scores
+      const optIds = input.responses.map((r) => r.optionId);
+      const optData = optIds.length > 0 ? await db.select({
+        id: parentAssessmentOptions.id,
+        score: parentAssessmentOptions.score,
+        questionId: parentAssessmentOptions.questionId,
+      }).from(parentAssessmentOptions).where(inArray(parentAssessmentOptions.id, optIds)) : [];
+      
+      const scoreMap: Record<string, number> = {};
+      for (const o of optData) scoreMap[o.id] = o.score || 0;
+
+      // Fetch questions to get domains
+      const qIds = input.responses.map((r) => r.questionId);
+      const questionData = qIds.length > 0 ? await db.select({
+        id: parentAssessmentQuestions.id,
+        domain: parentAssessmentQuestions.domain,
+      }).from(parentAssessmentQuestions).where(inArray(parentAssessmentQuestions.id, qIds)) : [];
+      
+      const domainMap: Record<string, string> = {};
+      for (const q of questionData) domainMap[q.id] = q.domain;
+
+      // Calculate total and domain scores
+      const totalScore = input.responses.reduce((sum, r) => sum + (scoreMap[r.optionId] || 0), 0);
+      const maxPossible = input.responses.length * 5;
+      
+      // Build domain scores
+      const domainScores: Record<string, number> = {};
+      const domainCounts: Record<string, { score: number; max: number }> = {};
+      for (const r of input.responses) {
+        const domain = domainMap[r.questionId] || "Unknown";
+        if (!domainCounts[domain]) domainCounts[domain] = { score: 0, max: 0 };
+        domainCounts[domain].score += scoreMap[r.optionId] || 0;
+        domainCounts[domain].max += 5;
+      }
+      for (const [domain, data] of Object.entries(domainCounts)) {
+        domainScores[domain] = Math.round((data.score / data.max) * 100);
+      }
+
+      // Determine category
+      const pct = Math.round((totalScore / maxPossible) * 100);
+      let category: "needs_guidance" | "developing" | "adequate" | "proficient" | "exemplary";
+      if (pct < 20) category = "needs_guidance";
+      else if (pct < 40) category = "developing";
+      else if (pct < 60) category = "adequate";
+      else if (pct < 80) category = "proficient";
+      else category = "exemplary";
+
+      const enrichedResponses = input.responses.map((r) => ({
+        ...r,
+        score: scoreMap[r.optionId] || 0,
+        domain: domainMap[r.questionId] || "Unknown",
+      }));
+
+      const [response] = await db.insert(parentAssessmentResponses).values({
+        parentId: ctx.user.id,
+        childId: input.childId || null,
+        responses: enrichedResponses,
+        totalScore,
+        maxPossibleScore: maxPossible,
+        domainScores,
+        category,
+        completedAt: new Date(),
+      }).returning();
+
+      return {
+        success: true,
+        score: totalScore,
+        maxScore: maxPossible,
+        percentage: pct,
+        category,
+        domainScores,
+        responseId: response.id,
+      };
+    }),
+
+  getParentAssessmentResults: protectedProcedure
+    .input(z.object({ responseId: z.string().optional() }))
+    .query(async ({ ctx, input }) => {
+      let response;
+      if (input.responseId) {
+        const [r] = await db.select().from(parentAssessmentResponses)
+          .where(and(eq(parentAssessmentResponses.id, input.responseId), eq(parentAssessmentResponses.parentId, ctx.user.id)))
+          .limit(1);
+        response = r;
+      } else {
+        const [r] = await db.select().from(parentAssessmentResponses)
+          .where(eq(parentAssessmentResponses.parentId, ctx.user.id))
+          .orderBy(desc(parentAssessmentResponses.createdAt)).limit(1);
+        response = r;
+      }
+      if (!response) return null;
+      
+      // Check for existing deep report
+      const [deepReport] = await db.select().from(parentAssessmentDeepReports)
+        .where(eq(parentAssessmentDeepReports.responseId, response.id))
+        .orderBy(desc(parentAssessmentDeepReports.createdAt)).limit(1);
+      
+      return {
+        id: response.id,
+        totalScore: response.totalScore,
+        maxPossibleScore: response.maxPossibleScore,
+        percentage: response.maxPossibleScore ? Math.round((response.totalScore || 0) / response.maxPossibleScore * 100) : 0,
+        category: response.category,
+        domainScores: response.domainScores,
+        completedAt: response.completedAt,
+        childId: response.childId,
+        deepReport: deepReport ? {
+          id: deepReport.id,
+          status: deepReport.status,
+          overallScore: deepReport.overallScore,
+          aiSummary: deepReport.aiSummary,
+        } : null,
+      };
+    }),
+
+  getParentAssessmentHistory: protectedProcedure.query(async ({ ctx }) => {
+    const responses = await db.select().from(parentAssessmentResponses)
+      .where(eq(parentAssessmentResponses.parentId, ctx.user.id))
+      .orderBy(desc(parentAssessmentResponses.createdAt));
+    return responses.map((r) => ({
+      id: r.id,
+      totalScore: r.totalScore,
+      maxPossibleScore: r.maxPossibleScore,
+      percentage: r.maxPossibleScore ? Math.round((r.totalScore || 0) / r.maxPossibleScore * 100) : 0,
+      category: r.category,
+      completedAt: r.completedAt,
+      childId: r.childId,
+    }));
+  }),
+
+  requestParentDeepReport: protectedProcedure
+    .input(z.object({ responseId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      // Verify the response belongs to this parent
+      const [response] = await db.select().from(parentAssessmentResponses)
+        .where(and(eq(parentAssessmentResponses.id, input.responseId), eq(parentAssessmentResponses.parentId, ctx.user.id)))
+        .limit(1);
+      if (!response) throw new Error("Assessment response not found");
+      
+      // Check if deep report already exists
+      const [existing] = await db.select().from(parentAssessmentDeepReports)
+        .where(eq(parentAssessmentDeepReports.responseId, input.responseId)).limit(1);
+      if (existing && existing.status === "completed") {
+        return { success: true, deepReportId: existing.id, message: "Deep report already exists" };
+      }
+      
+      // Check parent credits
+      const [credits] = await db.select({ total: sql<number>`coalesce(sum(${subscriptionCredits.creditsRemaining}), 0)` })
+        .from(subscriptionCredits).where(eq(subscriptionCredits.userId, ctx.user.id));
+      
+      if ((credits?.total || 0) <= 0) {
+        return { success: false, message: "No deep report credits remaining. Please purchase a plan.", paymentUrl: "/pricing" };
+      }
+      
+      // Deduct credit
+      await db.update(subscriptionCredits).set({
+        creditsRemaining: sql`${subscriptionCredits.creditsRemaining} - 1`,
+      }).where(and(
+        eq(subscriptionCredits.userId, ctx.user.id),
+        sql`${subscriptionCredits.creditsRemaining} > 0`
+      ));
+      
+      // Generate the deep report
+      const responseData = response.responses as { questionId: string; optionId: string; score: number; domain: string }[];
+      const report = generateParentDeepReport(
+        responseData.map((r) => ({
+          questionId: r.questionId,
+          score: r.score,
+          domain: r.domain,
+          dimension: "",
+        }))
+      );
+      
+      const [deepReport] = await db.insert(parentAssessmentDeepReports).values({
+        responseId: input.responseId,
+        parentId: ctx.user.id,
+        childId: response.childId,
+        status: "completed",
+        overallScore: String(report.overallScore),
+        domainAnalysis: report.domainAnalysis,
+        parentingStyle: report.parentingStyle,
+        strengths: report.strengths,
+        areasForGrowth: report.criticalGaps,
+        ageSpecificInsights: report.ageSpecificInsights,
+        actionPlan: report.actionPlan,
+        resourceRecommendations: report.resourceRecommendations,
+        redFlags: report.redFlags,
+        aiSummary: report.aiSummary,
+        generatedAt: new Date(),
+      }).returning();
+      
+      return { success: true, deepReportId: deepReport.id, message: "Deep report generated successfully" };
+    }),
+
+  getParentDeepReport: protectedProcedure
+    .input(z.object({ deepReportId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const [report] = await db.select().from(parentAssessmentDeepReports)
+        .where(and(
+          eq(parentAssessmentDeepReports.id, input.deepReportId),
+          eq(parentAssessmentDeepReports.parentId, ctx.user.id)
+        )).limit(1);
+      if (!report) return null;
+      
+      return {
+        id: report.id,
+        status: report.status,
+        overallScore: report.overallScore,
+        domainAnalysis: report.domainAnalysis,
+        parentingStyle: report.parentingStyle,
+        strengths: report.strengths,
+        areasForGrowth: report.areasForGrowth,
+        ageSpecificInsights: report.ageSpecificInsights,
+        actionPlan: report.actionPlan,
+        resourceRecommendations: report.resourceRecommendations,
+        redFlags: report.redFlags,
+        aiSummary: report.aiSummary,
+        generatedAt: report.generatedAt,
+      };
     }),
 
   deleteAccount: protectedProcedure

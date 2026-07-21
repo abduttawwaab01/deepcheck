@@ -97,7 +97,10 @@ export default function PracticePage() {
   }
 
   if (completed) {
-    const correctCount = questions.filter((q: any) => answers[q.id] === q.correctOptionId).length;
+    const correctCount = questions.filter((q: any) => {
+      const correctOpt = q.options?.find((o: any) => o.isCorrect);
+      return correctOpt && answers[q.id] === correctOpt.id;
+    }).length;
     const total = questions.length;
     const pct = Math.round((correctCount / total) * 100);
 
@@ -112,7 +115,8 @@ export default function PracticePage() {
           </div>
           <div className="mt-6 space-y-2">
             {questions.map((q: any, i: number) => {
-              const isCorrect = answers[q.id] === q.correctOptionId;
+              const correctOpt = q.options?.find((o: any) => o.isCorrect);
+              const isCorrect = correctOpt && answers[q.id] === correctOpt.id;
               return (
                 <div key={q.id} className={cn("flex items-center gap-2 rounded-lg px-3 py-2 text-sm",
                   isCorrect ? "bg-success/5 text-success" : "bg-error/5 text-error"
