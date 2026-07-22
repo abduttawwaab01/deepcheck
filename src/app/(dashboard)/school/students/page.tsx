@@ -32,16 +32,16 @@ export default function StudentsPage() {
 
   return (
     <div className="animate-fade-in space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Students</h1>
-        <Button size="sm" onClick={() => setShowRegister(true)}><UserPlus className="mr-1.5 h-4 w-4" /> Register</Button>
+        <Button size="sm" className="w-full sm:w-auto" onClick={() => setShowRegister(true)}><UserPlus className="mr-1.5 h-4 w-4" /> Register</Button>
       </div>
 
       {showRegister && (
         <div className="glass rounded-2xl border border-primary-200 p-4 dark:border-primary-800">
           <div className="mb-3 flex items-center justify-between">
             <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">Register Student</h3>
-            <button onClick={() => setShowRegister(false)} className="p-1 text-neutral-400"><X className="h-4 w-4" /></button>
+            <button onClick={() => setShowRegister(false)} className="flex items-center justify-center rounded-lg p-3 text-neutral-400 min-h-[44px] min-w-[44px]"><X className="h-4 w-4" /></button>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
             <input placeholder="First Name" value={form.firstName} onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))} className="min-h-[44px] w-full rounded-xl border border-neutral-200 bg-white px-4 text-sm outline-none focus:border-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white" />
@@ -54,7 +54,7 @@ export default function StudentsPage() {
 
       <div className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
-        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search students..." className="min-h-[44px] w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white" />
+        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search students..." className="min-h-[44px] w-full rounded-xl border border-neutral-200 bg-white px-10 py-3 text-sm outline-none focus:border-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white" />
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">

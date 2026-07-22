@@ -97,14 +97,14 @@ export default function SettingsPage() {
             <div>
               <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">Full Name</label>
               <input type="text" value={profile ? `${profile.firstName} ${profile.lastName}` : ""} disabled
-                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-500 outline-none dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400" />
+                 className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm text-neutral-500 outline-none dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 min-h-[44px]" />
             </div>
             <div>
               <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                 <input type="email" value={profile?.email || ""} disabled
-                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-2.5 pl-10 pr-4 text-sm text-neutral-500 outline-none dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400" />
+                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-3 pl-10 pr-4 text-sm text-neutral-500 outline-none dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 min-h-[44px]" />
               </div>
             </div>
           </div>
@@ -120,7 +120,7 @@ export default function SettingsPage() {
           <div className="relative">
             <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">Current Password</label>
             <input type={showPw ? "text" : "password"} value={currentPw} onChange={e => setCurrentPw(e.target.value)}
-              className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 pr-10 text-sm outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white" />
+              className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 pr-10 text-sm outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white min-h-[44px]" />
             <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-[calc(50%+8px)] -translate-y-1/2 text-neutral-400 min-h-[44px] min-w-[44px] flex items-center justify-center">
               {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -129,12 +129,12 @@ export default function SettingsPage() {
             <div>
               <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">New Password</label>
               <input type="password" value={newPw} onChange={e => setNewPw(e.target.value)}
-                className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white" />
+                className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white min-h-[44px]" />
             </div>
             <div>
               <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">Confirm New Password</label>
               <input type="password" value={confirmPw} onChange={e => setConfirmPw(e.target.value)}
-                className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white" />
+                className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white min-h-[44px]" />
             </div>
           </div>
           {pwError && <p className="text-xs text-error">{pwError}</p>}
@@ -168,7 +168,7 @@ export default function SettingsPage() {
           <h2 className="text-sm font-semibold text-neutral-900 sm:text-base dark:text-white">Language</h2>
         </div>
         <div className="mt-4">
-          <select className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white">
+          <select className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none transition-colors focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white min-h-[44px]">
             <option>English</option><option>Yoruba</option><option>Hausa</option><option>Igbo</option><option>French</option>
           </select>
         </div>
@@ -200,7 +200,7 @@ export default function SettingsPage() {
           <input
             value={deleteConfirm}
             onChange={e => setDeleteConfirm(e.target.value)}
-            className="flex-1 rounded-xl border border-error/30 bg-white px-4 py-2.5 text-sm outline-none focus:border-error dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+            className="flex-1 rounded-xl border border-error/30 bg-white px-4 py-3 text-sm outline-none focus:border-error dark:border-neutral-800 dark:bg-neutral-950 dark:text-white min-h-[44px]"
             placeholder='Type "DELETE" to confirm'
           />
           {deleteError && <p className="text-xs text-error sm:col-span-2">{deleteError}</p>}

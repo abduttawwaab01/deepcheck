@@ -23,7 +23,7 @@ export default function AboutPage() {
                 { title: "IRT-Based, Not Just AI", desc: "Our core engine uses Item Response Theory (psychometrics), not black-box AI. That means every score is statistically valid." },
                 { title: "Built for Nigeria", desc: "WASSCE, NECO, and JAMB-aligned content. Questions mapped to Bloom's Taxonomy. Pricing in Naira." },
                 { title: "Deep, Not Surface", desc: "We measure concept-level mastery, cognitive skills, and learning trajectories. Not just a percentage." },
-                { title: "Free to Start", desc: "Every student gets a free basic assessment and report card. Deep Reports cost just ₦3,000." },
+                { title: "Free to Start", desc: "Every student gets a free basic assessment and report card. Deep Reports cost just 1 coin (₦2,000)." },
               ].map((item) => (
                 <div key={item.title} className="glass rounded-2xl p-5">
                   <h3 className="font-bold text-neutral-900 dark:text-white">{item.title}</h3>

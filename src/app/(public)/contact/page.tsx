@@ -16,15 +16,15 @@ export default function ContactPage() {
             <form className="mt-4 space-y-4" onSubmit={(e) => e.preventDefault()}>
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300">Name</label>
-                <input type="text" className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" placeholder="Your name" />
+                <input type="text" className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" placeholder="Your name" />
               </div>
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300">Email</label>
-                <input type="email" className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" placeholder="you@email.com" />
+                <input type="email" className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" placeholder="you@email.com" />
               </div>
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300">Message</label>
-                <textarea rows={4} className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" placeholder="How can we help?" />
+                <textarea rows={4} className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" placeholder="How can we help?" />
               </div>
               <Button type="submit" className="w-full">Send Message</Button>
             </form>

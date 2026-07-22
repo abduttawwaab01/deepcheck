@@ -239,7 +239,7 @@ export default function AdminQuestionsPage() {
 
   return (
     <div className="animate-fade-in space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Question Banks</h1>
           <p className="mt-1 text-sm text-neutral-500">Manage readiness assessment question banks for all levels</p>
@@ -297,12 +297,12 @@ export default function AdminQuestionsPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
-          <input className="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-9 pr-4 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" placeholder="Search questions..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
+           <input className="w-full rounded-xl border border-neutral-200 bg-white py-3 pl-9 pr-4 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white min-h-[44px]" placeholder="Search questions..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
         </div>
         <div className="flex gap-2">
           {["all", "easy", "medium", "hard"].map((d) => (
             <button key={d} onClick={() => { setDifficulty(d); setPage(1); }}
-              className={cn("rounded-lg px-3 py-1.5 text-xs font-medium transition-colors", difficulty === d ? "bg-primary-600 text-white" : "glass text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300")}>
+              className={cn("rounded-lg px-3 py-2 text-xs font-medium transition-colors min-h-[44px]", difficulty === d ? "bg-primary-600 text-white" : "glass text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300")}>
               {d === "all" ? "All" : d.charAt(0).toUpperCase() + d.slice(1)}
             </button>
           ))}
@@ -346,9 +346,9 @@ export default function AdminQuestionsPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-1">
-                      <button onClick={() => setViewQuestion(q)} className="rounded-lg p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600 dark:hover:bg-neutral-800" title="View"><Eye className="h-3.5 w-3.5" /></button>
-                      <button onClick={() => openEditModal(q)} className="rounded-lg p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-primary-600 dark:hover:bg-neutral-800" title="Edit"><Edit2 className="h-3.5 w-3.5" /></button>
-                      <button onClick={() => handleDeleteQuestion(q.id)} className="rounded-lg p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-error dark:hover:bg-neutral-800" title="Delete"><Trash2 className="h-3.5 w-3.5" /></button>
+                      <button onClick={() => setViewQuestion(q)} className="flex items-center justify-center rounded-lg p-3 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600 dark:hover:bg-neutral-800 min-h-[44px] min-w-[44px]" title="View"><Eye className="h-4 w-4" /></button>
+                      <button onClick={() => openEditModal(q)} className="flex items-center justify-center rounded-lg p-3 text-neutral-400 hover:bg-neutral-100 hover:text-primary-600 dark:hover:bg-neutral-800 min-h-[44px] min-w-[44px]" title="Edit"><Edit2 className="h-4 w-4" /></button>
+                      <button onClick={() => handleDeleteQuestion(q.id)} className="flex items-center justify-center rounded-lg p-3 text-neutral-400 hover:bg-neutral-100 hover:text-error dark:hover:bg-neutral-800 min-h-[44px] min-w-[44px]" title="Delete"><Trash2 className="h-4 w-4" /></button>
                     </div>
                   </td>
                 </tr>
@@ -382,7 +382,7 @@ export default function AdminQuestionsPage() {
                 <span className="text-xs font-mono text-neutral-400">{viewQuestion.code}</span>
                 <h3 className="mt-1 text-base font-semibold text-neutral-900 dark:text-white">{viewQuestion.questionText}</h3>
               </div>
-              <button onClick={() => setViewQuestion(null)} className="rounded-lg p-1 text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800">✕</button>
+              <button onClick={() => setViewQuestion(null)} className="flex items-center justify-center rounded-lg p-3 text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 min-h-[44px] min-w-[44px]">✕</button>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
               <span className={cn("rounded px-2 py-0.5 text-xs font-medium", difficultyColors[viewQuestion.difficultyLevel])}>{viewQuestion.difficultyLevel}</span>
@@ -420,7 +420,7 @@ export default function AdminQuestionsPage() {
           <div className="w-full max-w-lg rounded-2xl bg-white p-5 sm:p-6 dark:bg-neutral-900 animate-slide-up max-h-[85vh] overflow-y-auto">
             <div className="flex items-start justify-between">
               <h3 className="text-lg font-bold text-neutral-900 dark:text-white">{editQuestion ? "Edit Question" : "Add New Question"}</h3>
-              <button onClick={() => { setShowAddModal(false); setEditQuestion(null); setFormError(""); }} className="rounded-lg p-1 text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800">✕</button>
+              <button onClick={() => { setShowAddModal(false); setEditQuestion(null); setFormError(""); }} className="flex items-center justify-center rounded-lg p-3 text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 min-h-[44px] min-w-[44px]">✕</button>
             </div>
 
             {formError && (
@@ -432,37 +432,37 @@ export default function AdminQuestionsPage() {
             <div className="mt-4 space-y-3">
               <div>
                 <label className="mb-1 block text-xs font-medium text-neutral-500">Question Text *</label>
-                <textarea className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" rows={3} placeholder="Enter question..." value={form.questionText} onChange={(e) => setForm((p) => ({ ...p, questionText: e.target.value }))} />
+                <textarea className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-3 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white min-h-[44px]" rows={3} placeholder="Enter question..." value={form.questionText} onChange={(e) => setForm((p) => ({ ...p, questionText: e.target.value }))} />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="mb-1 block text-xs font-medium text-neutral-500">Difficulty</label>
-                  <select className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" value={form.difficultyLevel} onChange={(e) => setForm((p) => ({ ...p, difficultyLevel: e.target.value as any }))}>
+                  <select className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-3 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950 dark:text-white min-h-[44px]" value={form.difficultyLevel} onChange={(e) => setForm((p) => ({ ...p, difficultyLevel: e.target.value as any }))}>
                     <option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option>
                   </select>
                 </div>
                 <div>
                   <label className="mb-1 block text-xs font-medium text-neutral-500">Bloom Level</label>
-                  <select className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" value={form.bloomLevel} onChange={(e) => setForm((p) => ({ ...p, bloomLevel: e.target.value as any }))}>
+                  <select className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-3 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-950 dark:text-white min-h-[44px]" value={form.bloomLevel} onChange={(e) => setForm((p) => ({ ...p, bloomLevel: e.target.value as any }))}>
                     <option value="remember">Remember</option><option value="understand">Understand</option><option value="apply">Apply</option><option value="analyze">Analyze</option><option value="evaluate">Evaluate</option>
                   </select>
                 </div>
               </div>
               <div>
                 <label className="mb-1 block text-xs font-medium text-neutral-500">Concept</label>
-                <input className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" placeholder="e.g. Fractions, Algebra" value={form.concept} onChange={(e) => setForm((p) => ({ ...p, concept: e.target.value }))} />
+                <input className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-3 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white min-h-[44px]" placeholder="e.g. Fractions, Algebra" value={form.concept} onChange={(e) => setForm((p) => ({ ...p, concept: e.target.value }))} />
               </div>
               <div>
                 <label className="mb-1 block text-xs font-medium text-neutral-500">Options * (min 2, mark one correct)</label>
                 {form.options.map((opt, i) => (
                   <div key={i} className="mb-2 flex items-center gap-2">
                     <span className="shrink-0 text-xs font-medium text-neutral-400 w-5">{String.fromCharCode(65 + i)}.</span>
-                    <input className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" placeholder={`Option ${i + 1}`} value={opt.optionText} onChange={(e) => updateFormOption(i, "optionText", e.target.value)} />
+                    <input className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-3 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white min-h-[44px]" placeholder={`Option ${i + 1}`} value={opt.optionText} onChange={(e) => updateFormOption(i, "optionText", e.target.value)} />
                     <label className="flex shrink-0 items-center gap-1 text-xs text-neutral-500">
                       <input type="radio" name="correct" checked={opt.isCorrect} onChange={() => updateFormOption(i, "isCorrect", true)} /> ✓
                     </label>
                     {form.options.length > 2 && (
-                      <button type="button" onClick={() => removeOption(i)} className="shrink-0 rounded p-0.5 text-neutral-400 hover:text-error"><X className="h-3.5 w-3.5" /></button>
+                      <button type="button" onClick={() => removeOption(i)} className="flex shrink-0 items-center justify-center rounded p-3 text-neutral-400 hover:text-error min-h-[44px] min-w-[44px]"><X className="h-4 w-4" /></button>
                     )}
                   </div>
                 ))}
@@ -472,7 +472,7 @@ export default function AdminQuestionsPage() {
               </div>
               <div>
                 <label className="mb-1 block text-xs font-medium text-neutral-500">Explanation (optional)</label>
-                <textarea className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" rows={2} placeholder="Explain the correct answer..." value={form.explanation} onChange={(e) => setForm((p) => ({ ...p, explanation: e.target.value }))} />
+                <textarea className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-3 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white min-h-[44px]" rows={2} placeholder="Explain the correct answer..." value={form.explanation} onChange={(e) => setForm((p) => ({ ...p, explanation: e.target.value }))} />
               </div>
             </div>
             <div className="mt-4 flex gap-3">

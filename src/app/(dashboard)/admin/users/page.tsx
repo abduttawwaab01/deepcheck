@@ -60,7 +60,7 @@ export default function AdminUsersPage() {
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
           <input
-            className="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-9 pr-4 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+            className="w-full rounded-xl border border-neutral-200 bg-white py-3 pl-9 pr-4 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white min-h-[44px]"
             placeholder="Search by name or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -72,7 +72,7 @@ export default function AdminUsersPage() {
               key={r}
               onClick={() => setRoleFilter(r)}
               className={cn(
-                "rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
+                "rounded-lg px-3 py-2 text-xs font-medium transition-colors min-h-[44px]",
                 roleFilter === r
                   ? "bg-primary-600 text-white"
                   : "glass text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300",
@@ -125,18 +125,18 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex justify-end gap-1">
-                        <button className="rounded-lg p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-primary-600 dark:hover:bg-neutral-800" title="Email">
-                          <Mail className="h-3.5 w-3.5" />
+                        <button className="flex items-center justify-center rounded-lg p-3 text-neutral-400 hover:bg-neutral-100 hover:text-primary-600 dark:hover:bg-neutral-800 min-h-[44px] min-w-[44px]" title="Email">
+                          <Mail className="h-4 w-4" />
                         </button>
-                        <button onClick={() => handleToggleStatus(u)} className="rounded-lg p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-warning dark:hover:bg-neutral-800" title={u.isActive ? "Suspend" : "Activate"}>
-                          <Ban className="h-3.5 w-3.5" />
+                        <button onClick={() => handleToggleStatus(u)} className="flex items-center justify-center rounded-lg p-3 text-neutral-400 hover:bg-neutral-100 hover:text-warning dark:hover:bg-neutral-800 min-h-[44px] min-w-[44px]" title={u.isActive ? "Suspend" : "Activate"}>
+                          <Ban className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => { setDeleteTarget(u); setConfirmText(""); }}
-                          className="rounded-lg p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-error dark:hover:bg-neutral-800"
+                          className="flex items-center justify-center rounded-lg p-3 text-neutral-400 hover:bg-neutral-100 hover:text-error dark:hover:bg-neutral-800 min-h-[44px] min-w-[44px]"
                           title="Delete"
                         >
-                          <Trash2 className="h-3.5 w-3.5" />
+                          <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
                     </td>
@@ -176,7 +176,7 @@ export default function AdminUsersPage() {
               Type <strong className="text-error">{deleteTarget.firstName} {deleteTarget.lastName}</strong> to confirm deletion:
             </p>
             <input
-              className="mt-2 w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-error dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+              className="mt-2 w-full rounded-xl border border-neutral-200 bg-white px-3 py-3 text-sm outline-none focus:border-error dark:border-neutral-700 dark:bg-neutral-950 dark:text-white min-h-[44px]"
               placeholder={`${deleteTarget.firstName} ${deleteTarget.lastName}`}
               value={confirmText}
               onChange={(e) => setConfirmText(e.target.value)}

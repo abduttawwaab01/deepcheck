@@ -27,16 +27,16 @@ export default function TeachersPage() {
 
   return (
     <div className="animate-fade-in space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Teachers</h1>
-        <Button size="sm" onClick={() => setShowInvite(true)}><UserPlus className="mr-1.5 h-4 w-4" /> Invite Teacher</Button>
+        <Button size="sm" className="w-full sm:w-auto" onClick={() => setShowInvite(true)}><UserPlus className="mr-1.5 h-4 w-4" /> Invite Teacher</Button>
       </div>
 
       {showInvite && (
         <div className="glass rounded-2xl border border-primary-200 p-4 dark:border-primary-800">
           <div className="mb-3 flex items-center justify-between">
             <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">Invite New Teacher</h3>
-            <button onClick={() => setShowInvite(false)} className="p-1 text-neutral-400"><X className="h-4 w-4" /></button>
+            <button onClick={() => setShowInvite(false)} className="flex items-center justify-center rounded-lg p-3 text-neutral-400 min-h-[44px] min-w-[44px]"><X className="h-4 w-4" /></button>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <input placeholder="First Name" value={form.firstName} onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))} className="min-h-[44px] w-full rounded-xl border border-neutral-200 bg-white px-4 text-sm outline-none focus:border-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white" />

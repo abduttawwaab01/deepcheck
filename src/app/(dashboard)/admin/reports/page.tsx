@@ -39,9 +39,9 @@ export default function AdminReportsPage() {
 
   return (
     <div className="animate-fade-in space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Report Requests</h1>
-        <span className="rounded-full bg-warning/10 px-3 py-1 text-xs font-medium text-warning">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Report Requests</h1>
+        <span className="self-start rounded-full bg-warning/10 px-3 py-1 text-xs font-medium text-warning sm:self-auto">
           {(requests || []).filter((r) => r.status === "pending").length} pending
         </span>
       </div>
@@ -50,7 +50,7 @@ export default function AdminReportsPage() {
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
         <input
           value={search} onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+          className="w-full rounded-xl border border-neutral-200 bg-white py-3 pl-10 pr-4 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white min-h-[44px]"
           placeholder="Search by requester or target..."
         />
       </div>

@@ -40,12 +40,12 @@ export default function ReviewSchedulePage() {
 
   return (
     <div className="animate-fade-in space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Review Schedule</h1>
           <p className="mt-1 text-sm text-neutral-500">Spaced repetition keeps your knowledge fresh</p>
         </div>
-        <button onClick={() => refetch()} className="rounded-xl border border-neutral-200 p-2 text-neutral-500 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900">
+        <button onClick={() => refetch()} className="flex items-center justify-center rounded-xl border border-neutral-200 p-3 text-neutral-500 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900 min-h-[44px] min-w-[44px]">
           <RefreshCw className="h-4 w-4" />
         </button>
       </div>

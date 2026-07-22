@@ -109,7 +109,7 @@ export function PricingSection() {
 
                     <div className="mt-6 text-lg font-semibold text-white">{plan.name}</div>
                     <div className="mt-3">
-                      <span className="text-5xl font-extrabold text-white">
+                      <span className="text-3xl font-extrabold text-white sm:text-5xl">
                         {plan.price === 0 ? "Free" : formatNaira(plan.price)}
                       </span>
                       {plan.price > 0 && (

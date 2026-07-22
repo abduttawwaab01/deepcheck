@@ -22,16 +22,16 @@ export default function AdminPaymentsPage() {
 
   return (
     <div className="animate-fade-in space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Payment History</h1>
-        <Button variant="outline" size="sm"><Download className="mr-2 h-4 w-4" /> Export</Button>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Payment History</h1>
+        <Button variant="outline" size="sm" className="w-full sm:w-auto"><Download className="mr-2 h-4 w-4" /> Export</Button>
       </div>
 
       <div className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
         <input
           value={search} onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+          className="w-full rounded-xl border border-neutral-200 bg-white py-3 pl-10 pr-4 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white min-h-[44px]"
           placeholder="Search by name..."
         />
       </div>

@@ -57,18 +57,18 @@ export default function AdminSettingsPage() {
         <div className="space-y-4">
           <div>
             <label className="mb-1.5 block text-xs font-medium text-neutral-500">Application Name</label>
-            <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+            <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
               value={form.appName || ""} onChange={(e) => setForm({ ...form, appName: e.target.value })} />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="mb-1.5 block text-xs font-medium text-neutral-500">Support Email</label>
-              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                 value={form.supportEmail || ""} onChange={(e) => setForm({ ...form, supportEmail: e.target.value })} />
             </div>
             <div>
               <label className="mb-1.5 block text-xs font-medium text-neutral-500">Platform URL</label>
-              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                 value={form.platformUrl || ""} onChange={(e) => setForm({ ...form, platformUrl: e.target.value })} />
             </div>
           </div>
@@ -85,13 +85,13 @@ export default function AdminSettingsPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="mb-1.5 block text-xs font-medium text-neutral-500">Price Per Coin (₦)</label>
-              <input type="number" min={100} className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+              <input type="number" min={100} className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                 value={form.pricePerCoin || 2000} onChange={(e) => setForm({ ...form, pricePerCoin: e.target.value })} />
               <p className="mt-1 text-[11px] text-neutral-400">Default: 2000. This is the price users pay per coin.</p>
             </div>
             <div>
               <label className="mb-1.5 block text-xs font-medium text-neutral-500">Coins Per Deep Report</label>
-              <input type="number" min={1} className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+              <input type="number" min={1} className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                 value={form.coinsPerReport || 1} onChange={(e) => setForm({ ...form, coinsPerReport: e.target.value })} />
               <p className="mt-1 text-[11px] text-neutral-400">Default: 1. How many coins are deducted per deep report.</p>
             </div>
@@ -111,18 +111,18 @@ export default function AdminSettingsPage() {
         <div className="space-y-4">
           <div>
             <label className="mb-1.5 block text-xs font-medium text-neutral-500">Account Name</label>
-            <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+            <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
               value={form.bankAccountName || ""} onChange={(e) => setForm({ ...form, bankAccountName: e.target.value })} />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="mb-1.5 block text-xs font-medium text-neutral-500">Account Number</label>
-              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                 value={form.bankAccountNumber || ""} onChange={(e) => setForm({ ...form, bankAccountNumber: e.target.value })} />
             </div>
             <div>
               <label className="mb-1.5 block text-xs font-medium text-neutral-500">Bank Name</label>
-              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                 value={form.bankName || ""} onChange={(e) => setForm({ ...form, bankName: e.target.value })} />
             </div>
           </div>
@@ -139,18 +139,18 @@ export default function AdminSettingsPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="mb-1.5 block text-xs font-medium text-neutral-500">SMTP Host</label>
-              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                 value={form.smtpHost || ""} onChange={(e) => setForm({ ...form, smtpHost: e.target.value })} />
             </div>
             <div>
               <label className="mb-1.5 block text-xs font-medium text-neutral-500">SMTP Port</label>
-              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                 value={form.smtpPort || ""} onChange={(e) => setForm({ ...form, smtpPort: e.target.value })} />
             </div>
           </div>
           <div>
             <label className="mb-1.5 block text-xs font-medium text-neutral-500">From Address</label>
-            <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+            <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
               value={form.fromAddress || ""} onChange={(e) => setForm({ ...form, fromAddress: e.target.value })} />
           </div>
           <div className="flex items-center gap-3">
@@ -171,7 +171,7 @@ export default function AdminSettingsPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="mb-1.5 block text-xs font-medium text-neutral-500">Currency</label>
-              <select className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+              <select className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                 value={form.currency || "NGN"} onChange={(e) => setForm({ ...form, currency: e.target.value })}>
                 <option value="NGN">NGN (₦)</option>
                 <option value="USD">USD ($)</option>
@@ -179,13 +179,13 @@ export default function AdminSettingsPage() {
             </div>
             <div>
               <label className="mb-1.5 block text-xs font-medium text-neutral-500">Tax Rate (%)</label>
-              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                 value={form.taxRate || ""} onChange={(e) => setForm({ ...form, taxRate: e.target.value })} />
             </div>
           </div>
           <div>
             <label className="mb-1.5 block text-xs font-medium text-neutral-500">Paystack Secret Key</label>
-            <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+            <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
               value={form.paymentGatewayKey || ""} onChange={(e) => setForm({ ...form, paymentGatewayKey: e.target.value })} type="password" />
             <p className="mt-1 text-[11px] text-neutral-400">Used for Paystack payment verification. Never shared with clients.</p>
           </div>
@@ -223,7 +223,7 @@ export default function AdminSettingsPage() {
         <div className="space-y-4">
           <div>
             <label className="mb-1.5 block text-xs font-medium text-neutral-500">Minimum Password Length</label>
-            <input type="number" className="w-32 rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+            <input type="number" className="w-32 rounded-xl border border-neutral-200 bg-white px-4 py-3 min-h-[44px] text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
               value={form.minPasswordLength || "8"} onChange={(e) => setForm({ ...form, minPasswordLength: e.target.value })} min={6} max={32} />
           </div>
           <div className="flex items-center gap-3">

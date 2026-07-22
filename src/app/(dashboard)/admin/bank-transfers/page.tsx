@@ -34,12 +34,12 @@ export default function AdminBankTransfersPage() {
 
   return (
     <div className="animate-fade-in space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Bank Transfers</h1>
+          <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Bank Transfers</h1>
           <p className="mt-1 text-sm text-neutral-500">Manage and confirm bank transfer payments</p>
         </div>
-        <div className="flex items-center gap-2 rounded-xl bg-warning/10 px-3 py-2 text-sm text-warning">
+        <div className="flex items-center gap-2 self-start rounded-xl bg-warning/10 px-3 py-2 text-sm text-warning">
           <Clock className="h-4 w-4" />
           <span className="font-medium">{transfers?.filter(t => t.status === "pending").length || 0} pending</span>
         </div>
@@ -85,13 +85,13 @@ export default function AdminBankTransfersPage() {
                           <span className="text-xs text-neutral-500">coins</span>
                         </div>
                         <div className="flex gap-1">
-                          <Button size="sm" variant="default"
+                          <Button size="sm" variant="default" className="min-h-[44px]"
                             onClick={() => { confirmMutation.mutate({ transferId: t.id, coinsGranted: coinsToGrant || t.coinsRequested }); setSelectedId(null); }}
                             disabled={confirmMutation.isPending}>
                             {confirmMutation.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <CheckCircle2 className="h-3 w-3" />}
                             Confirm
                           </Button>
-                          <Button size="sm" variant="outline" className="text-error"
+                          <Button size="sm" variant="outline" className="min-h-[44px] text-error"
                             onClick={async () => {
                               await rejectMutation.mutateAsync({ transferId: t.id, note: rejectNote || "Rejected by admin" });
                               setSelectedId(null);
@@ -102,10 +102,10 @@ export default function AdminBankTransfersPage() {
                         </div>
                         <input type="text" placeholder="Admin note..."
                           value={rejectNote} onChange={(e) => setRejectNote(e.target.value)}
-                          className="w-full rounded-lg border border-neutral-200 bg-white px-2 py-1 text-xs outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" />
+                          className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white" />
                       </div>
                     ) : (
-                      <Button size="sm" variant="outline" onClick={() => { setSelectedId(t.id); setCoinsToGrant(t.coinsRequested); setRejectNote(""); }}>
+                      <Button size="sm" variant="outline" className="min-h-[44px]" onClick={() => { setSelectedId(t.id); setCoinsToGrant(t.coinsRequested); setRejectNote(""); }}>
                         <Search className="mr-1 h-3 w-3" /> Review
                       </Button>
                     )}

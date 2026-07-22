@@ -22,12 +22,12 @@ export default function ParentChildrenPage() {
 
   return (
     <div className="animate-fade-in space-y-4 min-[320px]:space-y-6">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">My Children</h1>
           <p className="mt-1 text-sm text-neutral-500">Manage linked children</p>
         </div>
-        <Button onClick={() => setOpen(true)} size="sm" className="gap-1.5 min-h-[44px]"><UserPlus className="h-4 w-4" /><span className="hidden sm:inline">Add Child</span></Button>
+        <Button onClick={() => setOpen(true)} size="sm" className="gap-1.5 min-h-[44px] w-full sm:w-auto"><UserPlus className="h-4 w-4" /><span className="hidden sm:inline">Add Child</span></Button>
       </div>
 
       {(!children || children.length === 0) ? (
@@ -64,34 +64,32 @@ export default function ParentChildrenPage() {
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
           <div className="fixed inset-0 bg-black/50" onClick={() => setOpen(false)} />
           <div className="relative w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl bg-white p-6 dark:bg-neutral-900 animate-slide-up">
-            <button onClick={() => setOpen(false)} className="absolute right-4 top-4 p-2 text-neutral-400"><X className="h-5 w-5" /></button>
+            <button onClick={() => setOpen(false)} className="absolute right-4 top-4 flex items-center justify-center p-3 text-neutral-400 min-h-[44px] min-w-[44px]"><X className="h-5 w-5" /></button>
             <h2 className="text-lg font-bold text-neutral-900 dark:text-white">Link a Child</h2>
             <div className="mt-4 space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">First Name</label>
                   <input value={form.firstName} onChange={(e) => setForm(p => ({ ...p, firstName: e.target.value }))}
-                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
-                    style={{ minHeight: "44px" }} placeholder="Adeola" />
+                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white min-h-[44px]"
+                    placeholder="Adeola" />
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">Last Name</label>
                   <input value={form.lastName} onChange={(e) => setForm(p => ({ ...p, lastName: e.target.value }))}
-                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
-                    style={{ minHeight: "44px" }} placeholder="Ogunlesi" />
+                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white min-h-[44px]"
+                    placeholder="Ogunlesi" />
                 </div>
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">Child&apos;s Email</label>
                 <input value={form.email} onChange={(e) => setForm(p => ({ ...p, email: e.target.value }))}
-                  className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
-                  style={{ minHeight: "44px" }} placeholder="adeola@school.edu.ng" type="email" />
+                  className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white min-h-[44px]"
+                  placeholder="adeola@school.edu.ng" type="email" />
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">Relationship</label>
-                <select value={form.relationship} onChange={(e) => setForm(p => ({ ...p, relationship: e.target.value }))}
-                  className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
-                  style={{ minHeight: "44px" }}>
+                <select value={form.relationship} onChange={(e) => setForm(p => ({ ...p, relationship: e.target.value }))} className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white min-h-[44px]">
                   <option value="">Select relationship</option>
                   <option value="Mother">Mother</option>
                   <option value="Father">Father</option>

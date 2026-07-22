@@ -61,7 +61,7 @@ export default function ReportsPage() {
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="truncate text-sm font-semibold text-neutral-900 dark:text-white">{r.title}</h3>
+                  <h3 className="break-words text-sm font-semibold text-neutral-900 dark:text-white">{r.title}</h3>
                   <span className={cn("shrink-0 rounded-md px-2 py-0.5 text-[11px] font-medium", categoryColors[r.category] || categoryColors.developing)}>
                     {r.category}
                   </span>
