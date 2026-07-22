@@ -88,8 +88,7 @@ export function formatAmountInKobo(amountNaira: number): number {
 
 // Price constants (in Naira)
 export const PRICES = {
-  DEEP_REPORT: 3000,
-  PARENT_BUNDLE: 10000,
-  SCHOOL_TERM: 150000,
-  SCHOOL_ANNUAL: 500000,
+  COIN_PRICE: 2000,
+  BUNDLE_20_PRICE: 35000,
+  BUNDLE_20_COINS: 20,
 } as const;

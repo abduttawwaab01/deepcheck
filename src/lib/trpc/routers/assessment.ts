@@ -204,6 +204,11 @@ export const assessmentRouter = router({
       for (const [qId, selectedId] of Object.entries(input.answers)) {
         const isCorrect = correctMap[qId] === selectedId;
         if (isCorrect) correctCount++;
+        // Delete any prior response from submitAnswer to avoid duplicates
+        await db.delete(assessmentResponses).where(and(
+          eq(assessmentResponses.instanceId, inst.id),
+          eq(assessmentResponses.questionId, qId),
+        ));
         await db.insert(assessmentResponses).values({
           instanceId: inst.id,
           questionId: qId,
@@ -211,7 +216,7 @@ export const assessmentRouter = router({
           isCorrect,
           orderIndex: ++idx,
           timeSpentSeconds: input.questionTimes?.[qId] || 0,
-        }).onConflictDoNothing({ target: [assessmentResponses.id] });
+        });
       }
 
       const itemParams: ItemParams[] = dbQuestions.map((q) => ({

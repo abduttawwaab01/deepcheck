@@ -760,14 +760,12 @@ async function seed() {
   }
   console.log(`✓ ${parentQCount} parent assessment questions seeded (${parentAssessmentDomains.length} domains)\n`);
 
-  // ─── Subscription Plans ────────────────────────────────────────────
+  // ─── Subscription Plans (Coin Packages) ────────────────────────────
   await db.insert(subscriptionPlans).values([
-    { name: "Free", code: "free", amount: "0", interval: "one_time", credits: 1, isActive: true, features: [] },
-    { name: "Basic", code: "basic", amount: "5000", interval: "term", credits: 10, isActive: true, features: [] },
-    { name: "Pro", code: "pro", amount: "15000", interval: "term", credits: 50, isActive: true, features: [] },
-    { name: "Enterprise", code: "enterprise", amount: "50000", interval: "annual", credits: -1, isActive: true, features: [] },
+    { name: "Custom Coins", code: "coins_custom", amount: "0", interval: "one_time", credits: 0, isActive: true, features: ["Buy any number at ₦2,000/coin"] },
+    { name: "Bundle 20 Coins", code: "coins_bundle_20", amount: "35000", interval: "one_time", credits: 20, isActive: true, features: ["20 deep report coins at ₦35,000"] },
   ]);
-  console.log("✓ Subscription plans created\n");
+  console.log("✓ Coin packages seeded\n");
 
   console.log("✅ Seeding complete!");
   console.log(`\nAdmin credentials:`);

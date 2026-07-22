@@ -54,7 +54,7 @@ export async function POST(req: Request) {
           user_id: session?.user?.id,
           plan_code: planCode,
         },
-        callback_url: `${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/payment/confirm`,
+        callback_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://skoolar.org"}/payment/confirm`,
       }),
     });
 

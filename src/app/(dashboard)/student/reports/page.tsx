@@ -25,6 +25,9 @@ export default function ReportsPage() {
         window.location.href = data.paymentUrl;
       } else {
         alert(data.message || "Could not generate deep report");
+        if (data.message?.includes("school")) {
+          window.location.href = "/student";
+        }
       }
       setRequestingId(null);
       utils.student.getReports.invalidate();
@@ -59,7 +62,7 @@ export default function ReportsPage() {
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <h3 className="truncate text-sm font-semibold text-neutral-900 dark:text-white">{r.title}</h3>
-                  <span className={cn("shrink-0 rounded-md px-2 py-0.5 text-[10px] font-medium", categoryColors[r.category] || categoryColors.developing)}>
+                  <span className={cn("shrink-0 rounded-md px-2 py-0.5 text-[11px] font-medium", categoryColors[r.category] || categoryColors.developing)}>
                     {r.category}
                   </span>
                 </div>

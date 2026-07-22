@@ -4,7 +4,7 @@ import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { ClipboardCheck, Target, TrendingUp, Sparkles, Flame, ChevronRight, ArrowUp, ArrowDown } from "lucide-react";
+import { ClipboardCheck, Target, TrendingUp, Sparkles, Flame, ChevronRight, ArrowUp, ArrowDown, Coins } from "lucide-react";
 
 export default function StudentDashboardPage() {
   const { data, isLoading } = trpc.student.getDashboard.useQuery();
@@ -17,16 +17,24 @@ export default function StudentDashboardPage() {
 
   return (
     <div className="animate-fade-in space-y-4 min-[320px]:space-y-6">
-      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h1 className="truncate text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Good morning, {data.name}!</h1>
-          <span className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1 text-xs font-medium text-orange-600 dark:bg-orange-950 dark:text-orange-400">
-            <Flame className="h-3.5 w-3.5" />{data.streak}-day streak
-          </span>
+          <div className="mt-1 flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1 text-xs font-medium text-orange-600 dark:bg-orange-950 dark:text-orange-400">
+              <Flame className="h-3.5 w-3.5" />{data.streak}-day streak
+            </span>
+            <Link href="/pricing" className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-600 transition-colors hover:bg-amber-100 dark:bg-amber-950 dark:text-amber-400 dark:hover:bg-amber-900">
+              <Coins className="h-3.5 w-3.5" />{data.coinBalance ?? 0} coins
+            </Link>
+          </div>
         </div>
-        <Link href="/student/assessments">
-          <Button size="sm" className="min-h-[44px] shrink-0 gap-1.5"><ClipboardCheck className="h-4 w-4" /><span className="hidden sm:inline">Start</span></Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/pricing"><Button size="sm" variant="outline" className="min-h-[44px] gap-1.5"><Coins className="h-4 w-4" /><span className="hidden sm:inline">Buy Coins</span></Button></Link>
+          <Link href="/student/assessments">
+            <Button size="sm" className="min-h-[44px] shrink-0 gap-1.5"><ClipboardCheck className="h-4 w-4" /><span className="hidden sm:inline">Start</span></Button>
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -54,7 +62,7 @@ export default function StudentDashboardPage() {
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-2xl font-bold text-neutral-900 dark:text-white">{rd.score}</span>
-                <span className="text-[10px] text-neutral-500">{rd.category}</span>
+                <span className="text-[11px] text-neutral-500">{rd.category}</span>
               </div>
             </div>
             <div className="min-w-0">
@@ -83,7 +91,7 @@ export default function StudentDashboardPage() {
                   <div className="absolute inset-y-0 rounded-full bg-neutral-400/30" style={{ width: `${d.peerAverage}%` }} />
                   <div className="absolute inset-y-0 rounded-full bg-primary-500" style={{ width: `${d.score}%` }} />
                 </div>
-                <div className="mt-0.5 flex justify-between text-[10px] text-neutral-400"><span>You: {d.score}</span><span>Avg: {d.peerAverage}</span></div>
+                <div className="mt-0.5 flex justify-between text-[11px] text-neutral-400"><span>You: {d.score}</span><span>Avg: {d.peerAverage}</span></div>
               </div>
             ))}
           </div>

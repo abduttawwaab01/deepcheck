@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { studentProcedure as protectedProcedure, router } from "../server";
 import { db } from "@/lib/db";
-import { users } from "@/lib/db/schemas";
+import { users, studentProfiles } from "@/lib/db/schemas";
+import { schools } from "@/lib/db/schemas/schools";
 import { assessmentConfigs, assessmentInstances } from "@/lib/db/schemas/assessments";
 import { basicReports } from "@/lib/db/schemas/reports";
 import { questionBanks, questionBankConfigs } from "@/lib/db/schemas/question-banks";
@@ -82,6 +83,22 @@ export const studentRouter = router({
     const badges = await db.select().from(userBadges)
       .where(eq(userBadges.userId, ctx.user.id)).orderBy(desc(userBadges.awardedAt)).limit(10);
 
+    // Check coin balance
+    const { subscriptionCredits } = await import("@/lib/db/schemas/payments");
+    const [profile] = await db.select().from(studentProfiles)
+      .where(eq(studentProfiles.userId, ctx.user.id)).limit(1);
+
+    let coinBalance: number | null = null;
+    if (profile?.currentSchoolId) {
+      const [school] = await db.select({ credits: schools.deepReportCredits })
+        .from(schools).where(eq(schools.id, profile.currentSchoolId)).limit(1);
+      coinBalance = school?.credits || 0;
+    } else {
+      const [credits] = await db.select({ total: sql<number>`coalesce(sum(${subscriptionCredits.creditsRemaining}), 0)` })
+        .from(subscriptionCredits).where(eq(subscriptionCredits.userId, ctx.user.id));
+      coinBalance = credits?.total || 0;
+    }
+
     return {
       name: user.firstName,
       streak: gamification?.currentStreak || 0,
@@ -106,6 +123,7 @@ export const studentRouter = router({
         title: r.title,
         description: r.description,
       })),
+      coinBalance,
     };
   }),
 
@@ -235,18 +253,39 @@ export const studentRouter = router({
         return { success: true, deepReportId: existingDeep.id, message: "Deep report already available" };
       }
 
-      const [credits] = await db.select({ total: sql<number>`coalesce(sum(${subscriptionCredits.creditsRemaining}), 0)` })
-        .from(subscriptionCredits).where(eq(subscriptionCredits.userId, ctx.user.id));
-      if ((credits?.total || 0) <= 0) {
-        return { success: false, message: "No deep report credits remaining. Please purchase a plan.", paymentUrl: "/pricing" };
-      }
+      // Check if student is school-affiliated
+      const [profile] = await db.select().from(studentProfiles)
+        .where(eq(studentProfiles.userId, ctx.user.id)).limit(1);
+      const schoolId = profile?.currentSchoolId;
 
-      await db.update(subscriptionCredits).set({
-        creditsRemaining: sql`${subscriptionCredits.creditsRemaining} - 1`,
-      }).where(and(
-        eq(subscriptionCredits.userId, ctx.user.id),
-        sql`${subscriptionCredits.creditsRemaining} > 0`
-      ));
+      if (schoolId) {
+        // School-affiliated student uses school's credits
+        const [school] = await db.select().from(schools).where(eq(schools.id, schoolId)).limit(1);
+        if (!school || (school.deepReportCredits || 0) <= 0) {
+          return {
+            success: false,
+            message: "Your school has no credits remaining. Please contact your school administrator.",
+            paymentUrl: null,
+          };
+        }
+        await db.update(schools).set({
+          deepReportCredits: sql`${schools.deepReportCredits} - 1`,
+          updatedAt: new Date(),
+        }).where(eq(schools.id, schoolId));
+      } else {
+        // Independent student uses their own coins
+        const [credits] = await db.select({ total: sql<number>`coalesce(sum(${subscriptionCredits.creditsRemaining}), 0)` })
+          .from(subscriptionCredits).where(eq(subscriptionCredits.userId, ctx.user.id));
+        if ((credits?.total || 0) <= 0) {
+          return { success: false, message: "No coins remaining. Please purchase more coins.", paymentUrl: "/pricing" };
+        }
+        await db.update(subscriptionCredits).set({
+          creditsRemaining: sql`${subscriptionCredits.creditsRemaining} - 1`,
+        }).where(and(
+          eq(subscriptionCredits.userId, ctx.user.id),
+          sql`${subscriptionCredits.creditsRemaining} > 0`
+        ));
+      }
 
       const { generateDeepReport } = await import("@/lib/engine/report-generator");
       const result = await generateDeepReport({ userId: ctx.user.id, instanceId: input.instanceId });
@@ -266,6 +305,18 @@ export const studentRouter = router({
 
       return { success: true, deepReportId: result.reportId, message: "Deep report generated successfully" };
     }),
+
+  getSchoolInfo: protectedProcedure.query(async ({ ctx }) => {
+    const [profile] = await db.select().from(studentProfiles)
+      .where(eq(studentProfiles.userId, ctx.user.id)).limit(1);
+    if (!profile?.currentSchoolId) return null;
+    const [school] = await db.select({
+      id: schools.id,
+      name: schools.name,
+      deepReportCredits: schools.deepReportCredits,
+    }).from(schools).where(eq(schools.id, profile.currentSchoolId)).limit(1);
+    return school || null;
+  }),
 
   getProfile: protectedProcedure.query(async ({ ctx }) => {
     const [user] = await db.select().from(users).where(eq(users.id, ctx.user.id)).limit(1);

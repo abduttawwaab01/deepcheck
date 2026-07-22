@@ -10,12 +10,12 @@ export default function ParentDashboardPage() {
 
   return (
     <div className="animate-fade-in space-y-4 min-[320px]:space-y-6">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h1 className="truncate text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Welcome, {data.name}</h1>
+          <h1 className="break-words text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Welcome, {data.name}</h1>
           <p className="mt-1 text-sm text-neutral-500">Here&apos;s your children&apos;s progress</p>
         </div>
-        <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-secondary-50 px-3 py-1.5 text-xs font-medium text-secondary-700 dark:bg-secondary-950 dark:text-secondary-300">
+        <div className="flex items-center gap-1.5 rounded-full bg-secondary-50 px-3 py-1.5 text-xs font-medium text-secondary-700 dark:bg-secondary-950 dark:text-secondary-300">
           <Sparkles className="h-3.5 w-3.5" />{data.deepReportCredits} credits
         </div>
       </div>

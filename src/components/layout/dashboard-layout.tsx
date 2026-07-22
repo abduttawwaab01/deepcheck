@@ -10,7 +10,7 @@ import {
   LayoutDashboard, ClipboardCheck, BarChart3, Settings, LogOut,
   ChevronLeft, Bell, Menu, X, User, School, Users, BookOpen,
   FileText, Wallet, GraduationCap, HeartHandshake, Sparkles,
-  Brain, Target, ShieldCheck, Shield, Sun, Moon,
+  Brain, Target, ShieldCheck, Shield, Sun, Moon, Landmark,
 } from "lucide-react";
 
 const portalConfig: Record<string, { href: string; label: string; icon: any }[]> = {
@@ -21,6 +21,7 @@ const portalConfig: Record<string, { href: string; label: string; icon: any }[]>
     { href: "/admin/schools", label: "Schools", icon: School },
     { href: "/admin/reports", label: "Reports Queue", icon: FileText },
     { href: "/admin/payments", label: "Payments", icon: Wallet },
+    { href: "/admin/bank-transfers", label: "Bank Transfers", icon: Landmark },
     { href: "/admin/settings", label: "Settings", icon: Settings },
   ],
   school_admin: [
@@ -102,7 +103,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
             <span className="font-bold text-neutral-900 dark:text-white">Deep Check</span>
           </Link>
-          <button onClick={() => setSidebarOpen(false)} className="rounded-lg p-1 hover:bg-neutral-100 lg:hidden dark:hover:bg-neutral-800">
+          <button onClick={() => setSidebarOpen(false)} className="flex items-center justify-center rounded-lg p-3 hover:bg-neutral-100 lg:hidden dark:hover:bg-neutral-800 min-h-[44px] min-w-[44px]">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -128,7 +129,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 href={link.href}
                 onClick={() => setSidebarOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                  "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-colors min-h-[44px]",
                   isActive
                     ? "bg-primary-50 text-primary-700 dark:bg-primary-950 dark:text-primary-300"
                     : "text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
@@ -144,7 +145,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="border-t border-neutral-200 p-3 dark:border-neutral-800">
           <Link
             href="/auth/logout"
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+            className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800 min-h-[44px]"
           >
             <LogOut className="h-5 w-5" />
             Sign Out
@@ -154,7 +155,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       <div className="flex flex-1 flex-col">
         <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-neutral-200 bg-white/80 px-4 backdrop-blur-xl dark:border-neutral-800 dark:bg-neutral-950/80 sm:px-6">
-          <button onClick={() => setSidebarOpen(true)} className="rounded-lg p-1 hover:bg-neutral-100 lg:hidden dark:hover:bg-neutral-800">
+          <button onClick={() => setSidebarOpen(true)} className="flex items-center justify-center rounded-lg p-3 hover:bg-neutral-100 lg:hidden dark:hover:bg-neutral-800 min-h-[44px] min-w-[44px]">
             <Menu className="h-5 w-5" />
           </button>
 
@@ -162,14 +163,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {mounted && (
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="relative rounded-lg p-2 text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                className="relative flex items-center justify-center rounded-lg p-3 text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800 min-h-[44px] min-w-[44px]"
                 aria-label="Toggle theme"
               >
                 <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                 <Moon className="absolute left-1/2 top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               </button>
             )}
-            <button className="relative rounded-lg p-2 text-neutral-600 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800">
+            <button className="relative flex items-center justify-center rounded-lg p-3 text-neutral-600 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800 min-h-[44px] min-w-[44px]">
               <Bell className="h-5 w-5" />
               <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-error" />
             </button>

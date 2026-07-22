@@ -371,7 +371,7 @@ export const schoolRouter = router({
 
       const [school] = await db.select().from(schools).where(eq(schools.id, schoolId)).limit(1);
       if (!school || (school.deepReportCredits || 0) <= 0) {
-        return { success: false, message: "No deep report credits remaining. Please purchase more credits.", paymentUrl: "/school/settings" };
+        return { success: false, message: "No coins remaining. Please purchase more coins.", paymentUrl: "/school/settings" };
       }
 
       await db.update(schools).set({

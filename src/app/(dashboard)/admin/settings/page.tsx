@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc/client";
-import { Save, Loader2, Shield, CreditCard, Bell, Mail, Globe, Key } from "lucide-react";
+import { Save, Loader2, Shield, CreditCard, Bell, Mail, Globe, Key, Coins, Landmark, PiggyBank } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 export default function AdminSettingsPage() {
   const { data: config, isLoading, refetch } = trpc.admin.getSystemConfig.useQuery();
@@ -22,7 +21,10 @@ export default function AdminSettingsPage() {
   const handleSave = async () => {
     setSaved(false); setError("");
     try {
-      await updateMutation.mutateAsync(form);
+      const payload: any = { ...form };
+      payload.pricePerCoin = Number(payload.pricePerCoin);
+      payload.coinsPerReport = Number(payload.coinsPerReport);
+      await updateMutation.mutateAsync(payload);
       setSaved(true);
       refetch();
     } catch (err: any) { setError(err?.message || "Failed to save settings."); }
@@ -36,9 +38,9 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="animate-fade-in space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Admin Settings</h1>
-        <Button size="sm" onClick={handleSave} disabled={updateMutation.isPending}>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Admin Settings</h1>
+        <Button size="sm" onClick={handleSave} disabled={updateMutation.isPending} className="w-full sm:w-auto">
           {updateMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
           {updateMutation.isPending ? "Saving..." : "Save Changes"}
         </Button>
@@ -68,6 +70,60 @@ export default function AdminSettingsPage() {
               <label className="mb-1.5 block text-xs font-medium text-neutral-500">Platform URL</label>
               <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                 value={form.platformUrl || ""} onChange={(e) => setForm({ ...form, platformUrl: e.target.value })} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pricing Configuration */}
+      <div className="glass rounded-2xl p-5">
+        <div className="mb-4 flex items-center gap-2">
+          <Coins className="h-4 w-4 text-amber-600" />
+          <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">Pricing Configuration</h3>
+        </div>
+        <div className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-neutral-500">Price Per Coin (₦)</label>
+              <input type="number" min={100} className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+                value={form.pricePerCoin || 2000} onChange={(e) => setForm({ ...form, pricePerCoin: e.target.value })} />
+              <p className="mt-1 text-[11px] text-neutral-400">Default: 2000. This is the price users pay per coin.</p>
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-neutral-500">Coins Per Deep Report</label>
+              <input type="number" min={1} className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+                value={form.coinsPerReport || 1} onChange={(e) => setForm({ ...form, coinsPerReport: e.target.value })} />
+              <p className="mt-1 text-[11px] text-neutral-400">Default: 1. How many coins are deducted per deep report.</p>
+            </div>
+          </div>
+          <div className="rounded-xl bg-amber-50 p-3 text-xs text-amber-700 dark:bg-amber-950 dark:text-amber-300">
+            Bundle 20 Coins price is fixed at ₦35,000 (₦1,750/coin). Users see these prices on the /pricing page.
+          </div>
+        </div>
+      </div>
+
+      {/* Bank Transfer Settings */}
+      <div className="glass rounded-2xl p-5">
+        <div className="mb-4 flex items-center gap-2">
+          <Landmark className="h-4 w-4 text-primary-600" />
+          <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">Bank Transfer Settings</h3>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-neutral-500">Account Name</label>
+            <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+              value={form.bankAccountName || ""} onChange={(e) => setForm({ ...form, bankAccountName: e.target.value })} />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-neutral-500">Account Number</label>
+              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+                value={form.bankAccountNumber || ""} onChange={(e) => setForm({ ...form, bankAccountNumber: e.target.value })} />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-neutral-500">Bank Name</label>
+              <input className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+                value={form.bankName || ""} onChange={(e) => setForm({ ...form, bankName: e.target.value })} />
             </div>
           </div>
         </div>

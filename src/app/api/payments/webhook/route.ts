@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.text();
     const signature = req.headers.get("x-paystack-signature") || "";
-    const webhookSecret = process.env.PAYSTACK_WEBHOOK_SECRET;
+    const webhookSecret = process.env.PAYSTACK_WEBHOOK_SECRET || "";
 
     if (webhookSecret && !verifyPaystackSignature(body, signature, webhookSecret)) {
       return NextResponse.json({ status: false, message: "Invalid signature" }, { status: 401 });
@@ -44,14 +44,20 @@ export async function POST(req: NextRequest) {
           if (planCode && newTx) {
             const [plan] = await db.select().from(subscriptionPlans)
               .where(eq(subscriptionPlans.code, planCode)).limit(1);
-            if (plan && plan.credits && plan.credits > 0) {
-              await db.insert(subscriptionCredits).values({
-                userId,
-                planId: plan.id,
-                transactionId: newTx.id,
-                creditsRemaining: plan.credits,
-                expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-              });
+            if (plan) {
+              let coins = plan.credits || 0;
+              if (planCode === "coins_custom" || coins <= 0) {
+                coins = Math.floor((amount / 100) / 2000);
+              }
+              if (coins > 0) {
+                await db.insert(subscriptionCredits).values({
+                  userId,
+                  planId: plan.id,
+                  transactionId: newTx.id,
+                  creditsRemaining: coins,
+                  expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+                });
+              }
             }
           }
         }

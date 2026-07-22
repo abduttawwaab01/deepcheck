@@ -128,7 +128,7 @@ export const parentRouter = router({
         .from(subscriptionCredits).where(eq(subscriptionCredits.userId, ctx.user.id));
 
       if ((credits?.total || 0) <= 0) {
-        return { success: false, message: "No deep report credits remaining. Please purchase a plan.", paymentUrl: "/pricing" };
+        return { success: false, message: "No coins remaining. Please purchase more coins.", paymentUrl: "/pricing" };
       }
 
       await db.insert(reportRequests).values({
@@ -449,7 +449,7 @@ export const parentRouter = router({
         .from(subscriptionCredits).where(eq(subscriptionCredits.userId, ctx.user.id));
       
       if ((credits?.total || 0) <= 0) {
-        return { success: false, message: "No deep report credits remaining. Please purchase a plan.", paymentUrl: "/pricing" };
+        return { success: false, message: "No coins remaining. Please purchase more coins.", paymentUrl: "/pricing" };
       }
       
       // Deduct credit

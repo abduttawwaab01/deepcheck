@@ -19,8 +19,8 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="animate-fade-in space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Admin Dashboard</h1>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Admin Dashboard</h1>
         <div className="flex items-center gap-2 text-sm">
           <Activity className="h-4 w-4 text-success" />
           <span className="text-success">All Systems Operational</span>

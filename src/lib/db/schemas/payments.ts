@@ -17,19 +17,6 @@ export const paymentTransactions = pgTable("payment_transactions", {
   index("idx_payment_reference").on(t.reference),
 ]);
 
-export const walletTransactions = pgTable("wallet_transactions", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id").references(() => users.id).notNull(),
-  type: text("type", { enum: ["credit", "debit", "refund"] }).notNull(),
-  amount: numeric("amount").notNull(),
-  balance: numeric("balance").notNull(),
-  description: text("description"),
-  reference: text("reference"),
-  createdAt: timestamp("created_at").defaultNow(),
-}, (t) => [
-  index("idx_wallet_user").on(t.userId),
-]);
-
 export const subscriptionPlans = pgTable("subscription_plans", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
@@ -50,4 +37,21 @@ export const subscriptionCredits = pgTable("subscription_credits", {
   creditsRemaining: integer("credits_remaining").default(0),
   expiresAt: timestamp("expires_at"),
   createdAt: timestamp("created_at").defaultNow(),
-});
+}, (t) => [
+  index("idx_sub_credits_user").on(t.userId),
+]);
+
+export const bankTransfers = pgTable("bank_transfers", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("user_id").references(() => users.id).notNull(),
+  amount: numeric("amount").notNull(),
+  coinsRequested: integer("coins_requested").notNull(),
+  senderName: text("sender_name").notNull(),
+  status: text("status", { enum: ["pending", "confirmed", "rejected"] }).default("pending"),
+  adminNote: text("admin_note"),
+  confirmedAt: timestamp("confirmed_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (t) => [
+  index("idx_bank_transfer_user").on(t.userId),
+  index("idx_bank_transfer_status").on(t.status),
+]);

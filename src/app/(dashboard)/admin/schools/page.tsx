@@ -41,8 +41,8 @@ export default function AdminSchoolsPage() {
 
   return (
     <div className="animate-fade-in space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Schools</h1>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Schools</h1>
         <span className="text-xs text-neutral-400">{schools?.length || 0} schools</span>
       </div>
 
@@ -86,7 +86,7 @@ export default function AdminSchoolsPage() {
                 <h3 className="text-lg font-bold text-neutral-900 dark:text-white">{viewSchool.name}</h3>
                 <p className="text-xs text-neutral-500">{viewSchool.city}, {viewSchool.state} &middot; {viewSchool.schoolType || "N/A"}</p>
               </div>
-              <button onClick={() => setViewSchool(null)} className="rounded-lg p-1 text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800">✕</button>
+              <button onClick={() => setViewSchool(null)} className="flex items-center justify-center rounded-lg p-3 text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 min-h-[44px] min-w-[44px]">✕</button>
             </div>
 
             <div className="mt-4 grid grid-cols-2 gap-3">
@@ -103,10 +103,10 @@ export default function AdminSchoolsPage() {
             <div className="mt-4 space-y-3">
               <div>
                 <label className="mb-1 block text-xs font-medium text-neutral-500">Verification Status</label>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {(["verified", "pending", "rejected"] as const).map((s) => (
                     <button key={s} onClick={() => verifyMutation.mutate({ schoolId: viewSchool.id, status: s })}
-                      className={cn("rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
+                      className={cn("flex items-center justify-center rounded-lg px-4 py-2 text-xs font-medium transition-colors min-h-[44px]",
                         viewSchool.status === s ? "bg-primary-600 text-white" : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400")}>
                       {s.charAt(0).toUpperCase() + s.slice(1)}
                     </button>
@@ -119,7 +119,7 @@ export default function AdminSchoolsPage() {
                 <div className="flex flex-wrap gap-2">
                   {(["free", "basic", "pro", "enterprise"] as const).map((s) => (
                     <button key={s} onClick={() => subMutation.mutate({ schoolId: viewSchool.id, status: s })}
-                      className={cn("rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
+                      className={cn("flex items-center justify-center rounded-lg px-4 py-2 text-xs font-medium transition-colors min-h-[44px]",
                         viewSchool.subscription === s ? "bg-primary-600 text-white" : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400")}>
                       {s.charAt(0).toUpperCase() + s.slice(1)}
                     </button>
@@ -129,10 +129,10 @@ export default function AdminSchoolsPage() {
 
               <div>
                 <label className="mb-1 block text-xs font-medium text-neutral-500">Deep Report Credits</label>
-                <div className="flex gap-2">
-                  <input type="number" className="w-24 rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+                <div className="flex flex-wrap gap-2">
+                  <input type="number" className="w-full sm:w-24 rounded-xl border border-neutral-200 bg-white px-3 py-3 text-sm outline-none focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                     value={creditInput} onChange={(e) => setCreditInput(e.target.value)} min={0} max={9999} />
-                  <Button size="sm" onClick={() => creditsMutation.mutate({ schoolId: viewSchool.id, credits: Number(creditInput) || 0 })} disabled={creditsMutation.isPending}>
+                  <Button size="sm" className="w-full sm:w-auto" onClick={() => creditsMutation.mutate({ schoolId: viewSchool.id, credits: Number(creditInput) || 0 })} disabled={creditsMutation.isPending}>
                     <CreditCard className="mr-1 h-3.5 w-3.5" /> Set Credits
                   </Button>
                 </div>

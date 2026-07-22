@@ -1,10 +1,18 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
+
+const roleRedirectMap: Record<string, string> = {
+  admin: "/admin",
+  school_admin: "/school",
+  teacher: "/teacher",
+  student: "/student",
+  parent: "/parent",
+};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -27,7 +35,11 @@ export default function LoginPage() {
       if (res?.error) {
         setError("Invalid email or password");
       } else {
-        router.push("/admin");
+        // Fetch session to get user role for correct redirect
+        const sessionRes = await fetch("/api/auth/session");
+        const session = await sessionRes.json();
+        const role = session?.user?.role as string | undefined;
+        router.push(roleRedirectMap[role || "student"] || "/student");
         return;
       }
     } catch {
@@ -50,7 +62,7 @@ export default function LoginPage() {
               <label className="mb-1.5 block text-sm font-medium text-neutral-700 dark:text-neutral-300">Email</label>
               <input
                 type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none transition-colors focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+                className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none transition-colors focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                 placeholder="adeola@school.edu.ng" required
               />
             </div>
@@ -60,10 +72,10 @@ export default function LoginPage() {
               <div className="relative">
                 <input
                   type={showPw ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 pr-10 text-sm outline-none transition-colors focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+                  className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 pr-10 text-sm outline-none transition-colors focus:border-primary-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                   placeholder="••••••••" required
                 />
-                <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400">
+                <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center justify-center p-3 text-neutral-400 min-h-[44px] min-w-[44px]">
                   {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>

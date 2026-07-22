@@ -5,7 +5,7 @@ import Link from "next/link";
 const features = [
   { icon: BarChart, title: "Deep Analytics", desc: "Real-time dashboards for every student, class, and subject with predictive insights." },
   { icon: Shield, title: "Anti-Cheating", desc: "Browser lockdown, AI proctoring, and plagiarism detection built-in." },
-  { icon: Users, title: "Bulk Management", desc: "Upload or sync rosters, schedule assessments, and bulk-purchase credits." },
+  { icon: Users, title: "Bulk Management", desc: "Upload or sync rosters, schedule assessments, and manage coin credits." },
   { icon: Globe, title: "WASSCE & NECO Aligned", desc: "Questions mapped to national curricula with Bloom's taxonomy tagging." },
   { icon: Zap, title: "Auto-Grading", desc: "Instant results for objective, theory, and even essay questions." },
   { icon: Headphones, title: "Priority Support", desc: "Dedicated account manager and WhatsApp/Slack channel." },

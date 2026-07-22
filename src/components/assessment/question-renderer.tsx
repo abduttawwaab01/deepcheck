@@ -11,7 +11,7 @@ export function StandardRenderer({ question, selected, onSelect }: {
     <div className="space-y-3">
       <p className="text-base leading-relaxed text-neutral-900 dark:text-white">{question.questionText}</p>
       <div className="space-y-2">
-        {question.options.map((opt) => (
+        {question.options.map((opt, idx) => (
           <button
             key={opt.id}
             onClick={() => onSelect(opt.id)}
@@ -22,7 +22,7 @@ export function StandardRenderer({ question, selected, onSelect }: {
             }`}
           >
             <span className="mr-3 inline-flex h-6 w-6 items-center justify-center rounded-full border text-xs font-medium">
-              {opt.id.toUpperCase()}
+              {String.fromCharCode(65 + idx)}
             </span>
             {opt.text}
           </button>
@@ -44,7 +44,7 @@ export function PassageRenderer({ question, selected, onSelect }: {
       </div>
       <p className="text-base leading-relaxed text-neutral-900 dark:text-white">{question.questionText}</p>
       <div className="space-y-2">
-        {question.options.map((opt) => (
+        {question.options.map((opt, idx) => (
           <button
             key={opt.id}
             onClick={() => onSelect(opt.id)}
@@ -55,7 +55,7 @@ export function PassageRenderer({ question, selected, onSelect }: {
             }`}
           >
             <span className="mr-3 inline-flex h-6 w-6 items-center justify-center rounded-full border text-xs font-medium">
-              {opt.id.toUpperCase()}
+              {String.fromCharCode(65 + idx)}
             </span>
             {opt.text}
           </button>
@@ -75,7 +75,7 @@ export function ChartQuestionRenderer({ question, selected, onSelect }: {
       {question.chartData && <ChartRenderer data={question.chartData} />}
       <p className="text-base leading-relaxed text-neutral-900 dark:text-white">{question.questionText}</p>
       <div className="space-y-2">
-        {question.options.map((opt) => (
+        {question.options.map((opt, idx) => (
           <button
             key={opt.id}
             onClick={() => onSelect(opt.id)}
@@ -86,7 +86,7 @@ export function ChartQuestionRenderer({ question, selected, onSelect }: {
             }`}
           >
             <span className="mr-3 inline-flex h-6 w-6 items-center justify-center rounded-full border text-xs font-medium">
-              {opt.id.toUpperCase()}
+              {String.fromCharCode(65 + idx)}
             </span>
             {opt.text}
           </button>
@@ -106,7 +106,7 @@ export function GeometryQuestionRenderer({ question, selected, onSelect }: {
       {question.geometryData && <GeometryRenderer data={question.geometryData} />}
       <p className="text-base leading-relaxed text-neutral-900 dark:text-white">{question.questionText}</p>
       <div className="space-y-2">
-        {question.options.map((opt) => (
+        {question.options.map((opt, idx) => (
           <button
             key={opt.id}
             onClick={() => onSelect(opt.id)}
@@ -117,7 +117,7 @@ export function GeometryQuestionRenderer({ question, selected, onSelect }: {
             }`}
           >
             <span className="mr-3 inline-flex h-6 w-6 items-center justify-center rounded-full border text-xs font-medium">
-              {opt.id.toUpperCase()}
+              {String.fromCharCode(65 + idx)}
             </span>
             {opt.text}
           </button>
@@ -137,7 +137,7 @@ export function InteractiveRenderer({ question, selected, onSelect }: {
       <div className="space-y-3">
         <p className="text-base leading-relaxed text-neutral-900 dark:text-white">{question.questionText}</p>
         <div className="space-y-2">
-          {question.options.map((opt) => (
+          {question.options.map((opt, idx) => (
             <button
               key={opt.id}
               onClick={() => onSelect(opt.id)}
@@ -148,7 +148,7 @@ export function InteractiveRenderer({ question, selected, onSelect }: {
               }`}
             >
               <span className="mr-3 inline-flex h-6 w-6 items-center justify-center rounded-full border text-xs font-medium">
-                {opt.id.toUpperCase()}
+                {String.fromCharCode(65 + idx)}
               </span>
               {opt.text}
             </button>
@@ -162,7 +162,7 @@ export function InteractiveRenderer({ question, selected, onSelect }: {
     <div className="space-y-3">
       <p className="text-base leading-relaxed text-neutral-900 dark:text-white">{question.questionText}</p>
       <div className="space-y-2">
-        {question.options.map((opt) => (
+        {question.options.map((opt, idx) => (
           <button
             key={opt.id}
             onClick={() => onSelect(opt.id)}
@@ -173,7 +173,7 @@ export function InteractiveRenderer({ question, selected, onSelect }: {
             }`}
           >
             <span className="mr-3 inline-flex h-6 w-6 items-center justify-center rounded-full border text-xs font-medium">
-              {opt.id.toUpperCase()}
+              {String.fromCharCode(65 + idx)}
             </span>
             {opt.text}
           </button>

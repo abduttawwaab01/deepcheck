@@ -116,8 +116,8 @@ export function RadarChart({ data, size = 300, levels = 5 }: RadarChartProps) {
   if (!data.length) return null;
 
   return (
-    <div className="flex items-center justify-center">
-      <svg ref={svgRef} width={size} height={size} className="overflow-visible" />
+    <div className="flex w-full items-center justify-center">
+      <svg ref={svgRef} viewBox={`0 0 ${size} ${size}`} className="max-w-full overflow-visible" style={{ width: size, height: size }} />
     </div>
   );
 }

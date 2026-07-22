@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { schools } from "@/lib/db/schemas/schools";
 import { questionBanks, questionBankConfigs } from "@/lib/db/schemas/question-banks";
 import { questions, questionOptions, users, userRoles, roles } from "@/lib/db/schemas";
-import { paymentTransactions } from "@/lib/db/schemas/payments";
+import { paymentTransactions, subscriptionCredits, subscriptionPlans, bankTransfers } from "@/lib/db/schemas/payments";
 import { reportRequests, basicReports } from "@/lib/db/schemas/reports";
 import { systemConfig } from "@/lib/db/schemas/system";
 import { assessmentInstances } from "@/lib/db/schemas/assessments";
@@ -369,6 +369,11 @@ export const adminRouter = router({
       currency: config.currency || "NGN",
       taxRate: config.tax_rate || "7.5",
       paymentGatewayKey: config.payment_gateway_key || "sk_live_••••••••••••••••",
+      pricePerCoin: config.price_per_coin || 2000,
+      coinsPerReport: config.coins_per_report || 1,
+      bankAccountName: config.bank_account_name || "Odebunmi Tawwab",
+      bankAccountNumber: config.bank_account_number || "9152929772",
+      bankName: config.bank_name || "Palmpay",
     };
   }),
 
@@ -384,6 +389,11 @@ export const adminRouter = router({
       currency: z.string().optional(),
       taxRate: z.string().optional(),
       paymentGatewayKey: z.string().optional(),
+      pricePerCoin: z.number().optional(),
+      coinsPerReport: z.number().optional(),
+      bankAccountName: z.string().optional(),
+      bankAccountNumber: z.string().optional(),
+      bankName: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
       for (const [key, value] of Object.entries(input)) {
@@ -398,6 +408,79 @@ export const adminRouter = router({
           await db.insert(systemConfig).values({ key: dbKey, value });
         }
       }
+      return { success: true };
+    }),
+
+  // ─── BANK TRANSFERS ─────────────────────────────────────────────────
+  getBankTransfers: adminProcedure.query(async () => {
+    const transfers = await db.select().from(bankTransfers)
+      .orderBy(desc(bankTransfers.createdAt)).limit(50);
+    const userIds = [...new Set(transfers.map((t) => t.userId))];
+    const userMap: Record<string, string> = {};
+    if (userIds.length > 0) {
+      const found = await db.select({ id: users.id, firstName: users.firstName, lastName: users.lastName })
+        .from(users).where(inArray(users.id, userIds));
+      for (const u of found) userMap[u.id] = `${u.firstName} ${u.lastName}`;
+    }
+    return transfers.map((t) => ({
+      id: t.id,
+      user: userMap[t.userId] || t.userId,
+      amount: t.amount,
+      coinsRequested: t.coinsRequested,
+      senderName: t.senderName,
+      status: t.status,
+      adminNote: t.adminNote,
+      createdAt: t.createdAt?.toISOString?.()?.split("T")[0] || String(t.createdAt),
+      confirmedAt: t.confirmedAt?.toISOString?.()?.split("T")[0] || null,
+    }));
+  }),
+
+  confirmBankTransfer: adminProcedure
+    .input(z.object({ transferId: z.string(), coinsGranted: z.number().min(1) }))
+    .mutation(async ({ input }) => {
+      const [transfer] = await db.select().from(bankTransfers)
+        .where(eq(bankTransfers.id, input.transferId)).limit(1);
+      if (!transfer) return { success: false, message: "Transfer not found" };
+      if (transfer.status !== "pending") return { success: false, message: "Transfer already processed" };
+
+      const [plan] = await db.select().from(subscriptionPlans)
+        .where(eq(subscriptionPlans.code, "coins_custom")).limit(1);
+
+      await db.insert(paymentTransactions).values({
+        userId: transfer.userId,
+        reference: `BT-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        amount: transfer.amount,
+        status: "success",
+        provider: "bank_transfer",
+        metadata: { sender_name: transfer.senderName, bank_transfer_id: transfer.id },
+        paidAt: new Date(),
+      });
+
+      if (plan) {
+        await db.insert(subscriptionCredits).values({
+          userId: transfer.userId,
+          planId: plan.id,
+          creditsRemaining: input.coinsGranted,
+          expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+        });
+      }
+
+      await db.update(bankTransfers).set({
+        status: "confirmed",
+        adminNote: `Granted ${input.coinsGranted} coins`,
+        confirmedAt: new Date(),
+      }).where(eq(bankTransfers.id, input.transferId));
+
+      return { success: true };
+    }),
+
+  rejectBankTransfer: adminProcedure
+    .input(z.object({ transferId: z.string(), note: z.string().optional() }))
+    .mutation(async ({ input }) => {
+      await db.update(bankTransfers).set({
+        status: "rejected",
+        adminNote: input.note || "Rejected by admin",
+      }).where(eq(bankTransfers.id, input.transferId));
       return { success: true };
     }),
 });
