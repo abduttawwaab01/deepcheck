@@ -190,7 +190,7 @@ export function NeuralNetwork({ nodeCount = 16 }: { nodeCount?: number }) {
 
       // Draw nodes with pulse
       for (const node of nodes) {
-        const pulse = 0.4 + 0.6 * Math.sin(t * 0.8 + node.phase);
+        const pulse = Math.max(0, 0.4 + 0.6 * Math.sin(t * 0.8 + node.phase));
         const glow = 15 * pulse;
 
         ctx!.beginPath();
