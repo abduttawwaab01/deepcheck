@@ -74,30 +74,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user, trigger }) {
       if ((trigger === "signIn" || trigger === "signUp") && user?.id) {
         token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user && token.id) {
+        session.user.id = token.id as string;
         try {
           const [userRecord] = await withTimeout(
             db
               .select({ roleName: roles.name, schoolId: users.schoolId })
               .from(userRoles)
               .innerJoin(roles, eq(userRoles.roleId, roles.id))
-              .where(eq(userRoles.userId, user.id))
+              .where(eq(userRoles.userId, token.id as string))
               .limit(1),
             10000,
           );
-          token.role = userRecord?.roleName || "guest";
-          token.schoolId = userRecord?.schoolId || null;
+          session.user.role = userRecord?.roleName || "student";
+          (session.user as any).schoolId = userRecord?.schoolId || null;
         } catch {
-          token.role = "guest";
-          token.schoolId = null;
+          session.user.role = "student";
+          (session.user as any).schoolId = null;
         }
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
-        (session.user as any).schoolId = token.schoolId || null;
       }
       return session;
     },
