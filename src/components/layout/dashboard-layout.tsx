@@ -60,7 +60,9 @@ const portalConfig: Record<string, { href: string; label: string; icon: any }[]>
   parent: [
     { href: "/parent", label: "Dashboard", icon: LayoutDashboard },
     { href: "/parent/children", label: "My Children", icon: HeartHandshake },
+    { href: "/parent/assessment", label: "Assessment", icon: ClipboardCheck },
     { href: "/parent/reports", label: "Reports", icon: BarChart3 },
+    { href: "/pricing", label: "Buy Coins", icon: Sparkles },
     { href: "/parent/settings", label: "Settings", icon: Settings },
   ],
 };

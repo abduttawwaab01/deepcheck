@@ -62,7 +62,7 @@ export default function ReportsPage() {
                     <span className="text-xs text-neutral-400">In progress</span>
                   ) : (
                     <Button size="sm" variant="outline" className="gap-1" loading={requestDeep.isPending}
-                      onClick={() => requestDeep.mutate({ targetUserId: r.id, instanceId: r.id, assessmentType: r.type })}>
+                      onClick={() => requestDeep.mutate({ targetUserId: r.userId, instanceId: r.instanceId, assessmentType: r.type })}>
                       <FileText className="h-3.5 w-3.5" /> Request Deep
                     </Button>
                   )}

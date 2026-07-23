@@ -4,18 +4,35 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Mail, BookOpen, CheckCircle2, Clock, UserPlus, X } from "lucide-react";
+import { Mail, BookOpen, CheckCircle2, Clock, UserPlus, X, AlertCircle } from "lucide-react";
 
 export default function TeachersPage() {
+  const utils = trpc.useUtils();
   const { data: teachers, isLoading } = trpc.school.getTeachers.useQuery();
-  const invite = trpc.school.inviteTeacher.useMutation();
+  const invite = trpc.school.inviteTeacher.useMutation({
+    onSuccess: () => { utils.school.getTeachers.invalidate(); },
+  });
   const [showInvite, setShowInvite] = useState(false);
   const [form, setForm] = useState({ email: "", firstName: "", lastName: "", subject: "" });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleInvite = async () => {
-    await invite.mutateAsync(form);
-    setShowInvite(false);
-    setForm({ email: "", firstName: "", lastName: "", subject: "" });
+    setError("");
+    setSuccess("");
+    try {
+      const result = await invite.mutateAsync(form);
+      if (result.success) {
+        setSuccess(result.message || "Teacher invited successfully");
+        setShowInvite(false);
+        setForm({ email: "", firstName: "", lastName: "", subject: "" });
+        setTimeout(() => setSuccess(""), 4000);
+      } else {
+        setError(result.message || "Failed to invite teacher");
+      }
+    } catch (e: any) {
+      setError(e?.message || "An error occurred");
+    }
   };
 
   if (isLoading) return (
@@ -31,6 +48,17 @@ export default function TeachersPage() {
         <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Teachers</h1>
         <Button size="sm" className="w-full sm:w-auto" onClick={() => setShowInvite(true)}><UserPlus className="mr-1.5 h-4 w-4" /> Invite Teacher</Button>
       </div>
+
+      {error && (
+        <div className="flex items-center gap-2 rounded-xl border border-error/20 bg-error/5 p-3 text-sm text-error">
+          <AlertCircle className="h-4 w-4 shrink-0" /> {error}
+        </div>
+      )}
+      {success && (
+        <div className="flex items-center gap-2 rounded-xl border border-success/20 bg-success/5 p-3 text-sm text-success">
+          <CheckCircle2 className="h-4 w-4 shrink-0" /> {success}
+        </div>
+      )}
 
       {showInvite && (
         <div className="glass rounded-2xl border border-primary-200 p-4 dark:border-primary-800">
@@ -70,6 +98,10 @@ export default function TeachersPage() {
           </div>
         ))}
       </div>
+
+      {(!teachers || teachers.length === 0) && (
+        <div className="py-16 text-center text-sm text-neutral-400">No teachers registered yet</div>
+      )}
     </div>
   );
 }

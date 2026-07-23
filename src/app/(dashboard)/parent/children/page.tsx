@@ -1,21 +1,33 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
-import { cn, formatDate } from "@/lib/utils";
-import { UserPlus, Users, Mail, CalendarDays, ClipboardCheck, X, User } from "lucide-react";
+import { formatDate } from "@/lib/utils";
+import { UserPlus, Users, Mail, CalendarDays, ClipboardCheck, X, User, BarChart3 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function ParentChildrenPage() {
-  const { data: children, isLoading } = trpc.parent.getChildren.useQuery();
+  const { data: children, isLoading, refetch } = trpc.parent.getChildren.useQuery();
   const addChild = trpc.parent.addChild.useMutation();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", relationship: "" });
 
   const handleAdd = async () => {
-    await addChild.mutateAsync(form);
-    setOpen(false);
-    setForm({ firstName: "", lastName: "", email: "", relationship: "" });
+    try {
+      const res = await addChild.mutateAsync(form);
+      if (res.success) {
+        toast.success(res.message);
+        setOpen(false);
+        setForm({ firstName: "", lastName: "", email: "", relationship: "" });
+        refetch();
+      } else {
+        toast.error(res.message);
+      }
+    } catch {
+      toast.error("Failed to link child. Please try again.");
+    }
   };
 
   if (isLoading) return <div className="animate-fade-in space-y-4">{[1, 2].map(i => <div key={i} className="h-32 animate-pulse rounded-2xl bg-neutral-200 dark:bg-neutral-800" />)}</div>;
@@ -54,6 +66,18 @@ export default function ParentChildrenPage() {
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2 border-t border-neutral-100 pt-3 dark:border-neutral-800">
+                <Link href={`/parent/children/${child.id}/early-warning`}>
+                  <Button size="sm" variant="outline" className="gap-1.5">
+                    <BarChart3 className="h-3.5 w-3.5" />View Progress
+                  </Button>
+                </Link>
+                <Link href="/parent/assessment">
+                  <Button size="sm" variant="ghost" className="gap-1.5 text-primary-600">
+                    <ClipboardCheck className="h-3.5 w-3.5" />Parent Assessment
+                  </Button>
+                </Link>
               </div>
             </div>
           ))}

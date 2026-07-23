@@ -3,23 +3,43 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
-import { Search, UserPlus, Mail, ClipboardCheck, Clock, X } from "lucide-react";
+import { Search, UserPlus, Mail, ClipboardCheck, Clock, X, AlertCircle, CheckCircle2 } from "lucide-react";
 
 export default function StudentsPage() {
+  const utils = trpc.useUtils();
   const { data: students, isLoading } = trpc.school.getStudents.useQuery();
-  const register = trpc.school.registerStudent.useMutation();
+  const register = trpc.school.registerStudent.useMutation({
+    onSuccess: () => { utils.school.getStudents.invalidate(); },
+  });
   const [search, setSearch] = useState("");
   const [showRegister, setShowRegister] = useState(false);
   const [form, setForm] = useState({ email: "", firstName: "", lastName: "" });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [tempPassword, setTempPassword] = useState("");
 
   const filtered = students?.filter((s) =>
     s.name.toLowerCase().includes(search.toLowerCase()) || s.email.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleRegister = async () => {
-    await register.mutateAsync(form);
-    setShowRegister(false);
-    setForm({ email: "", firstName: "", lastName: "" });
+    setError("");
+    setSuccess("");
+    setTempPassword("");
+    try {
+      const result = await register.mutateAsync(form);
+      if (result.success) {
+        setSuccess(result.message || "Student registered successfully");
+        if (result.tempPassword) setTempPassword(result.tempPassword);
+        setShowRegister(false);
+        setForm({ email: "", firstName: "", lastName: "" });
+        setTimeout(() => { setSuccess(""); setTempPassword(""); }, 6000);
+      } else {
+        setError(result.message || "Failed to register student");
+      }
+    } catch (e: any) {
+      setError(e?.message || "An error occurred");
+    }
   };
 
   if (isLoading) return (
@@ -36,6 +56,23 @@ export default function StudentsPage() {
         <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Students</h1>
         <Button size="sm" className="w-full sm:w-auto" onClick={() => setShowRegister(true)}><UserPlus className="mr-1.5 h-4 w-4" /> Register</Button>
       </div>
+
+      {error && (
+        <div className="flex items-center gap-2 rounded-xl border border-error/20 bg-error/5 p-3 text-sm text-error">
+          <AlertCircle className="h-4 w-4 shrink-0" /> {error}
+        </div>
+      )}
+      {success && (
+        <div className="flex items-center gap-2 rounded-xl border border-success/20 bg-success/5 p-3 text-sm text-success">
+          <CheckCircle2 className="h-4 w-4 shrink-0" /> {success}
+        </div>
+      )}
+      {tempPassword && (
+        <div className="rounded-xl border border-warning/20 bg-warning/5 p-3 text-sm text-warning">
+          <span className="font-medium">Temporary password:</span> <code className="rounded bg-neutral-100 px-1.5 py-0.5 font-mono text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">{tempPassword}</code>
+          <span className="ml-2 text-xs text-neutral-500">Share this securely with the student.</span>
+        </div>
+      )}
 
       {showRegister && (
         <div className="glass rounded-2xl border border-primary-200 p-4 dark:border-primary-800">
@@ -74,6 +111,10 @@ export default function StudentsPage() {
           </div>
         ))}
       </div>
+
+      {(!filtered || filtered.length === 0) && (
+        <div className="py-16 text-center text-sm text-neutral-400">No students found</div>
+      )}
     </div>
   );
 }

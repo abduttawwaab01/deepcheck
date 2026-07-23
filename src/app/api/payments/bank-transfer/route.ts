@@ -18,11 +18,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    const numericAmount = Number(amount);
+    const numericCoins = Number(coinsRequested);
+
+    if (isNaN(numericAmount) || numericAmount <= 0) {
+      return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
+    }
+    if (isNaN(numericCoins) || numericCoins <= 0) {
+      return NextResponse.json({ error: "Invalid coins requested" }, { status: 400 });
+    }
+
     const [transfer] = await db.insert(bankTransfers).values({
       userId,
-      amount: String(amount),
-      coinsRequested,
-      senderName,
+      amount: String(numericAmount),
+      coinsRequested: numericCoins,
+      senderName: senderName.trim(),
       status: "pending",
     }).returning();
 
@@ -33,6 +43,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("Bank transfer error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error. Please try again or contact support." }, { status: 500 });
   }
 }

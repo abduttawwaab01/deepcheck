@@ -12,15 +12,16 @@ import { generateSchoolDeepReport } from "@/lib/engine/school-report-generator";
 import { eq, sql, and, desc, inArray } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 
-async function getSchoolId(userId: string): Promise<string | null> {
+async function getSchoolId(ctxUser: { id: string; schoolId?: string | null }): Promise<string | null> {
+  if (ctxUser.schoolId) return ctxUser.schoolId;
   const tp = await db.select({ schoolId: teacherProfiles.schoolId })
-    .from(teacherProfiles).where(eq(teacherProfiles.userId, userId)).limit(1);
+    .from(teacherProfiles).where(eq(teacherProfiles.userId, ctxUser.id)).limit(1);
   return tp[0]?.schoolId || null;
 }
 
 export const schoolRouter = router({
   getDashboard: schoolProcedure.query(async ({ ctx }) => {
-    const schoolId = await getSchoolId(ctx.user.id);
+    const schoolId = await getSchoolId(ctx.user);
     if (!schoolId) return null;
     const [school] = await db.select().from(schools).where(eq(schools.id, schoolId)).limit(1);
     if (!school) return null;
@@ -29,9 +30,49 @@ export const schoolRouter = router({
     const [teacherCnt] = await db.select({ count: sql<number>`count(*)` }).from(teacherProfiles)
       .where(eq(teacherProfiles.schoolId, schoolId));
 
+    // Teacher status: query actual teachers with assessment counts
+    const tps = await db.select({
+      userId: teacherProfiles.userId,
+      subject: teacherProfiles.subject,
+      status: teacherProfiles.isActive,
+    }).from(teacherProfiles).where(eq(teacherProfiles.schoolId, schoolId));
+    const teacherUserIds = tps.map((t) => t.userId);
+    const teacherUsers = teacherUserIds.length > 0
+      ? await db.select({ id: users.id, firstName: users.firstName, lastName: users.lastName })
+        .from(users).where(inArray(users.id, teacherUserIds))
+      : [];
+    const teacherUserMap: Record<string, string> = {};
+    for (const u of teacherUsers) teacherUserMap[u.id] = `${u.firstName} ${u.lastName}`;
+
+    const teacherAssessedCounts = teacherUserIds.length > 0
+      ? await db.select({
+          userId: assessmentInstances.userId,
+          count: sql<number>`count(*)`,
+        }).from(assessmentInstances)
+          .where(and(inArray(assessmentInstances.userId, teacherUserIds), eq(assessmentInstances.status, "completed")))
+          .groupBy(assessmentInstances.userId)
+      : [];
+    const assessedMap: Record<string, number> = {};
+    for (const row of teacherAssessedCounts) assessedMap[row.userId] = row.count;
+
+    const teacherStatus = tps.map((t) => ({
+      name: teacherUserMap[t.userId] || "Unknown",
+      subject: t.subject || "N/A",
+      assessed: (assessedMap[t.userId] || 0) > 0,
+      score: 0,
+    }));
+
+    // Student data for reports
     const sps = await db.select({ userId: studentProfiles.userId })
       .from(studentProfiles).where(eq(studentProfiles.currentSchoolId, schoolId));
     const studentUserIds = sps.map((s) => s.userId);
+
+    // Total assessments taken (all completed, not just recent)
+    const [totalAssessments] = studentUserIds.length > 0
+      ? await db.select({ count: sql<number>`count(*)` }).from(assessmentInstances)
+          .where(and(inArray(assessmentInstances.userId, studentUserIds), eq(assessmentInstances.status, "completed")))
+      : [{ count: 0 }];
+
     const recentReports = studentUserIds.length > 0
       ? await db.select({
           id: basicReports.id,
@@ -45,13 +86,19 @@ export const schoolRouter = router({
           .limit(10)
       : [];
 
+    const reportUserIds = [...new Set(recentReports.map((r) => r.userId))];
+    const reportUsers = reportUserIds.length > 0
+      ? await db.select({ id: users.id, firstName: users.firstName, lastName: users.lastName })
+        .from(users).where(inArray(users.id, reportUserIds))
+      : [];
     const userMap: Record<string, string> = {};
-    if (recentReports.length > 0) {
-      const reportUserIds = [...new Set(recentReports.map((r) => r.userId))];
-      const reportUsers = await db.select({ id: users.id, firstName: users.firstName, lastName: users.lastName })
-        .from(users).where(inArray(users.id, reportUserIds));
-      for (const u of reportUsers) userMap[u.id] = `${u.firstName} ${u.lastName}`;
-    }
+    for (const u of reportUsers) userMap[u.id] = `${u.firstName} ${u.lastName}`;
+
+    // Deep reports generated count
+    const [deepCount] = studentUserIds.length > 0
+      ? await db.select({ count: sql<number>`count(*)` }).from(basicReports)
+          .where(inArray(basicReports.userId, studentUserIds))
+      : [{ count: 0 }];
 
     return {
       id: school.id,
@@ -59,8 +106,8 @@ export const schoolRouter = router({
       city: school.city,
       studentCount: studentCnt?.count || 0,
       teacherCount: teacherCnt?.count || 0,
-      assessmentsTaken: recentReports.length,
-      deepReportsGenerated: 0,
+      assessmentsTaken: totalAssessments?.count || 0,
+      deepReportsGenerated: deepCount?.count || 0,
       reportCreditsRemaining: school.deepReportCredits || 0,
       recentAssessments: recentReports.map((r) => ({
         student: userMap[r.userId] || "Unknown",
@@ -68,12 +115,12 @@ export const schoolRouter = router({
         score: Number(r.overallScore),
         date: r.createdAt?.toISOString?.()?.split("T")[0] || "",
       })),
-      teacherStatus: [] as { name: string; subject: string; assessed: boolean; score: number }[],
+      teacherStatus,
     };
   }),
 
   getTeachers: schoolProcedure.query(async ({ ctx }) => {
-    const schoolId = await getSchoolId(ctx.user.id);
+    const schoolId = await getSchoolId(ctx.user);
     if (!schoolId) return [];
     const tps = await db.select({
       id: teacherProfiles.userId,
@@ -87,11 +134,10 @@ export const schoolRouter = router({
       .from(users).where(inArray(users.id, userIds));
     for (const u of found) userMap[u.id] = u;
 
-    const { assessmentInstances: ai } = await import("@/lib/db/schemas/assessments");
     const results = [];
     for (const t of tps) {
-      const [assessed] = await db.select({ count: sql<number>`count(*)` }).from(ai)
-        .where(and(eq(ai.userId, t.id), eq(ai.status, "completed")));
+      const [assessed] = await db.select({ count: sql<number>`count(*)` }).from(assessmentInstances)
+        .where(and(eq(assessmentInstances.userId, t.id), eq(assessmentInstances.status, "completed")));
       results.push({
         id: t.id,
         name: userMap[t.id] ? `${userMap[t.id].firstName} ${userMap[t.id].lastName}` : t.id,
@@ -105,7 +151,7 @@ export const schoolRouter = router({
   }),
 
   getStudents: schoolProcedure.query(async ({ ctx }) => {
-    const schoolId = await getSchoolId(ctx.user.id);
+    const schoolId = await getSchoolId(ctx.user);
     if (!schoolId) return [];
     const sps = await db.select({
       userId: studentProfiles.userId,
@@ -116,10 +162,9 @@ export const schoolRouter = router({
     const found = await db.select({ id: users.id, firstName: users.firstName, lastName: users.lastName, email: users.email, createdAt: users.createdAt })
       .from(users).where(inArray(users.id, userIds));
 
-    const { assessmentInstances: ai } = await import("@/lib/db/schemas/assessments");
     const results = [];
     for (const u of found) {
-      const [assessCount] = await db.select({ count: sql<number>`count(*)` }).from(ai).where(eq(ai.userId, u.id));
+      const [assessCount] = await db.select({ count: sql<number>`count(*)` }).from(assessmentInstances).where(eq(assessmentInstances.userId, u.id));
       results.push({
         id: u.id,
         name: `${u.firstName} ${u.lastName}`,
@@ -132,7 +177,7 @@ export const schoolRouter = router({
   }),
 
   getReports: schoolProcedure.query(async ({ ctx }) => {
-    const schoolId = await getSchoolId(ctx.user.id);
+    const schoolId = await getSchoolId(ctx.user);
     if (!schoolId) return [];
     const sps = await db.select({ userId: studentProfiles.userId })
       .from(studentProfiles).where(eq(studentProfiles.currentSchoolId, schoolId));
@@ -145,19 +190,43 @@ export const schoolRouter = router({
     const reports = await db.select({
       id: basicReports.id,
       userId: basicReports.userId,
+      instanceId: basicReports.instanceId,
       overallScore: basicReports.overallScore,
       category: basicReports.category,
       createdAt: basicReports.createdAt,
     }).from(basicReports).where(inArray(basicReports.userId, userIds)).orderBy(desc(basicReports.createdAt)).limit(50);
-    return reports.map((r) => ({
-      id: r.id,
-      student: userMap[r.userId] || r.userId,
-      type: "Diagnostic",
-      basicScore: Number(r.overallScore),
-      hasDeep: false,
-      deepStatus: null,
-      date: r.createdAt?.toISOString?.()?.split("T")[0] || "",
-    }));
+
+    // Check for existing deep reports
+    const reportIds = reports.map((r) => r.id);
+    const deepReports = reportIds.length > 0
+      ? await db.select({ basicReportId: basicReports.id, status: basicReports.id })
+        .from(basicReports).where(inArray(basicReports.id, reportIds))
+      : [];
+
+    // Query deep report requests for these reports
+    const { reportRequests: rrTable } = await import("@/lib/db/schemas/reports");
+    const requestInstances = reports.map((r) => r.instanceId).filter(Boolean);
+    const existingRequests = requestInstances.length > 0
+      ? await db.select().from(rrTable)
+          .where(inArray(rrTable.instanceId, requestInstances))
+      : [];
+    const requestMap: Record<string, string> = {};
+    for (const req of existingRequests) { if (req.instanceId) requestMap[req.instanceId] = req.status; }
+
+    return reports.map((r) => {
+      const reqStatus = requestMap[r.instanceId || ""];
+      return {
+        id: r.id,
+        userId: r.userId,
+        instanceId: r.instanceId || "",
+        student: userMap[r.userId] || r.userId,
+        type: r.category || "Diagnostic",
+        basicScore: Number(r.overallScore),
+        hasDeep: !!reqStatus,
+        deepStatus: reqStatus || null,
+        date: r.createdAt?.toISOString?.()?.split("T")[0] || "",
+      };
+    });
   }),
 
   getStudentsBasicReport: schoolProcedure
@@ -225,7 +294,7 @@ export const schoolRouter = router({
       responses: z.array(z.object({ questionId: z.string(), optionId: z.string() })),
     }))
     .mutation(async ({ ctx, input }) => {
-      const schoolId = await getSchoolId(ctx.user.id);
+      const schoolId = await getSchoolId(ctx.user);
       if (!schoolId) throw new Error("School not found");
 
       const optIds = input.responses.map((r) => r.optionId);
@@ -297,7 +366,7 @@ export const schoolRouter = router({
   getSchoolAssessmentResults: schoolProcedure
     .input(z.object({ responseId: z.string().optional() }))
     .query(async ({ ctx, input }) => {
-      const schoolId = await getSchoolId(ctx.user.id);
+      const schoolId = await getSchoolId(ctx.user);
       if (!schoolId) return null;
 
       let response;
@@ -337,7 +406,7 @@ export const schoolRouter = router({
     }),
 
   getSchoolAssessmentHistory: schoolProcedure.query(async ({ ctx }) => {
-    const schoolId = await getSchoolId(ctx.user.id);
+    const schoolId = await getSchoolId(ctx.user);
     if (!schoolId) return [];
     const responses = await db.select().from(schoolAssessmentResponses)
       .where(eq(schoolAssessmentResponses.schoolId, schoolId))
@@ -355,7 +424,7 @@ export const schoolRouter = router({
   requestSchoolDeepReport: schoolProcedure
     .input(z.object({ responseId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const schoolId = await getSchoolId(ctx.user.id);
+      const schoolId = await getSchoolId(ctx.user);
       if (!schoolId) throw new Error("School not found");
 
       const [response] = await db.select().from(schoolAssessmentResponses)
@@ -430,7 +499,7 @@ export const schoolRouter = router({
   getSchoolDeepReport: schoolProcedure
     .input(z.object({ deepReportId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const schoolId = await getSchoolId(ctx.user.id);
+      const schoolId = await getSchoolId(ctx.user);
       if (!schoolId) return null;
 
       const [report] = await db.select().from(schoolAssessmentDeepReports)
@@ -457,11 +526,12 @@ export const schoolRouter = router({
     }),
 
   getSettings: schoolProcedure.query(async ({ ctx }) => {
-    const schoolId = await getSchoolId(ctx.user.id);
+    const schoolId = await getSchoolId(ctx.user);
     if (!schoolId) return null;
     const [school] = await db.select().from(schools).where(eq(schools.id, schoolId)).limit(1);
     if (!school) return null;
     return {
+      id: school.id,
       name: school.name,
       city: school.city,
       email: school.email || "",
@@ -474,10 +544,31 @@ export const schoolRouter = router({
     };
   }),
 
+  updateSettings: schoolProcedure
+    .input(z.object({
+      name: z.string().min(1).optional(),
+      email: z.string().email().optional(),
+      phone: z.string().optional(),
+      address: z.string().optional(),
+      city: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const schoolId = await getSchoolId(ctx.user);
+      if (!schoolId) return { success: false, message: "School not found" };
+      const updates: Record<string, any> = { updatedAt: new Date() };
+      if (input.name !== undefined) updates.name = input.name;
+      if (input.email !== undefined) updates.email = input.email;
+      if (input.phone !== undefined) updates.phone = input.phone;
+      if (input.address !== undefined) updates.address = input.address;
+      if (input.city !== undefined) updates.city = input.city;
+      await db.update(schools).set(updates).where(eq(schools.id, schoolId));
+      return { success: true, message: "School profile updated" };
+    }),
+
   inviteTeacher: schoolProcedure
     .input(z.object({ email: z.string().email(), firstName: z.string(), lastName: z.string(), subject: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const schoolId = await getSchoolId(ctx.user.id);
+      const schoolId = await getSchoolId(ctx.user);
       if (!schoolId) return { success: false, message: "School not found" };
 
       const [existing] = await db.select({ id: users.id }).from(users)
@@ -533,7 +624,7 @@ export const schoolRouter = router({
   registerStudent: schoolProcedure
     .input(z.object({ email: z.string().email(), firstName: z.string(), lastName: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const schoolId = await getSchoolId(ctx.user.id);
+      const schoolId = await getSchoolId(ctx.user);
       if (!schoolId) return { success: false, message: "School not found" };
 
       const [existing] = await db.select({ id: users.id }).from(users)
@@ -600,7 +691,7 @@ export const schoolRouter = router({
       })).min(1).max(200),
     }))
     .mutation(async ({ ctx, input }) => {
-      const schoolId = await getSchoolId(ctx.user.id);
+      const schoolId = await getSchoolId(ctx.user);
       if (!schoolId) return { success: false, message: "School not found", imported: 0, failed: 0 };
 
       let imported = 0;
@@ -671,7 +762,7 @@ export const schoolRouter = router({
     }),
 
   getClassroomAnalytics: schoolProcedure.query(async ({ ctx }) => {
-    const schoolId = await getSchoolId(ctx.user.id);
+    const schoolId = await getSchoolId(ctx.user);
     if (!schoolId) return null;
 
     const sps = await db.select({ userId: studentProfiles.userId })
@@ -679,9 +770,8 @@ export const schoolRouter = router({
     const userIds = sps.map((s) => s.userId);
     if (userIds.length === 0) return { students: 0, avgScore: 0, subjectPerformance: [], topWeaknesses: [], topStrengths: [] };
 
-    const { basicReports: br } = await import("@/lib/db/schemas/reports");
-    const reports = userIds.length > 0 ? await db.select().from(br)
-      .where(inArray(br.userId, userIds)).orderBy(desc(br.createdAt)) : [];
+    const reports = userIds.length > 0 ? await db.select().from(basicReports)
+      .where(inArray(basicReports.userId, userIds)).orderBy(desc(basicReports.createdAt)) : [];
 
     const latestPerStudent = new Map<string, typeof reports[0]>();
     for (const r of reports) {

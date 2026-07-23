@@ -1,18 +1,24 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Check, Loader2, Coins, Landmark, Sparkles, Ban } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 
 export default function PricingPage() {
+  const { data: session } = useSession();
+  const role = (session?.user as any)?.role as string | undefined;
+  const dashboardHref = role ? `/${role}` : "/student";
+
   const [loading, setLoading] = useState<string | null>(null);
   const [customCoins, setCustomCoins] = useState(5);
   const [senderName, setSenderName] = useState("");
   const [bankTransferSent, setBankTransferSent] = useState(false);
   const [btLoading, setBtLoading] = useState(false);
   const [btError, setBtError] = useState("");
+  const [btResultCoins, setBtResultCoins] = useState(0);
 
   const { data: pricing } = trpc.public.getPricingConfig.useQuery();
   const { data: bankDetails } = trpc.public.getBankDetails.useQuery();
@@ -42,18 +48,19 @@ export default function PricingPage() {
     setLoading(null);
   };
 
-  const handleBankTransfer = async () => {
+  const handleBankTransfer = async (plan: "custom" | "bundle") => {
     if (!senderName.trim()) { setBtError("Please enter the sender's name"); return; }
     setBtLoading(true); setBtError("");
     try {
-      const amount = customCoins * pricePerCoin;
+      const amount = plan === "bundle" ? bundle20Price : customCoins * pricePerCoin;
+      const coins = plan === "bundle" ? bundle20Coins : customCoins;
       const res = await fetch("/api/payments/bank-transfer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount, coinsRequested: customCoins, senderName: senderName.trim() }),
+        body: JSON.stringify({ amount, coinsRequested: coins, senderName: senderName.trim() }),
       });
       const data = await res.json();
-      if (data.success) setBankTransferSent(true);
+      if (data.success) { setBtResultCoins(coins); setBankTransferSent(true); }
       else setBtError(data.error || "Failed to submit");
     } catch { setBtError("Network error"); }
     setBtLoading(false);
@@ -77,8 +84,8 @@ export default function PricingPage() {
             Please contact your school administrator if you need more credits.
           </p>
           <div className="mt-6 flex gap-3">
-            <Link href="/student"><Button variant="outline" className="flex-1">Go to Dashboard</Button></Link>
-            <Link href="/student/reports"><Button className="flex-1">View Reports</Button></Link>
+            <Link href={dashboardHref}><Button variant="outline" className="flex-1">Go to Dashboard</Button></Link>
+            <Link href="/parent/reports"><Button className="flex-1">View Reports</Button></Link>
           </div>
         </div>
       </main>
@@ -94,12 +101,12 @@ export default function PricingPage() {
           </div>
           <h1 className="text-xl font-bold text-neutral-900 dark:text-white">Transfer Submitted!</h1>
           <p className="mt-3 text-sm text-neutral-500">
-            Your bank transfer request for <strong>{customCoins} coins</strong> has been submitted.
+            Your bank transfer request for <strong>{btResultCoins} coins</strong> has been submitted.
             An admin will confirm your payment and credit your account shortly.
           </p>
           <div className="mt-6 flex gap-3">
             <Button variant="outline" className="flex-1" onClick={() => { setBankTransferSent(false); setSenderName(""); }}>Submit Another</Button>
-            <Link href="/student"><Button className="flex-1">Go to Dashboard</Button></Link>
+            <Link href={dashboardHref}><Button className="flex-1">Go to Dashboard</Button></Link>
           </div>
         </div>
       </main>
@@ -205,7 +212,7 @@ export default function PricingPage() {
                   placeholder="Enter the name you sent from" />
               </div>
               {btError && <p className="text-xs text-error">{btError}</p>}
-              <Button variant="outline" className="w-full gap-2" onClick={handleBankTransfer} disabled={btLoading}>
+              <Button variant="outline" className="w-full gap-2" onClick={() => handleBankTransfer("custom")} disabled={btLoading}>
                 {btLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Landmark className="h-4 w-4" />}
                 {btLoading ? "Submitting..." : "I've Sent the Transfer"}
               </Button>
@@ -297,7 +304,7 @@ export default function PricingPage() {
                   placeholder="Enter the name you sent from" />
               </div>
               {btError && <p className="text-xs text-error">{btError}</p>}
-              <Button variant="outline" className="w-full gap-2" onClick={handleBankTransfer} disabled={btLoading}>
+              <Button variant="outline" className="w-full gap-2" onClick={() => handleBankTransfer("bundle")} disabled={btLoading}>
                 {btLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Landmark className="h-4 w-4" />}
                 {btLoading ? "Submitting..." : "I've Sent the Transfer"}
               </Button>
