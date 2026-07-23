@@ -1,7 +1,8 @@
 import { z } from "zod";
-import { publicProcedure, router } from "../server";
+import { publicProcedure, protectedProcedure, router } from "../server";
 import { db } from "@/lib/db";
 import { systemConfig } from "@/lib/db/schemas/system";
+import { bankTransfers } from "@/lib/db/schemas/payments";
 import { eq } from "drizzle-orm";
 
 export const publicRouter = router({
@@ -46,4 +47,31 @@ export const publicRouter = router({
       bankName: cfg.bank_name || "Palmpay",
     };
   }),
+
+  submitBankTransfer: protectedProcedure
+    .input(z.object({
+      amount: z.number().positive(),
+      coinsRequested: z.number().int().positive(),
+      senderName: z.string().min(1),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const [transfer] = await db.insert(bankTransfers).values({
+          userId: ctx.user.id,
+          amount: String(input.amount),
+          coinsRequested: input.coinsRequested,
+          senderName: input.senderName.trim(),
+          status: "pending",
+        }).returning();
+
+        return {
+          success: true,
+          transferId: transfer.id,
+          message: "Bank transfer request submitted. Awaiting admin confirmation.",
+        };
+      } catch (error) {
+        console.error("Bank transfer TRPC error:", error);
+        throw new Error("Failed to submit bank transfer. Please ensure your account is active and try again.");
+      }
+    }),
 });

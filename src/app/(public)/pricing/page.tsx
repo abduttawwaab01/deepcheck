@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -48,21 +48,20 @@ export default function PricingPage() {
     setLoading(null);
   };
 
+  const submitBT = trpc.public.submitBankTransfer.useMutation();
+
   const handleBankTransfer = async (plan: "custom" | "bundle") => {
     if (!senderName.trim()) { setBtError("Please enter the sender's name"); return; }
     setBtLoading(true); setBtError("");
     try {
       const amount = plan === "bundle" ? bundle20Price : customCoins * pricePerCoin;
       const coins = plan === "bundle" ? bundle20Coins : customCoins;
-      const res = await fetch("/api/payments/bank-transfer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount, coinsRequested: coins, senderName: senderName.trim() }),
+      const data = await submitBT.mutateAsync({
+        amount, coinsRequested: coins, senderName: senderName.trim(),
       });
-      const data = await res.json();
       if (data.success) { setBtResultCoins(coins); setBankTransferSent(true); }
-      else setBtError(data.error || "Failed to submit");
-    } catch { setBtError("Network error"); }
+      else setBtError(data.message || "Failed to submit");
+    } catch { setBtError("Failed to submit bank transfer. Please ensure your account is active and try again."); }
     setBtLoading(false);
   };
 
