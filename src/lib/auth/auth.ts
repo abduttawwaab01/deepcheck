@@ -86,6 +86,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               .select({ roleName: roles.name, schoolId: users.schoolId })
               .from(userRoles)
               .innerJoin(roles, eq(userRoles.roleId, roles.id))
+              .innerJoin(users, eq(userRoles.userId, users.id))
               .where(eq(userRoles.userId, token.id as string))
               .limit(1),
             10000,
