@@ -1,9 +1,7 @@
+"use client";
+
 import Link from "next/link";
 import { WifiOff, RefreshCw, ArrowLeft } from "lucide-react";
-
-export const metadata = {
-  title: "You're Offline — Deep Check",
-};
 
 export default function OfflinePage() {
   return (

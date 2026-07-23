@@ -1,12 +1,22 @@
 "use client";
 
+import { useState } from "react";
 import { trpc } from "@/lib/trpc/client";
-import { Users, GraduationCap, ClipboardCheck, Sparkles, Award, CheckCircle2, Clock } from "lucide-react";
+import { Users, GraduationCap, ClipboardCheck, Sparkles, Award, CheckCircle2, Clock, Building2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function SchoolDashboardPage() {
+  const utils = trpc.useUtils();
   const { data, isLoading } = trpc.school.getDashboard.useQuery();
+  const createSchool = trpc.school.createSchool.useMutation({
+    onSuccess: () => { utils.school.getDashboard.invalidate(); utils.school.getSettings.invalidate(); },
+  });
+
+  const [showCreate, setShowCreate] = useState(false);
+  const [form, setForm] = useState({ name: "", city: "", state: "", email: "", phone: "", schoolType: "" });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   if (isLoading) return (
     <div className="animate-fade-in space-y-6">
@@ -17,7 +27,108 @@ export default function SchoolDashboardPage() {
     </div>
   );
 
-  if (!data) return <div className="pt-10 text-center text-neutral-500">Failed to load dashboard</div>;
+  if (!data && !showCreate) return (
+    <div className="animate-fade-in flex flex-col items-center justify-center py-20 text-center">
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-50 dark:bg-primary-950">
+        <Building2 className="h-8 w-8 text-primary-600" />
+      </div>
+      <h2 className="mt-4 text-lg font-bold text-neutral-900 dark:text-white">No School Registered</h2>
+      <p className="mt-2 max-w-sm text-sm text-neutral-500">
+        Create your school to start managing teachers, students, and assessments.
+      </p>
+      <Button className="mt-6" onClick={() => setShowCreate(true)}>
+        <Building2 className="mr-1.5 h-4 w-4" /> Create School
+      </Button>
+    </div>
+  );
+
+  if (showCreate) return (
+    <div className="animate-fade-in mx-auto max-w-lg space-y-6">
+      <div>
+        <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl dark:text-white">Create Your School</h1>
+        <p className="mt-1 text-sm text-neutral-500">Set up your school profile to get started.</p>
+      </div>
+
+      {error && (
+        <div className="flex items-center gap-2 rounded-xl border border-error/20 bg-error/5 p-3 text-sm text-error">
+          <AlertCircle className="h-4 w-4 shrink-0" /> {error}
+        </div>
+      )}
+      {success && (
+        <div className="flex items-center gap-2 rounded-xl border border-success/20 bg-success/5 p-3 text-sm text-success">
+          <CheckCircle2 className="h-4 w-4 shrink-0" /> {success}
+        </div>
+      )}
+
+      <div className="glass rounded-2xl p-5">
+        <div className="space-y-4">
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">School Name *</label>
+            <div className="relative">
+              <Building2 className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+              <input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="e.g. Lagos Grammar School"
+                className="min-h-[44px] w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white" />
+            </div>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">City</label>
+              <input value={form.city} onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))} placeholder="Lagos"
+                className="min-h-[44px] w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white" />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">State</label>
+              <input value={form.state} onChange={(e) => setForm((f) => ({ ...f, state: e.target.value }))} placeholder="Lagos State"
+                className="min-h-[44px] w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white" />
+            </div>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">Email</label>
+              <input type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} placeholder="admin@school.com"
+                className="min-h-[44px] w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white" />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">Phone</label>
+              <input value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} placeholder="08012345678"
+                className="min-h-[44px] w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white" />
+            </div>
+          </div>
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-neutral-600 dark:text-neutral-400">School Type</label>
+            <select value={form.schoolType} onChange={(e) => setForm((f) => ({ ...f, schoolType: e.target.value }))}
+              className="min-h-[44px] w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-white">
+              <option value="">Select type</option>
+              <option value="primary">Primary</option>
+              <option value="secondary">Secondary</option>
+              <option value="tertiary">Tertiary</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div className="mt-5 flex gap-3">
+          <Button variant="outline" className="flex-1" onClick={() => setShowCreate(false)}>Cancel</Button>
+          <Button className="flex-1" loading={createSchool.isPending} onClick={async () => {
+            setError(""); setSuccess("");
+            if (!form.name.trim()) { setError("School name is required"); return; }
+            try {
+              const result = await createSchool.mutateAsync(form);
+              if (result.success) {
+                setSuccess(result.message);
+                setTimeout(() => setShowCreate(false), 1500);
+              } else {
+                setError(result.message || "Failed to create school");
+              }
+            } catch (e: any) {
+              setError(e?.message || "An error occurred");
+            }
+          }}>Create School</Button>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (!data) return null;
 
   const stats = [
     { label: "Students", value: data.studentCount, icon: Users, color: "text-primary-600", bg: "bg-primary-50 dark:bg-primary-950" },

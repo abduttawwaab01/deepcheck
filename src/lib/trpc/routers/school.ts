@@ -14,6 +14,8 @@ import bcrypt from "bcryptjs";
 
 async function getSchoolId(ctxUser: { id: string; schoolId?: string | null }): Promise<string | null> {
   if (ctxUser.schoolId) return ctxUser.schoolId;
+  const [u] = await db.select({ schoolId: users.schoolId }).from(users).where(eq(users.id, ctxUser.id)).limit(1);
+  if (u?.schoolId) return u.schoolId;
   const tp = await db.select({ schoolId: teacherProfiles.schoolId })
     .from(teacherProfiles).where(eq(teacherProfiles.userId, ctxUser.id)).limit(1);
   return tp[0]?.schoolId || null;
@@ -817,4 +819,37 @@ export const schoolRouter = router({
       totalAssessments: reports.length,
     };
   }),
+
+  createSchool: schoolProcedure
+    .input(z.object({
+      name: z.string().min(2),
+      city: z.string().optional(),
+      state: z.string().optional(),
+      email: z.string().email().optional(),
+      phone: z.string().optional(),
+      schoolType: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const slug = input.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+      const [existing] = await db.select({ id: schools.id }).from(schools)
+        .where(eq(schools.slug, slug)).limit(1);
+      if (existing) return { success: false, message: "A school with a similar name already exists" };
+
+      const [school] = await db.insert(schools).values({
+        name: input.name,
+        slug,
+        email: input.email || null,
+        phone: input.phone || null,
+        city: input.city || null,
+        state: input.state || null,
+        schoolType: input.schoolType || null,
+        verificationStatus: "pending",
+        isActive: true,
+      }).returning();
+
+      await db.update(users).set({ schoolId: school.id }).where(eq(users.id, ctx.user.id));
+
+      return { success: true, schoolId: school.id, message: "School created successfully" };
+    }),
 });

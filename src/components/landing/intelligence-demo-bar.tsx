@@ -5,7 +5,11 @@ import { Brain, Search, Target, Zap, Activity, Sparkles } from "lucide-react";
 
 export function IntelligenceDemoBar() {
   const [data, setData] = useState<any>(null);
-  useEffect(() => { fetch("/api/landing-stats").then(r => r.json()).then(setData).catch(() => {}); }, []);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/landing-stats", { signal: controller.signal }).then(r => r.json()).then(setData).catch(() => {});
+    return () => controller.abort();
+  }, []);
 
   const gapCount = data?.totalQuestions || 0;
 

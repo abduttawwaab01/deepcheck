@@ -6,8 +6,10 @@ import { questionBanks, questionBankConfigs } from "@/lib/db/schemas/question-ba
 import { questions, questionOptions, users, userRoles, roles } from "@/lib/db/schemas";
 import { paymentTransactions, subscriptionCredits, subscriptionPlans, bankTransfers } from "@/lib/db/schemas/payments";
 import { reportRequests, basicReports } from "@/lib/db/schemas/reports";
-import { systemConfig } from "@/lib/db/schemas/system";
+import { systemConfig, auditLogs } from "@/lib/db/schemas/system";
 import { assessmentInstances } from "@/lib/db/schemas/assessments";
+import { schoolAssessmentQuestions, schoolAssessmentOptions } from "@/lib/db/schemas/school-assessments";
+import { parentAssessmentQuestions, parentAssessmentOptions } from "@/lib/db/schemas/parent-assessments";
 import { eq, sql, like, and, desc, inArray } from "drizzle-orm";
 
 export const adminRouter = router({
@@ -21,6 +23,8 @@ export const adminRouter = router({
     const [configCount] = await db.select({ count: sql<number>`count(*)` }).from(questionBankConfigs);
     const [revenue] = await db.select({ total: sql<number>`coalesce(sum(${paymentTransactions.amount}), 0)` })
       .from(paymentTransactions).where(eq(paymentTransactions.status, "success"));
+    const [schoolAssessCount] = await db.select({ count: sql<number>`count(*)` }).from(schoolAssessmentQuestions).where(eq(schoolAssessmentQuestions.isActive, true));
+    const [parentAssessCount] = await db.select({ count: sql<number>`count(*)` }).from(parentAssessmentQuestions).where(eq(parentAssessmentQuestions.isActive, true));
 
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -36,6 +40,8 @@ export const adminRouter = router({
       questionCount: questionCount?.count || 0,
       bankCount: bankCount?.count || 0,
       sectionCount: configCount?.count || 0,
+      schoolAssessmentCount: schoolAssessCount?.count || 0,
+      parentAssessmentCount: parentAssessCount?.count || 0,
       recentUsers: recentUsers?.count || 0,
       userGrowth: [],
     };
@@ -501,5 +507,470 @@ export const adminRouter = router({
         adminNote: input.note || "Rejected by admin",
       }).where(eq(bankTransfers.id, input.transferId));
       return { success: true };
+    }),
+
+  // ─── SCHOOL ASSESSMENT QUESTIONS ─────────────────────────────────
+  getSchoolQuestions: adminProcedure
+    .input(z.object({
+      search: z.string().optional(),
+      domain: z.string().optional(),
+      page: z.number().default(1),
+      pageSize: z.number().default(25),
+    }))
+    .query(async ({ input }) => {
+      const conditions: any[] = [eq(schoolAssessmentQuestions.isActive, true)];
+      if (input.search) conditions.push(like(schoolAssessmentQuestions.questionText, `%${input.search}%`));
+      if (input.domain && input.domain !== "all") conditions.push(eq(schoolAssessmentQuestions.domain, input.domain));
+      const offset = (input.page - 1) * input.pageSize;
+      const [items, totalResult] = await Promise.all([
+        db.select().from(schoolAssessmentQuestions).where(and(...conditions)).orderBy(schoolAssessmentQuestions.displayOrder).limit(input.pageSize).offset(offset),
+        db.select({ count: sql<number>`count(*)` }).from(schoolAssessmentQuestions).where(and(...conditions)),
+      ]);
+      const qIds = items.map((q) => q.id);
+      const opts = qIds.length > 0 ? await db.select().from(schoolAssessmentOptions).where(inArray(schoolAssessmentOptions.questionId, qIds)) : [];
+      const optsByQ: Record<string, typeof opts> = {};
+      for (const o of opts) {
+        if (!optsByQ[o.questionId]) optsByQ[o.questionId] = [];
+        optsByQ[o.questionId].push(o);
+      }
+      return {
+        items: items.map((q) => ({ ...q, options: optsByQ[q.id] || [] })),
+        total: totalResult[0]?.count || 0,
+        page: input.page,
+        pageSize: input.pageSize,
+      };
+    }),
+
+  getSchoolQuestionDomains: adminProcedure.query(async () => {
+    const rows = await db.select({ domain: schoolAssessmentQuestions.domain })
+      .from(schoolAssessmentQuestions)
+      .where(eq(schoolAssessmentQuestions.isActive, true))
+      .groupBy(schoolAssessmentQuestions.domain);
+    return rows.map((r) => r.domain);
+  }),
+
+  createSchoolQuestion: adminProcedure
+    .input(z.object({
+      code: z.string().min(1),
+      domain: z.string().min(1),
+      dimension: z.string().min(1),
+      questionText: z.string().min(1),
+      options: z.array(z.object({
+        optionText: z.string().min(1),
+        score: z.number().min(1).max(5),
+        optionOrder: z.number(),
+      })).min(2).max(5),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const { options: opts, ...rest } = input;
+      const maxOrder = await db.select({ max: sql<number>`coalesce(max(${schoolAssessmentQuestions.displayOrder}), 0)` })
+        .from(schoolAssessmentQuestions);
+      return await db.transaction(async (tx) => {
+        const [q] = await tx.insert(schoolAssessmentQuestions).values({
+          ...rest,
+          displayOrder: (maxOrder[0]?.max || 0) + 1,
+          isActive: true,
+        }).returning();
+        await tx.insert(schoolAssessmentOptions).values(
+          opts.map((o) => ({ questionId: q.id, optionText: o.optionText, score: o.score, optionOrder: o.optionOrder })),
+        );
+        await tx.insert(auditLogs).values({
+          userId: ctx.user.id,
+          action: "create_school_question",
+          entity: "school_assessment_question",
+          entityId: q.id,
+          metadata: { domain: rest.domain, questionText: rest.questionText.substring(0, 100) },
+        });
+        return q;
+      });
+    }),
+
+  updateSchoolQuestion: adminProcedure
+    .input(z.object({
+      id: z.string(),
+      code: z.string().optional(),
+      domain: z.string().optional(),
+      dimension: z.string().optional(),
+      questionText: z.string().optional(),
+      options: z.array(z.object({
+        id: z.string().optional(),
+        optionText: z.string(),
+        score: z.number().min(1).max(5),
+        optionOrder: z.number(),
+      })).optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const { id, options: opts, ...rest } = input;
+      return await db.transaction(async (tx) => {
+        const toUpdate: any = { ...rest };
+        Object.keys(toUpdate).forEach((k) => { if (toUpdate[k] === undefined) delete toUpdate[k]; });
+        if (Object.keys(toUpdate).length > 0) {
+          await tx.update(schoolAssessmentQuestions).set(toUpdate).where(eq(schoolAssessmentQuestions.id, id));
+        }
+        if (opts) {
+          await tx.delete(schoolAssessmentOptions).where(eq(schoolAssessmentOptions.questionId, id));
+          if (opts.length > 0) {
+            await tx.insert(schoolAssessmentOptions).values(
+              opts.map((o) => ({ questionId: id, optionText: o.optionText, score: o.score, optionOrder: o.optionOrder })),
+            );
+          }
+        }
+        await tx.insert(auditLogs).values({
+          userId: ctx.user.id,
+          action: "update_school_question",
+          entity: "school_assessment_question",
+          entityId: id,
+          metadata: { updatedFields: Object.keys(toUpdate), optionsReplaced: !!opts },
+        });
+        return { success: true };
+      });
+    }),
+
+  deleteSchoolQuestion: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      await db.update(schoolAssessmentQuestions).set({ isActive: false }).where(eq(schoolAssessmentQuestions.id, input.id));
+      await db.insert(auditLogs).values({
+        userId: ctx.user.id,
+        action: "delete_school_question",
+        entity: "school_assessment_question",
+        entityId: input.id,
+        metadata: { softDelete: true },
+      });
+      return { success: true };
+    }),
+
+  // ─── PARENT ASSESSMENT QUESTIONS ─────────────────────────────────
+  getParentQuestions: adminProcedure
+    .input(z.object({
+      search: z.string().optional(),
+      domain: z.string().optional(),
+      page: z.number().default(1),
+      pageSize: z.number().default(25),
+    }))
+    .query(async ({ input }) => {
+      const conditions: any[] = [eq(parentAssessmentQuestions.isActive, true)];
+      if (input.search) conditions.push(like(parentAssessmentQuestions.questionText, `%${input.search}%`));
+      if (input.domain && input.domain !== "all") conditions.push(eq(parentAssessmentQuestions.domain, input.domain));
+      const offset = (input.page - 1) * input.pageSize;
+      const [items, totalResult] = await Promise.all([
+        db.select().from(parentAssessmentQuestions).where(and(...conditions)).orderBy(parentAssessmentQuestions.displayOrder).limit(input.pageSize).offset(offset),
+        db.select({ count: sql<number>`count(*)` }).from(parentAssessmentQuestions).where(and(...conditions)),
+      ]);
+      const qIds = items.map((q) => q.id);
+      const opts = qIds.length > 0 ? await db.select().from(parentAssessmentOptions).where(inArray(parentAssessmentOptions.questionId, qIds)) : [];
+      const optsByQ: Record<string, typeof opts> = {};
+      for (const o of opts) {
+        if (!optsByQ[o.questionId]) optsByQ[o.questionId] = [];
+        optsByQ[o.questionId].push(o);
+      }
+      return {
+        items: items.map((q) => ({ ...q, options: optsByQ[q.id] || [] })),
+        total: totalResult[0]?.count || 0,
+        page: input.page,
+        pageSize: input.pageSize,
+      };
+    }),
+
+  getParentQuestionDomains: adminProcedure.query(async () => {
+    const rows = await db.select({ domain: parentAssessmentQuestions.domain })
+      .from(parentAssessmentQuestions)
+      .where(eq(parentAssessmentQuestions.isActive, true))
+      .groupBy(parentAssessmentQuestions.domain);
+    return rows.map((r) => r.domain);
+  }),
+
+  createParentQuestion: adminProcedure
+    .input(z.object({
+      code: z.string().min(1),
+      domain: z.string().min(1),
+      dimension: z.string().min(1),
+      questionText: z.string().min(1),
+      options: z.array(z.object({
+        optionText: z.string().min(1),
+        score: z.number().min(1).max(5),
+        optionOrder: z.number(),
+      })).min(2).max(5),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const { options: opts, ...rest } = input;
+      const maxOrder = await db.select({ max: sql<number>`coalesce(max(${parentAssessmentQuestions.displayOrder}), 0)` })
+        .from(parentAssessmentQuestions);
+      return await db.transaction(async (tx) => {
+        const [q] = await tx.insert(parentAssessmentQuestions).values({
+          ...rest,
+          displayOrder: (maxOrder[0]?.max || 0) + 1,
+          isActive: true,
+        }).returning();
+        await tx.insert(parentAssessmentOptions).values(
+          opts.map((o) => ({ questionId: q.id, optionText: o.optionText, score: o.score, optionOrder: o.optionOrder })),
+        );
+        await tx.insert(auditLogs).values({
+          userId: ctx.user.id,
+          action: "create_parent_question",
+          entity: "parent_assessment_question",
+          entityId: q.id,
+          metadata: { domain: rest.domain, questionText: rest.questionText.substring(0, 100) },
+        });
+        return q;
+      });
+    }),
+
+  updateParentQuestion: adminProcedure
+    .input(z.object({
+      id: z.string(),
+      code: z.string().optional(),
+      domain: z.string().optional(),
+      dimension: z.string().optional(),
+      questionText: z.string().optional(),
+      options: z.array(z.object({
+        id: z.string().optional(),
+        optionText: z.string(),
+        score: z.number().min(1).max(5),
+        optionOrder: z.number(),
+      })).optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const { id, options: opts, ...rest } = input;
+      return await db.transaction(async (tx) => {
+        const toUpdate: any = { ...rest };
+        Object.keys(toUpdate).forEach((k) => { if (toUpdate[k] === undefined) delete toUpdate[k]; });
+        if (Object.keys(toUpdate).length > 0) {
+          await tx.update(parentAssessmentQuestions).set(toUpdate).where(eq(parentAssessmentQuestions.id, id));
+        }
+        if (opts) {
+          await tx.delete(parentAssessmentOptions).where(eq(parentAssessmentOptions.questionId, id));
+          if (opts.length > 0) {
+            await tx.insert(parentAssessmentOptions).values(
+              opts.map((o) => ({ questionId: id, optionText: o.optionText, score: o.score, optionOrder: o.optionOrder })),
+            );
+          }
+        }
+        await tx.insert(auditLogs).values({
+          userId: ctx.user.id,
+          action: "update_parent_question",
+          entity: "parent_assessment_question",
+          entityId: id,
+          metadata: { updatedFields: Object.keys(toUpdate), optionsReplaced: !!opts },
+        });
+        return { success: true };
+      });
+    }),
+
+  deleteParentQuestion: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      await db.update(parentAssessmentQuestions).set({ isActive: false }).where(eq(parentAssessmentQuestions.id, input.id));
+      await db.insert(auditLogs).values({
+        userId: ctx.user.id,
+        action: "delete_parent_question",
+        entity: "parent_assessment_question",
+        entityId: input.id,
+        metadata: { softDelete: true },
+      });
+      return { success: true };
+    }),
+
+  // Bulk import school assessment questions
+  bulkImportSchoolQuestions: adminProcedure
+    .input(z.object({
+      questions: z.array(z.object({
+        domain: z.string().min(1),
+        subDomain: z.string().optional(),
+        questionText: z.string().min(1),
+        displayOrder: z.number().optional(),
+        difficulty: z.enum(["easy", "medium", "hard"]).default("medium"),
+        options: z.array(z.object({
+          optionText: z.string().min(1),
+          score: z.number().min(1).max(5),
+          optionOrder: z.number(),
+        })).min(2).max(7),
+      })).min(1).max(100),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      let created = 0;
+      let failed = 0;
+      const results: { domain: string; status: string }[] = [];
+
+      for (const q of input.questions) {
+        try {
+          const [newQ] = await db.insert(schoolAssessmentQuestions).values({
+            domain: q.domain,
+            dimension: q.subDomain || "",
+            questionText: q.questionText,
+            displayOrder: q.displayOrder ?? 0,
+            isActive: true,
+          }).returning();
+
+          if (q.options.length > 0) {
+            await db.insert(schoolAssessmentOptions).values(
+              q.options.map((o) => ({ questionId: newQ.id, optionText: o.optionText, score: o.score, optionOrder: o.optionOrder })),
+            );
+          }
+
+          await db.insert(auditLogs).values({
+            userId: ctx.user.id,
+            action: "bulk_import_school_question",
+            entity: "school_assessment_question",
+            entityId: newQ.id,
+            metadata: { domain: q.domain, questionText: q.questionText.substring(0, 100) },
+          });
+
+          results.push({ domain: q.domain, status: "created" });
+          created++;
+        } catch {
+          results.push({ domain: q.domain, status: "error" });
+          failed++;
+        }
+      }
+
+      return { success: true, created, failed, results };
+    }),
+
+  // Bulk import parent assessment questions
+  bulkImportParentQuestions: adminProcedure
+    .input(z.object({
+      questions: z.array(z.object({
+        domain: z.string().min(1),
+        subDomain: z.string().optional(),
+        questionText: z.string().min(1),
+        displayOrder: z.number().optional(),
+        difficulty: z.enum(["easy", "medium", "hard"]).default("medium"),
+        options: z.array(z.object({
+          optionText: z.string().min(1),
+          score: z.number().min(1).max(5),
+          optionOrder: z.number(),
+        })).min(2).max(7),
+      })).min(1).max(100),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      let created = 0;
+      let failed = 0;
+      const results: { domain: string; status: string }[] = [];
+
+      for (const q of input.questions) {
+        try {
+          const [newQ] = await db.insert(parentAssessmentQuestions).values({
+            domain: q.domain,
+            dimension: q.subDomain || "",
+            questionText: q.questionText,
+            displayOrder: q.displayOrder ?? 0,
+            code: `parent-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+            isActive: true,
+          }).returning();
+
+          if (q.options.length > 0) {
+            await db.insert(parentAssessmentOptions).values(
+              q.options.map((o) => ({ questionId: newQ.id, optionText: o.optionText, score: o.score, optionOrder: o.optionOrder })),
+            );
+          }
+
+          await db.insert(auditLogs).values({
+            userId: ctx.user.id,
+            action: "bulk_import_parent_question",
+            entity: "parent_assessment_question",
+            entityId: newQ.id,
+            metadata: { domain: q.domain, questionText: q.questionText.substring(0, 100) },
+          });
+
+          results.push({ domain: q.domain, status: "created" });
+          created++;
+        } catch {
+          results.push({ domain: q.domain, status: "error" });
+          failed++;
+        }
+      }
+
+      return { success: true, created, failed, results };
+    }),
+
+  // Export school assessment questions
+  exportSchoolQuestions: adminProcedure
+    .input(z.object({ domain: z.string().optional() }))
+    .query(async ({ input }) => {
+      const conditions = [eq(schoolAssessmentQuestions.isActive, true)];
+      if (input.domain) conditions.push(eq(schoolAssessmentQuestions.domain, input.domain));
+
+      const rows = await db.select({
+        id: schoolAssessmentQuestions.id,
+        domain: schoolAssessmentQuestions.domain,
+        dimension: schoolAssessmentQuestions.dimension,
+        questionText: schoolAssessmentQuestions.questionText,
+        displayOrder: schoolAssessmentQuestions.displayOrder,
+      }).from(schoolAssessmentQuestions).where(and(...conditions));
+
+      const questionsWithOptions = await Promise.all(
+        rows.map(async (q) => {
+          const opts = await db.select().from(schoolAssessmentOptions)
+            .where(eq(schoolAssessmentOptions.questionId, q.id))
+            .orderBy(schoolAssessmentOptions.optionOrder);
+          return { ...q, options: opts };
+        }),
+      );
+
+      return questionsWithOptions;
+    }),
+
+  // Export parent assessment questions
+  exportParentQuestions: adminProcedure
+    .input(z.object({ domain: z.string().optional() }))
+    .query(async ({ input }) => {
+      const conditions = [eq(parentAssessmentQuestions.isActive, true)];
+      if (input.domain) conditions.push(eq(parentAssessmentQuestions.domain, input.domain));
+
+      const rows = await db.select({
+        id: parentAssessmentQuestions.id,
+        domain: parentAssessmentQuestions.domain,
+        dimension: parentAssessmentQuestions.dimension,
+        questionText: parentAssessmentQuestions.questionText,
+        displayOrder: parentAssessmentQuestions.displayOrder,
+      }).from(parentAssessmentQuestions).where(and(...conditions));
+
+      const questionsWithOptions = await Promise.all(
+        rows.map(async (q) => {
+          const opts = await db.select().from(parentAssessmentOptions)
+            .where(eq(parentAssessmentOptions.questionId, q.id))
+            .orderBy(parentAssessmentOptions.optionOrder);
+          return { ...q, options: opts };
+        }),
+      );
+
+      return questionsWithOptions;
+    }),
+
+  // Audit logs
+  getAuditLogs: adminProcedure
+    .input(z.object({
+      entity: z.string().optional(),
+      userId: z.string().optional(),
+      limit: z.number().min(1).max(100).default(50),
+      offset: z.number().min(0).default(0),
+    }))
+    .query(async ({ input }) => {
+      const conditions = [];
+      if (input.entity) conditions.push(eq(auditLogs.entity, input.entity));
+      if (input.userId) conditions.push(eq(auditLogs.userId, input.userId));
+
+      const logs = await db.select({
+        id: auditLogs.id,
+        userId: auditLogs.userId,
+        action: auditLogs.action,
+        entity: auditLogs.entity,
+        entityId: auditLogs.entityId,
+        metadata: auditLogs.metadata,
+        createdAt: auditLogs.createdAt,
+        userName: sql<string>`CONCAT(${users.firstName}, ' ', ${users.lastName})`,
+      }).from(auditLogs)
+        .leftJoin(users, eq(auditLogs.userId, users.id))
+        .where(conditions.length > 0 ? and(...conditions) : undefined)
+        .orderBy(desc(auditLogs.createdAt))
+        .limit(input.limit)
+        .offset(input.offset);
+
+      const [countResult] = await db.select({ count: sql<number>`COUNT(*)` })
+        .from(auditLogs)
+        .where(conditions.length > 0 ? and(...conditions) : undefined);
+
+      return { logs, total: countResult?.count ?? 0 };
     }),
 });

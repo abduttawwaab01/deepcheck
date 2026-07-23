@@ -15,7 +15,9 @@ export function HeroSection() {
   const [glowPos, setGlowPos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    fetch("/api/landing-stats").then(r => r.json()).then(setData).catch(() => {});
+    const controller = new AbortController();
+    fetch("/api/landing-stats", { signal: controller.signal }).then(r => r.json()).then(setData).catch(() => {});
+    return () => controller.abort();
   }, []);
 
   useEffect(() => {

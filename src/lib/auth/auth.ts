@@ -4,7 +4,8 @@ import Credentials from "next-auth/providers/credentials";
 import { db } from "@/lib/db";
 import { users, roles, userRoles } from "@/lib/db/schemas";
 import { eq } from "drizzle-orm";
-import bcrypt from "bcryptjs";
+import { SignJWT } from "jose/jwt/sign";
+import { jwtVerify } from "jose/jwt/verify";
 
 const withTimeout = <T>(p: Promise<T>, ms: number): Promise<T> =>
   Promise.race([
@@ -12,11 +13,33 @@ const withTimeout = <T>(p: Promise<T>, ms: number): Promise<T> =>
     new Promise<T>((_, reject) => setTimeout(() => reject(new Error("DB query timed out")), ms)),
   ]);
 
+function getSecret(): Uint8Array {
+  return new TextEncoder().encode(process.env.AUTH_SECRET || "");
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
   pages: {
     signIn: "/auth/login",
     error: "/auth/error",
+  },
+  jwt: {
+    encode: async ({ token }) => {
+      return new SignJWT(token as Record<string, unknown>)
+        .setProtectedHeader({ alg: "HS256" })
+        .setIssuedAt()
+        .setExpirationTime("30d")
+        .sign(getSecret());
+    },
+    decode: async ({ token }) => {
+      if (!token) return null;
+      try {
+        const { payload } = await jwtVerify(token, getSecret(), { algorithms: ["HS256"] });
+        return payload;
+      } catch {
+        return null;
+      }
+    },
   },
   providers: [
     Google({
@@ -37,6 +60,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             10000,
           );
           if (!user || !user.passwordHash) return null;
+          const bcrypt = await import("bcryptjs");
           const isValid = await bcrypt.compare(credentials.password as string, user.passwordHash);
           if (!isValid) return null;
           return { id: user.id, email: user.email, name: `${user.firstName} ${user.lastName}`, image: user.avatarUrl, role: "authenticated" };
@@ -51,18 +75,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if ((trigger === "signIn" || trigger === "signUp") && user?.id) {
         token.id = user.id;
         try {
-          const [userRole] = await withTimeout(
+          const [userRecord] = await withTimeout(
             db
-              .select({ roleName: roles.name })
+              .select({ roleName: roles.name, schoolId: users.schoolId })
               .from(userRoles)
               .innerJoin(roles, eq(userRoles.roleId, roles.id))
               .where(eq(userRoles.userId, user.id))
               .limit(1),
             10000,
           );
-          token.role = userRole?.roleName || "guest";
+          token.role = userRecord?.roleName || "guest";
+          token.schoolId = userRecord?.schoolId || null;
         } catch {
           token.role = "guest";
+          token.schoolId = null;
         }
       }
       return token;
@@ -71,6 +97,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
+        (session.user as any).schoolId = token.schoolId || null;
       }
       return session;
     },

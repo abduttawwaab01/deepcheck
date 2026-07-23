@@ -77,27 +77,34 @@ async function processQueue() {
 
 export const syncManager = {
   init() {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined") return () => {};
 
     const updateOnline = async () => {
       currentStatus.isOnline = navigator.onLine;
       await refreshCounts();
       notify("status-change", getStatus());
       if (navigator.onLine) {
+        await processQueue();
+      }
+    };
+
+    const handleSWMessage = (event: MessageEvent) => {
+      if (event.data?.type === "SYNC_PENDING" || event.data?.type === "SYNC_ASSESSMENTS") {
         processQueue();
       }
     };
 
     window.addEventListener("online", updateOnline);
     window.addEventListener("offline", updateOnline);
-
-    navigator.serviceWorker?.addEventListener("message", (event) => {
-      if (event.data?.type === "SYNC_PENDING" || event.data?.type === "SYNC_ASSESSMENTS") {
-        processQueue();
-      }
-    });
+    navigator.serviceWorker?.addEventListener("message", handleSWMessage);
 
     updateOnline();
+
+    return () => {
+      window.removeEventListener("online", updateOnline);
+      window.removeEventListener("offline", updateOnline);
+      navigator.serviceWorker?.removeEventListener("message", handleSWMessage);
+    };
   },
 
   enqueueMutation(procedure: string, input: unknown) {
@@ -107,7 +114,9 @@ export const syncManager = {
       processQueue();
     } else {
       navigator.serviceWorker?.ready.then((reg) => {
-        reg.sync.register("sync-pending").catch(() => {});
+        reg.sync.register("sync-pending").catch((err) => {
+          console.error("Background sync registration failed:", err);
+        });
       });
     }
   },

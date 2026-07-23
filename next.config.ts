@@ -6,7 +6,6 @@ const withSerwist = withSerwistInit({
   swDest: "public/sw.js",
   reloadOnOnline: true,
   cacheOnNavigation: true,
-  additionalPrecacheEntries: ["/offline"],
   exclude: [/\.map$/, /^manifest.*\.js$/, /\/api\//, /\/trpc\//],
 });
 

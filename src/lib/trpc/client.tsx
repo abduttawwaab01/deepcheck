@@ -70,7 +70,7 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
   );
 
   useEffect(() => {
-    syncManager.init();
+    return syncManager.init();
   }, []);
 
   return (

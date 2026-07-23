@@ -68,7 +68,7 @@ export const offlineDb = {
   // Pending mutations
   async addPendingMutation(mutation: Omit<PendingMutation, "id">): Promise<number> {
     const db = await getDb();
-    return db.add("pending_mutations", mutation);
+    return db.add("pending_mutations", mutation) as Promise<number>;
   },
   async getPendingMutations(): Promise<PendingMutation[]> {
     const db = await getDb();

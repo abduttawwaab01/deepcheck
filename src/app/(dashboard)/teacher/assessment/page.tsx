@@ -18,6 +18,7 @@ export default function TeacherAssessmentPage() {
   const questionStartTimeRef = useRef<number>(0);
   const questionTimesRef = useRef<Record<string, number>>({});
   const proctorRef = useRef<ProctoringMonitor | null>(null);
+  const handleCompleteRef = useRef<() => void>(() => {});
 
   const { data: assessment, isLoading } = trpc.assessment.getBySlug.useQuery(
     { slug: "teacher-quality" },
@@ -45,7 +46,7 @@ export default function TeacherAssessmentPage() {
 
   useEffect(() => {
     if (timeLeft === 0 && started && !result && assessment) {
-      handleComplete();
+      handleCompleteRef.current();
     }
   }, [timeLeft, started, result, assessment]);
 
@@ -68,6 +69,7 @@ export default function TeacherAssessmentPage() {
     }
     setSaving(false);
   }, [assessment, answers, instanceId, completeMutation, recordQuestionTime]);
+  handleCompleteRef.current = handleComplete;
 
   const handleStart = async () => {
     try {

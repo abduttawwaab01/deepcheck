@@ -37,6 +37,7 @@ export default function AssessmentPage() {
   const questionStartTimeRef = useRef<number>(0);
   const questionTimesRef = useRef<Record<string, number>>({});
   const proctorRef = useRef<ProctoringMonitor | null>(null);
+  const handleCompleteRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     if (assessment && !started) {
@@ -45,10 +46,10 @@ export default function AssessmentPage() {
   }, [assessment, started]);
 
   useEffect(() => {
-    if (!started || completed || !timerRef.current) return;
+    if (!started || completed) return;
     timerRef.current = setInterval(() => {
       setTimeRemaining((prev) => {
-        if (prev <= 1) { handleComplete(); return 0; }
+        if (prev <= 1) { handleCompleteRef.current(); return 0; }
         return prev - 1;
       });
     }, 1000);
@@ -88,6 +89,7 @@ export default function AssessmentPage() {
     }
     setSaving(false);
   }, [assessment, answers, instanceId, completeMutation, recordQuestionTime]);
+  handleCompleteRef.current = handleComplete;
 
   const handleStart = async () => {
     try {

@@ -1,5 +1,6 @@
-import { auth } from "@/lib/auth/auth";
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { getSessionFromCookie } from "@/lib/auth/middleware";
 
 const PUBLIC_PATHS = ["/", "/auth/login", "/auth/register", "/auth/error", "/about", "/contact", "/pricing", "/privacy", "/tos", "/for-schools"];
 
@@ -11,18 +12,23 @@ const ROLE_DASHBOARDS: Record<string, string> = {
   parent: "/parent",
 };
 
-export default auth((req) => {
-  const { pathname } = req.nextUrl;
-  const session = req.auth;
-  const isAuthenticated = !!session?.user?.id;
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const session = await getSessionFromCookie(request);
+  const user = session?.user;
+  const isAuthenticated = !!user?.id;
 
   // Allow public paths
   if (PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
+    // If logged in and on root, redirect to dashboard
+    if (isAuthenticated && pathname === "/") {
+      const dashboard = ROLE_DASHBOARDS[user!.role] || "/student";
+      return NextResponse.redirect(new URL(dashboard, request.url));
+    }
     // If logged in and on auth pages, redirect to dashboard
     if (isAuthenticated && pathname.startsWith("/auth")) {
-      const role = (session.user as any)?.role as string;
-      const dashboard = ROLE_DASHBOARDS[role] || "/student";
-      return NextResponse.redirect(new URL(dashboard, req.url));
+      const dashboard = ROLE_DASHBOARDS[user!.role] || "/student";
+      return NextResponse.redirect(new URL(dashboard, request.url));
     }
     return NextResponse.next();
   }
@@ -44,28 +50,16 @@ export default auth((req) => {
 
   // Require authentication for all other routes
   if (!isAuthenticated) {
-    const loginUrl = new URL("/auth/login", req.url);
+    const loginUrl = new URL("/auth/login", request.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // Role-based dashboard redirect: if user hits "/" while logged in, send to their dashboard
-  if (pathname === "/") {
-    const role = (session.user as any)?.role as string;
-    const dashboard = ROLE_DASHBOARDS[role] || "/student";
-    return NextResponse.redirect(new URL(dashboard, req.url));
-  }
-
   return NextResponse.next();
-});
+}
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static, _next/image, favicon.ico (static files)
-     * - api/trpc (tRPC handles its own auth)
-     */
     "/((?!_next/static|_next/image|favicon.ico|api/trpc).*)",
   ],
 };

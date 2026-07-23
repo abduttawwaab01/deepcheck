@@ -1,7 +1,10 @@
+/// <reference lib="webworker" />
 import { defaultCache } from "@serwist/next/worker";
-import { Serwist, NetworkFirst, CacheFirst, StaleWhileRevalidate } from "serwist";
+import { Serwist, NetworkFirst, CacheFirst } from "serwist";
 
-declare const self: ServiceWorkerGlobalScope;
+declare const self: ServiceWorkerGlobalScope & {
+  __SW_MANIFEST: (string | { url: string; revision: string })[];
+};
 
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
@@ -11,9 +14,10 @@ const serwist = new Serwist({
   runtimeCaching: [
     ...defaultCache,
 
-    // tRPC GET queries — NetworkFirst with 5s timeout, fall back to cache
+    // tRPC GET queries
     {
-      matcher: ({ url }) => url.pathname.startsWith("/api/trpc/") && url.method === "GET",
+      matcher: ({ url }) => url.pathname.startsWith("/api/trpc/"),
+      method: "GET",
       handler: new NetworkFirst({
         cacheName: "trpc-cache-v1",
         networkTimeoutSeconds: 5,
@@ -22,9 +26,13 @@ const serwist = new Serwist({
             cacheWillUpdate: async ({ response }) => {
               if (response && response.status === 200) {
                 const cloned = response.clone();
-                const body = await cloned.json();
-                if (body?.result?.data) {
-                  return response;
+                try {
+                  const body = await cloned.json();
+                  if (body?.result?.data) {
+                    return response;
+                  }
+                } catch {
+                  return null;
                 }
               }
               return null;
@@ -36,31 +44,19 @@ const serwist = new Serwist({
 
     // Other GET API endpoints
     {
-      matcher: ({ url }) => url.pathname.startsWith("/api/") && url.method === "GET",
+      matcher: ({ url }) => url.pathname.startsWith("/api/"),
+      method: "GET",
       handler: new NetworkFirst({
         cacheName: "api-cache-v1",
         networkTimeoutSeconds: 3,
       }),
     },
 
-    // Images — CacheFirst, expire after 30 days
+    // Images
     {
       matcher: ({ request }) => request.destination === "image",
       handler: new CacheFirst({
         cacheName: "image-cache-v1",
-        plugins: [
-          {
-            cacheWillUpdate: async ({ response }) => {
-              if (response && response.status === 200) {
-                const cloned = response.clone();
-                if (cloned.headers.get("content-length") !== "0") {
-                  return response;
-                }
-              }
-              return null;
-            },
-          },
-        ],
       }),
     },
   ],
@@ -68,7 +64,6 @@ const serwist = new Serwist({
 
 serwist.addEventListeners();
 
-// Handle background sync for pending mutations
 self.addEventListener("sync", (event) => {
   if (event.tag === "sync-pending") {
     event.waitUntil(syncPending());
@@ -78,7 +73,6 @@ self.addEventListener("sync", (event) => {
   }
 });
 
-// Listen for messages from the client
 self.addEventListener("message", (event) => {
   if (event.data?.type === "SKIP_WAITING") {
     self.skipWaiting();
@@ -98,8 +92,3 @@ async function syncAssessments() {
     client.postMessage({ type: "SYNC_ASSESSMENTS" });
   }
 }
-
-// Fallback offline page for navigation requests
-serwist.addToPrecacheList([
-  { url: "/offline", revision: Date.now().toString() },
-]);

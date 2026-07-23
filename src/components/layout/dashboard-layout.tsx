@@ -25,6 +25,8 @@ const portalConfig: Record<string, { href: string; label: string; icon: any }[]>
   admin: [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/questions", label: "Question Bank", icon: BookOpen },
+    { href: "/admin/school-assessments", label: "School Assessments", icon: School },
+    { href: "/admin/parent-assessments", label: "Parent Assessments", icon: HeartHandshake },
     { href: "/admin/users", label: "Users", icon: Users },
     { href: "/admin/schools", label: "Schools", icon: School },
     { href: "/admin/reports", label: "Reports Queue", icon: FileText },

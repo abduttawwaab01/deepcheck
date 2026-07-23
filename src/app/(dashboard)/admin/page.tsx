@@ -1,7 +1,7 @@
 "use client";
 
 import { trpc } from "@/lib/trpc/client";
-import { Users, School, ClipboardCheck, Wallet, TrendingUp, Activity } from "lucide-react";
+import { Users, School, ClipboardCheck, Wallet, TrendingUp, Activity, Building, HeartHandshake } from "lucide-react";
 
 export default function AdminDashboardPage() {
   const { data: s } = trpc.admin.getDashboardStats.useQuery();
@@ -13,7 +13,9 @@ export default function AdminDashboardPage() {
   const cards = [
     { label: "Total Users", value: fmt(s.totalUsers), icon: Users, color: "text-primary-600", bg: "bg-primary-50 dark:bg-primary-950/30" },
     { label: "Schools", value: fmt(s.totalSchools), icon: School, color: "text-secondary-600", bg: "bg-secondary-50 dark:bg-secondary-950/30" },
-    { label: "Questions", value: fmt(s.questionCount), icon: ClipboardCheck, color: "text-success", bg: "bg-success/5" },
+    { label: "Academic Questions", value: fmt(s.questionCount), icon: ClipboardCheck, color: "text-success", bg: "bg-success/5" },
+    { label: "School Assessment Qs", value: fmt(s.schoolAssessmentCount), icon: Building, color: "text-blue-600", bg: "bg-blue-50 dark:bg-blue-950/30" },
+    { label: "Parent Assessment Qs", value: fmt(s.parentAssessmentCount), icon: HeartHandshake, color: "text-violet-600", bg: "bg-violet-50 dark:bg-violet-950/30" },
     { label: "Pending Reports", value: fmt(s.pendingReports), icon: Wallet, color: "text-warning", bg: "bg-warning/5" },
   ];
 
@@ -27,7 +29,7 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-6">
         {cards.map((c) => (
           <div key={c.label} className="glass rounded-2xl p-4">
             <div className={`${c.bg} flex h-10 w-10 items-center justify-center rounded-xl`}>

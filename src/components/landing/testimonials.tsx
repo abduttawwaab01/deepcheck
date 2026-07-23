@@ -37,7 +37,11 @@ export function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
-  useEffect(() => { fetch("/api/landing-stats").then(r => r.json()).then(setData).catch(() => {}); }, []);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/landing-stats", { signal: controller.signal }).then(r => r.json()).then(setData).catch(() => {});
+    return () => controller.abort();
+  }, []);
 
   const next = useCallback(() => {
     setDirection(1);
