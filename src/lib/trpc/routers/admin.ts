@@ -286,6 +286,37 @@ export const adminRouter = router({
     return result;
   }),
 
+  reseedMissingOptions: adminProcedure.mutation(async () => {
+    const { primaryToJss1Questions, jss3ToSs1Questions, ss3ToUniversityQuestions } = await import("@/data/assessments/seeds");
+    const seedData = [...primaryToJss1Questions, ...jss3ToSs1Questions, ...ss3ToUniversityQuestions];
+    const seedMap = new Map(seedData.map((s) => [s.code, s.options]));
+
+    const allQ = await db.select({ id: questions.id, code: questions.code })
+      .from(questions).where(sql`${questions.deletedAt} IS NULL`);
+    const allQIds = allQ.map((q) => q.id);
+    const existingOpts = await db.select({ questionId: questionOptions.questionId })
+      .from(questionOptions).where(inArray(questionOptions.questionId, allQIds));
+    const optsByQId = new Set(existingOpts.map((o) => o.questionId));
+
+    const missing = allQ.filter((q) => q.code && !optsByQId.has(q.id) && seedMap.has(q.code));
+
+    const BATCH_SIZE = 200;
+    let inserted = 0;
+    for (let i = 0; i < missing.length; i += BATCH_SIZE) {
+      const batch = missing.slice(i, i + BATCH_SIZE);
+      const rows = batch.flatMap((q) => {
+        const opts = seedMap.get(q.code!)!;
+        return opts.map((o) => ({ questionId: q.id, optionText: o.optionText, isCorrect: o.isCorrect, optionOrder: o.optionOrder }));
+      });
+      if (rows.length > 0) {
+        await db.insert(questionOptions).values(rows);
+        inserted += rows.length;
+      }
+    }
+
+    return { totalMissing: missing.length, inserted };
+  }),
+
   // ─── REPORT REQUESTS ────────────────────────────────────────────────
   getReportRequests: adminProcedure.query(async () => {
     const requests = await db.select({

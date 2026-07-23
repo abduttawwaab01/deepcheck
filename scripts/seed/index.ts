@@ -677,10 +677,15 @@ async function seed() {
   const allOptions = insertedQuestions.flatMap(({ id, options }) =>
     options.map((o: any) => ({ ...o, questionId: id }))
   );
-  if (allOptions.length > 0) {
-    await db.insert(questionOptions).values(allOptions);
+  const BATCH_SIZE = 200;
+  let insertedOptions = 0;
+  for (let i = 0; i < allOptions.length; i += BATCH_SIZE) {
+    const batch = allOptions.slice(i, i + BATCH_SIZE);
+    await db.insert(questionOptions).values(batch);
+    insertedOptions += batch.length;
+    process.stdout.write(`\r  Options: ${insertedOptions}/${allOptions.length}`);
   }
-  console.log(`✓ ${allOptions.length} question options inserted`);
+  console.log(`\n✓ ${allOptions.length} question options inserted (batched)`);
 
   // ─── Teacher Quality Bank ──────────────────────────────────────────
   const tqBankId = bankMap["TCH-QUALITY"];

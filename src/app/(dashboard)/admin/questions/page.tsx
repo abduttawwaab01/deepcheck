@@ -121,6 +121,8 @@ export default function AdminQuestionsPage() {
     },
   });
 
+  const reseedMissing = trpc.admin.reseedMissingOptions.useMutation();
+
   const questions = bankData?.items || [];
   const total = bankData?.total || 0;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -275,7 +277,13 @@ export default function AdminQuestionsPage() {
             return (
               <div className="mb-4 flex items-center gap-2 rounded-xl bg-amber-500/10 px-4 py-3 text-sm text-amber-600 dark:text-amber-400">
                 <AlertTriangle className="h-4 w-4 shrink-0" />
-                <span>{info.missing} of {info.total} questions in this bank are missing options. Edit each question to add options.</span>
+                <span>{info.missing} of {info.total} questions in this bank are missing options.</span>
+                <Button size="sm" variant="outline" className="ml-auto gap-1 border-amber-300 text-amber-600 hover:bg-amber-500/20 dark:border-amber-700 dark:text-amber-400"
+                  disabled={reseedMissing.isPending}
+                  onClick={() => reseedMissing.mutate(undefined, { onSuccess: (d) => { utils.admin.getQuestions.invalidate(); utils.admin.checkMissingOptions.invalidate(); alert(`Inserted ${d.inserted} options for ${d.totalMissing} questions.`); } })}>
+                  <Database className="h-3.5 w-3.5" />
+                  {reseedMissing.isPending ? "Fixing..." : "Fix Options"}
+                </Button>
               </div>
             );
           })()
