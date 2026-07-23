@@ -91,12 +91,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const gradient = role ? roleColors[role] || roleColors.student : roleColors.student;
 
   useEffect(() => {
-    if (!role) return;
-    const expectedPath = ROLE_DASHBOARDS[role] || `/${role}`;
+    if (!role || !ROLE_DASHBOARDS[role]) return;
     const base = pathname.split("/")[1];
-    const expectedBase = expectedPath.split("/")[1];
+    const expectedBase = ROLE_DASHBOARDS[role].split("/")[1];
     if (expectedBase !== base) {
-      router.push(expectedPath);
+      router.push(ROLE_DASHBOARDS[role]);
     }
   }, [role, pathname, router]);
 
