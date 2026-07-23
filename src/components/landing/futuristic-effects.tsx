@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useCallback, useState, type ReactNode } from "react";
+import { motion } from "framer-motion";
 
 // ─── 3D Floating Geometric Shapes ───────────────────────────
 
@@ -464,9 +465,6 @@ export function FloatingDataParticles() {
 }
 
 // ─── 3D Tilt Card Wrapper ───────────────────────────────────
-
-import { motion } from "framer-motion";
-import type { ReactNode } from "react";
 
 export function TiltCard({
   children,

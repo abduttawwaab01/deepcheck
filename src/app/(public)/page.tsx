@@ -9,6 +9,7 @@ import { FAQ } from "@/components/landing/faq";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { BackgroundEffects } from "@/components/landing/background-effects";
+import { SectionErrorBoundary } from "@/components/landing/section-error-boundary";
 
 export default function LandingPage() {
   return (
@@ -16,14 +17,30 @@ export default function LandingPage() {
       <BackgroundEffects />
       <Navbar />
       <main>
-        <HeroSection />
-        <IntelligenceDemoBar />
-        <StatsCounter />
-        <HowItWorks />
-        <DeepIntelligence />
-        <Testimonials />
-        <PricingSection />
-        <FAQ />
+        <SectionErrorBoundary name="HeroSection">
+          <HeroSection />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary name="IntelligenceDemoBar">
+          <IntelligenceDemoBar />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary name="StatsCounter">
+          <StatsCounter />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary name="HowItWorks">
+          <HowItWorks />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary name="DeepIntelligence">
+          <DeepIntelligence />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary name="Testimonials">
+          <Testimonials />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary name="PricingSection">
+          <PricingSection />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary name="FAQ">
+          <FAQ />
+        </SectionErrorBoundary>
       </main>
       <Footer />
     </>
