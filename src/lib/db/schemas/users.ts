@@ -18,6 +18,7 @@ export const users = pgTable("users", {
   loginCount: integer("login_count").default(0),
   locale: varchar("locale", { length: 10 }).default("en"),
   timezone: varchar("timezone", { length: 50 }).default("Africa/Lagos"),
+  schoolId: uuid("school_id"),
   metadata: jsonb("metadata").default({}),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),

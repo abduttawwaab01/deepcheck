@@ -61,7 +61,7 @@ export default function PricingPage() {
       });
       if (data.success) { setBtResultCoins(coins); setBankTransferSent(true); }
       else setBtError(data.message || "Failed to submit");
-    } catch { setBtError("Failed to submit bank transfer. Please ensure your account is active and try again."); }
+    } catch (e: any) { setBtError(e?.message || "Failed to submit bank transfer. Please try again."); }
     setBtLoading(false);
   };
 

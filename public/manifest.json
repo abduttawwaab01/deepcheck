@@ -1,0 +1,30 @@
+{
+  "name": "Deep Check — Learning Diagnostic Intelligence",
+  "short_name": "Deep Check",
+  "description": "AI-powered learning diagnostic platform. Discover what your child doesn't know.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#0f172a",
+  "background_color": "#0f172a",
+  "categories": ["education", "assessment"],
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    { "src": "/icons/icon-48x48.png", "sizes": "48x48", "type": "image/png" },
+    { "src": "/icons/icon-72x72.png", "sizes": "72x72", "type": "image/png" },
+    { "src": "/icons/icon-96x96.png", "sizes": "96x96", "type": "image/png" },
+    { "src": "/icons/icon-128x128.png", "sizes": "128x128", "type": "image/png" },
+    { "src": "/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-384x384.png", "sizes": "384x384", "type": "image/png" },
+    { "src": "/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    { "name": "Dashboard", "short_name": "Dashboard", "description": "View your dashboard", "url": "/student", "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }] },
+    { "name": "Assessments", "short_name": "Assessments", "description": "Take an assessment", "url": "/student/assessments", "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }] },
+    { "name": "Reports", "short_name": "Reports", "description": "View your reports", "url": "/student/reports", "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }] }
+  ]
+}

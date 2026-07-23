@@ -2,8 +2,10 @@ import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "../server";
 import { db } from "@/lib/db";
 import { systemConfig } from "@/lib/db/schemas/system";
-import { bankTransfers } from "@/lib/db/schemas/payments";
-import { eq } from "drizzle-orm";
+import { bankTransfers, subscriptionCredits } from "@/lib/db/schemas/payments";
+import { users } from "@/lib/db/schemas";
+import { eq, sql, and, desc } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
 
 export const publicRouter = router({
   hello: publicProcedure
@@ -55,9 +57,18 @@ export const publicRouter = router({
       senderName: z.string().min(1),
     }))
     .mutation(async ({ ctx, input }) => {
+      const [user] = await db.select({ id: users.id }).from(users)
+        .where(eq(users.id, ctx.user.id)).limit(1);
+      if (!user) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Your account was not found. Try logging out and signing in again.",
+        });
+      }
+
       try {
         const [transfer] = await db.insert(bankTransfers).values({
-          userId: ctx.user.id,
+          userId: user.id,
           amount: String(input.amount),
           coinsRequested: input.coinsRequested,
           senderName: input.senderName.trim(),
@@ -69,9 +80,12 @@ export const publicRouter = router({
           transferId: transfer.id,
           message: "Bank transfer request submitted. Awaiting admin confirmation.",
         };
-      } catch (error) {
-        console.error("Bank transfer TRPC error:", error);
-        throw new Error("Failed to submit bank transfer. Please ensure your account is active and try again.");
+      } catch (error: any) {
+        console.error("Bank transfer DB error:", error?.message || error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `Database error: ${error?.message || "Unknown error"}. Please contact support.`,
+        });
       }
     }),
 });
