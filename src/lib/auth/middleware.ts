@@ -1,43 +1,27 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 function base64UrlToString(str: string): string {
-  const base64 = str.replace(/-/g, "+").replace(/_/g, "/");
-  return atob(base64);
+  return atob(str.replace(/-/g, "+").replace(/_/g, "/"));
 }
 
 function base64UrlToBytes(str: string): Uint8Array {
-  const base64 = str.replace(/-/g, "+").replace(/_/g, "/");
-  const binary = atob(base64);
+  const binary = atob(str.replace(/-/g, "+").replace(/_/g, "/"));
   const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
   return bytes;
-}
-
-function textToBytes(s: string): Uint8Array {
-  return new TextEncoder().encode(s);
-}
-
-async function importKey(secret: Uint8Array): Promise<CryptoKey> {
-  return crypto.subtle.importKey(
-    "raw",
-    secret as BufferSource,
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["verify"],
-  );
 }
 
 export async function getSessionFromCookie(request: NextRequest): Promise<{
   user: { id: string; role: string; schoolId?: string | null } | null;
 }> {
-  const cookieName = "next-auth.session-token";
-  const cookie = request.cookies.get(cookieName);
-  if (!cookie?.value) return { user: null };
+  const cookieNames = ["__Secure-authjs.session-token", "authjs.session-token"];
+  let token: string | undefined;
+  for (const name of cookieNames) {
+    const c = request.cookies.get(name);
+    if (c?.value) { token = c.value; break; }
+  }
+  if (!token) return { user: null };
 
-  const token = cookie.value;
   const parts = token.split(".");
   if (parts.length !== 3) return { user: null };
 
@@ -45,11 +29,19 @@ export async function getSessionFromCookie(request: NextRequest): Promise<{
     const secret = process.env.AUTH_SECRET;
     if (!secret) return { user: null };
 
-    const key = await importKey(textToBytes(secret));
-    const signature = base64UrlToBytes(parts[2]);
-    const data = textToBytes(`${parts[0]}.${parts[1]}`);
-
-    const valid = await crypto.subtle.verify("HMAC", key, signature as BufferSource, data as BufferSource);
+    const key = await crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode(secret) as BufferSource,
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["verify"],
+    );
+    const valid = await crypto.subtle.verify(
+      "HMAC",
+      key,
+      base64UrlToBytes(parts[2]) as BufferSource,
+      new TextEncoder().encode(`${parts[0]}.${parts[1]}`) as BufferSource,
+    );
     if (!valid) return { user: null };
 
     const payload = JSON.parse(base64UrlToString(parts[1]));
