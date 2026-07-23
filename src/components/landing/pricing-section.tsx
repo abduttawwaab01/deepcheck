@@ -1,52 +1,93 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, Sparkles, ArrowRight, Zap, Shield, Star } from "lucide-react";
+import { Check, Sparkles, ArrowRight, Zap, Shield, Star, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { formatNaira } from "@/lib/utils";
 import { TiltCard, HolographicBadge, ScanningBeam, FloatingOrb } from "./futuristic-effects";
+import { trpc } from "@/lib/trpc/client";
 
-const plans = [
-  {
-    name: "Free",
-    price: 0,
-    description: "Full assessment and basic report at no cost",
-    features: ["Complete adaptive assessment", "Basic readiness report", "Radar chart visualization", "Top 3 weaknesses identified", "Progress tracking"],
-    cta: "Start Free",
-    href: "/auth/register",
-    popular: false,
-    icon: Shield,
-    gradient: "from-slate-500 to-slate-600",
-  },
-  {
-    name: "Deep Report",
-    price: 3000,
-    description: "Complete diagnostic with AI-powered recommendations",
-    features: ["Everything in Free", "20-section Deep Report", "AI-generated recommendations", "Daily practice plan", "PDF download", "Misconception analysis", "Growth projection", "Parent diagnostic report"],
-    cta: "Get Deep Report",
-    href: "/auth/register",
-    popular: true,
-    icon: Zap,
-    gradient: "from-primary-500 to-secondary-500",
-  },
-  {
-    name: "School Bulk",
-    price: 150000,
-    description: "Perfect for schools with multiple students",
-    features: ["50 Deep Report credits", "School dashboard", "Teacher analytics", "Parent portal access", "Class comparison tools", "School quality report", "Bulk student management", "Priority support"],
-    cta: "Contact Sales",
-    href: "/contact",
-    popular: false,
-    icon: Star,
-    gradient: "from-amber-500 to-orange-500",
-  },
-];
+const freePlan = {
+  name: "Free",
+  price: 0,
+  description: "Full assessment and basic report at no cost",
+  features: ["Complete adaptive assessment", "Basic readiness report", "Radar chart visualization", "Top 3 weaknesses identified", "Progress tracking"],
+  cta: "Start Free",
+  href: "/auth/register",
+  popular: false,
+  icon: Shield,
+  gradient: "from-slate-500 to-slate-600",
+};
 
 export function PricingSection() {
+  const { data: pricing, isLoading } = trpc.public.getPricingConfig.useQuery();
+
+  if (isLoading) {
+    return (
+      <section id="pricing" className="relative overflow-hidden bg-slate-950 py-24 lg:py-32">
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="h-6 w-6 animate-spin text-primary-400" />
+        </div>
+      </section>
+    );
+  }
+
+  const pricePerCoin = pricing?.pricePerCoin ?? 2000;
+  const coinsPerReport = pricing?.coinsPerReport ?? 1;
+  const bundlePrice = pricing?.bundle20Price ?? 35000;
+  const bundleCoins = pricing?.bundle20Coins ?? 20;
+
+  const perReportPrice = pricePerCoin * coinsPerReport;
+  const bundlePerUnitPrice = Math.round(bundlePrice / bundleCoins);
+  const bundleSavings = (perReportPrice * bundleCoins) - bundlePrice;
+
+  const plans = [
+    freePlan,
+    {
+      name: "Deep Report",
+      price: perReportPrice,
+      description: `Each coin costs ${formatNaira(pricePerCoin)} and covers ${coinsPerReport} deep report${coinsPerReport > 1 ? "s" : ""}`,
+      features: [
+        "Everything in Free",
+        "20-section Deep Report",
+        "AI-generated recommendations",
+        "Daily practice plan",
+        "PDF download",
+        "Misconception analysis",
+        "Growth projection",
+        "Parent diagnostic report",
+      ],
+      cta: "Get Started",
+      href: "/auth/register",
+      popular: true,
+      icon: Zap,
+      gradient: "from-primary-500 to-secondary-500",
+    },
+    {
+      name: "Bundle 20 Coins",
+      price: bundlePrice,
+      description: `${bundleCoins} coins for ${formatNaira(bundlePrice)} — ${formatNaira(bundlePerUnitPrice)} per coin`,
+      features: [
+        `${bundleCoins} deep report credits`,
+        "School dashboard (school accounts)",
+        "Teacher analytics",
+        "Parent portal access",
+        "Class comparison tools",
+        "School quality report",
+        "Bulk student management",
+        "Priority support",
+      ],
+      cta: "Buy Bundle",
+      href: "/pricing",
+      popular: false,
+      icon: Star,
+      gradient: "from-amber-500 to-orange-500",
+    },
+  ];
+
   return (
     <section id="pricing" className="relative overflow-hidden bg-slate-950 py-24 lg:py-32">
-      {/* Holographic grid background */}
       <div className="data-grid pointer-events-none absolute inset-0 opacity-20" />
 
       <FloatingOrb color="from-primary-500/12 to-secondary-500/8" size={700} className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" blur="blur-[150px]" animation="animate-glow-pulse" />
@@ -66,6 +107,19 @@ export function PricingSection() {
             No hidden fees. No surprise charges. Just clear, affordable access to the world&apos;s most advanced learning diagnostic.
           </p>
         </motion.div>
+
+        {bundleSavings > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-6 flex justify-center"
+          >
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-4 py-1.5 text-xs font-medium text-emerald-400">
+              <Sparkles className="h-3 w-3" />
+              Bundle saves you {formatNaira(bundleSavings)} compared to buying individually
+            </div>
+          </motion.div>
+        )}
 
         <div className="mt-14 grid gap-8 lg:grid-cols-3 lg:gap-6">
           {plans.map((plan, i) => (
@@ -96,13 +150,11 @@ export function PricingSection() {
                     </>
                   )}
 
-                  {/* Hover glow */}
                   <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br from-primary-500/0 via-secondary-500/0 to-primary-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 ${
                     plan.popular ? "group-hover:from-primary-500/8 group-hover:via-secondary-500/8 group-hover:to-primary-500/8" : "group-hover:from-primary-500/3 group-hover:via-secondary-500/3 group-hover:to-primary-500/3"
                   }`} />
 
                   <div className="relative">
-                    {/* Icon */}
                     <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${plan.gradient} shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:shadow-xl`}>
                       <plan.icon className="h-6 w-6 text-white" />
                     </div>
@@ -112,7 +164,10 @@ export function PricingSection() {
                       <span className="text-3xl font-extrabold text-white sm:text-5xl">
                         {plan.price === 0 ? "Free" : formatNaira(plan.price)}
                       </span>
-                      {plan.price > 0 && (
+                      {plan.price > 0 && plan.name === "Deep Report" && (
+                        <span className="ml-2 text-sm text-slate-500">per report</span>
+                      )}
+                      {plan.price > 0 && plan.name === "Bundle 20 Coins" && (
                         <span className="ml-2 text-sm text-slate-500">one-time</span>
                       )}
                     </div>

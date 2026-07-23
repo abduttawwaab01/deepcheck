@@ -13,6 +13,14 @@ import {
   Brain, Target, ShieldCheck, Shield, Sun, Moon, Landmark,
 } from "lucide-react";
 
+const ROLE_DASHBOARDS: Record<string, string> = {
+  admin: "/admin",
+  school_admin: "/school",
+  teacher: "/teacher",
+  student: "/student",
+  parent: "/parent",
+};
+
 const portalConfig: Record<string, { href: string; label: string; icon: any }[]> = {
   admin: [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -80,9 +88,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   useEffect(() => {
     if (!role) return;
+    const expectedPath = ROLE_DASHBOARDS[role] || `/${role}`;
     const base = pathname.split("/")[1];
-    if (role !== base && !pathname.startsWith(`/${role}`)) {
-      router.push(`/${role}`);
+    const expectedBase = expectedPath.split("/")[1];
+    if (expectedBase !== base) {
+      router.push(expectedPath);
     }
   }, [role, pathname, router]);
 

@@ -109,11 +109,13 @@ export const adminRouter = router({
     }))
     .mutation(async ({ input }) => {
       const { options: opts, ...rest } = input;
-      const [q] = await db.insert(questions).values({ ...rest, assessmentType: "academic", status: "approved" }).returning();
-      await db.insert(questionOptions).values(
-        opts.map((o) => ({ questionId: q.id, optionText: o.optionText, isCorrect: o.isCorrect, optionOrder: o.optionOrder })),
-      );
-      return q;
+      return await db.transaction(async (tx) => {
+        const [q] = await tx.insert(questions).values({ ...rest, assessmentType: "academic", status: "approved" }).returning();
+        await tx.insert(questionOptions).values(
+          opts.map((o) => ({ questionId: q.id, optionText: o.optionText, isCorrect: o.isCorrect, optionOrder: o.optionOrder })),
+        );
+        return q;
+      });
     }),
 
   updateQuestion: adminProcedure
@@ -135,20 +137,22 @@ export const adminRouter = router({
     }))
     .mutation(async ({ input }) => {
       const { id, options: opts, ...rest } = input;
-      const toUpdate: any = { ...rest, updatedAt: new Date() };
-      Object.keys(toUpdate).forEach((k) => { if (toUpdate[k] === undefined) delete toUpdate[k]; });
-      if (Object.keys(toUpdate).length > 0) {
-        await db.update(questions).set(toUpdate).where(eq(questions.id, id));
-      }
-      if (opts) {
-        await db.delete(questionOptions).where(eq(questionOptions.questionId, id));
-        if (opts.length > 0) {
-          await db.insert(questionOptions).values(
-            opts.map((o) => ({ questionId: id, optionText: o.optionText, isCorrect: o.isCorrect, optionOrder: o.optionOrder })),
-          );
+      return await db.transaction(async (tx) => {
+        const toUpdate: any = { ...rest, updatedAt: new Date() };
+        Object.keys(toUpdate).forEach((k) => { if (toUpdate[k] === undefined) delete toUpdate[k]; });
+        if (Object.keys(toUpdate).length > 0) {
+          await tx.update(questions).set(toUpdate).where(eq(questions.id, id));
         }
-      }
-      return { success: true };
+        if (opts) {
+          await tx.delete(questionOptions).where(eq(questionOptions.questionId, id));
+          if (opts.length > 0) {
+            await tx.insert(questionOptions).values(
+              opts.map((o) => ({ questionId: id, optionText: o.optionText, isCorrect: o.isCorrect, optionOrder: o.optionOrder })),
+            );
+          }
+        }
+        return { success: true };
+      });
     }),
 
   deleteQuestion: adminProcedure
@@ -259,6 +263,21 @@ export const adminRouter = router({
   // ─── QUESTIONS (generic) ────────────────────────────────────────────
   getQuestions: adminProcedure.query(async () => {
     return db.select().from(questions).where(sql`${questions.deletedAt} IS NULL`).limit(200);
+  }),
+
+  checkMissingOptions: adminProcedure.query(async () => {
+    const banks = await db.select({ id: questionBanks.id, level: questionBanks.level, title: questionBanks.title }).from(questionBanks).where(eq(questionBanks.isActive, true));
+    const result: { bankId: string; level: string; title: string; total: number; missing: number }[] = [];
+    for (const bank of banks) {
+      const allQ = await db.select({ id: questions.id }).from(questions).where(and(sql`${questions.deletedAt} IS NULL`, eq(questions.bankId, bank.id)));
+      if (allQ.length === 0) continue;
+      const qIds = allQ.map((q) => q.id);
+      const opts = await db.select({ questionId: questionOptions.questionId }).from(questionOptions).where(inArray(questionOptions.questionId, qIds));
+      const optQIds = new Set(opts.map((o) => o.questionId));
+      const missing = allQ.filter((q) => !optQIds.has(q.id)).length;
+      result.push({ bankId: bank.id, level: bank.level, title: bank.title, total: allQ.length, missing });
+    }
+    return result;
   }),
 
   // ─── REPORT REQUESTS ────────────────────────────────────────────────

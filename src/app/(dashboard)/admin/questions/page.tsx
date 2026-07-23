@@ -70,6 +70,7 @@ const emptyForm: QuestionForm = {
 export default function AdminQuestionsPage() {
   const utils = trpc.useUtils();
   const { data: banks, isLoading: banksLoading } = trpc.admin.getQuestionBanks.useQuery();
+  const { data: missingOptions } = trpc.admin.checkMissingOptions.useQuery();
   const [activeBankId, setActiveBankId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState("all");
@@ -268,6 +269,17 @@ export default function AdminQuestionsPage() {
       </div>
 
       <div className="glass rounded-2xl p-4 sm:p-5">
+        {activeBankId && missingOptions?.find((m) => m.bankId === activeBankId)?.missing ? (
+          (() => {
+            const info = missingOptions.find((m) => m.bankId === activeBankId)!;
+            return (
+              <div className="mb-4 flex items-center gap-2 rounded-xl bg-amber-500/10 px-4 py-3 text-sm text-amber-600 dark:text-amber-400">
+                <AlertTriangle className="h-4 w-4 shrink-0" />
+                <span>{info.missing} of {info.total} questions in this bank are missing options. Edit each question to add options.</span>
+              </div>
+            );
+          })()
+        ) : null}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <div className={cn("flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-sm", gradient)}>
